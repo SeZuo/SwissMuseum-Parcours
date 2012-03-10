@@ -5,6 +5,12 @@ import java.util.LinkedList;
 
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 
+/**
+ * Manages to notify the listeners of a specific {@link Event}, when this {@link Event} is fired.
+ *
+ * @author Sebastien Zurfluh
+ *
+ */
 public class EventBus {
 	HashMap<EventType, LinkedList<EventBusListener>> listeners = 
 			new HashMap<EventType, LinkedList<EventBusListener>>(EventType.values().length);

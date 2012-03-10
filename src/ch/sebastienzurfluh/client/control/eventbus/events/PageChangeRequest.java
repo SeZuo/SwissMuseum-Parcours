@@ -1,22 +1,28 @@
 package ch.sebastienzurfluh.client.control.eventbus.events;
 
+import com.google.gwt.http.client.URL;
+
 import ch.sebastienzurfluh.client.control.eventbus.Event;
-import ch.sebastienzurfluh.client.model.Page;
 
-
+/**
+ * This event is fired after a page has been changed.
+ *
+ * @author Sebastien Zurfluh
+ *
+ */
 public class PageChangeRequest extends Event {
-	private Page page;
+	int pageId;
 	
-	public PageChangeRequest(Page page) {
-		this.page = page;
+	public PageChangeRequest(int pageId) {
+		this.pageId = pageId;
 	}
 
-	public Page getPage() {
-		return page;
+	public int getPageId() {
+		return pageId;
 	}
 
 	@Override
 	public EventType getType() {
-		return EventType.LOAD_PAGE_REQUEST;
+		return EventType.PAGE_CHANGE_REQUEST;
 	}
 }
