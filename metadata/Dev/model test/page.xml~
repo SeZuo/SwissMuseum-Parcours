@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- The file is stored in a folder corresponding to its position in the -->
+<item>
+	<page>
+		<title></title>
+		<content></content>
+	</page>
+
+	<type>
+		<!-- Parcours/Chapter/Page/Ressource -->
+	</type>
+	
+	<children>
+		<item id="0">
+			<!-- name -->
+		</item>
+		<item id="1">
+			<!-- name -->
+		</item>
+		<!-- as much children as needed -->
+	</children>
+
+	<last_modified date="" time="" user="">
+		<date>
+			<year></year>			
+			<month></month>
+			<day></day>
+			<hour></hour>
+			<minute></minute>
+		</date>
+		<user></user>
+	</last_modified>
+</item>
