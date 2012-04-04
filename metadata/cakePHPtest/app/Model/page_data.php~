@@ -1,0 +1,13 @@
+<?php
+class PageData extends AppModel {
+	public $name = 'PageData';
+	
+	public $hasOne = array(
+    	'PageData' => array(
+        	'className'    => 'PageData',
+        	'dependent'    => true
+		)
+    );
+
+}
+?>

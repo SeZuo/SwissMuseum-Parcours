@@ -1,7 +1,5 @@
 package ch.sebastienzurfluh.client.view.TileMenu;
 
-import ch.sebastienzurfluh.client.model.structure.Config;
-
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;

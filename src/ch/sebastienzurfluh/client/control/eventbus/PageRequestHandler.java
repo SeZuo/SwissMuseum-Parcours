@@ -36,14 +36,9 @@ public class PageRequestHandler implements EventBusListener {
 		if(e instanceof PageChangeRequest) {
 			PageChangeRequest pageChangeRequest = (PageChangeRequest) e;
 			
-			// Check if the requested page is OK.
-			// Collect the necessary data and fire an event.
-			if (data != null) {
-				eventBus.fireEvent(
-						new PageChangeEvent(
-								model.getPageTypeOf(pageChangeRequest.getPageId()),
-								pageChangeRequest.getPageId()));
-			}
+			//TODO Check if the requested page is OK.
+			//TODO Collect the necessary data and fire an event.
+			
 			
 		}
 	}

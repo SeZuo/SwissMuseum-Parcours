@@ -1,0 +1,14 @@
+<?php
+class Menu extends AppModel {
+	public $name = 'Menu';
+	
+	public $hasOne = 'PageData';
+	
+	public $hasOne = array(
+    	'PageData' => array(
+        	'className'    => 'PageData',
+        	'dependent'    => true
+		)
+    );
+}
+?>

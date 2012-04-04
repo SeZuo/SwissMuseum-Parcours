@@ -1,10 +1,8 @@
 package ch.sebastienzurfluh.client.control;
 
-import ch.sebastienzurfluh.client.model.structure.Booklet;
-import ch.sebastienzurfluh.client.model.structure.Chapter;
-import ch.sebastienzurfluh.client.model.structure.Data;
-import ch.sebastienzurfluh.client.model.structure.Page;
-import ch.sebastienzurfluh.client.model.structure.Tree;
+import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.io.CakeConnector;
+import ch.sebastienzurfluh.client.model.io.TestConnector;
 
 /**
  * Create test data with this factory.
@@ -12,22 +10,39 @@ import ch.sebastienzurfluh.client.model.structure.Tree;
  *
  */
 public class ModelFactory {
-	public static Tree<Data> createTutorialTree() {
+	enum Connector {
+		TEST, CAKE;
+	}
+	
+	public static Model createModel(Connector connector) {
+		switch (connector) {
+			case TEST:
+				return new Model(new TestConnector());
+			case CAKE:
+				return new Model(new CakeConnector());
+			default:
+				throw(new Error(""));
+		}
+	}
+	
+	
+	/*
+	public static Data createTutorialTree() {
 		//Create super tree
-		Tree<Data> superTree = new Tree<Data>(0, 0, null, null, null, null, null);
+		Data superTree = new Data(0, DataType.SUPER, 0, null, null, null, null, null);
 		
 		// Create language tree
-		Tree<Booklet> languageTree = new Tree<Booklet>(1, 0, "English", null, null, null, null);
+		Data languageTree = new Data(1, DataType.SUPER, 0, "English", null, null, null, null);
 		
 		// Create the tree for the tutorial booklet
-		Booklet tutorialBooklet = new Booklet(2, 0,
+		Data tutorialBooklet = new Data(2, DataType.BOOKLET, 0,
 				"Tutorial",
 				"This booklet explains how to use the application.",
 				"To coninue to the next step of this tutorial, choose the first image in the \"Chapter\" menu below",
 				null,
 				null);
 		
-		Chapter tutorialChapter1 = new Chapter(3, 0,
+		Data tutorialChapter1 = new Data(3, DataType.CHAPTER, 0,
 				"Step 1",
 				"You've just used the \"tile menu\". Use this menu to choose which object you want to see.",
 				"Now, take a look at the beginning of the page. You can see another line appeared. This is"
@@ -38,7 +53,7 @@ public class ModelFactory {
 				null,
 				null);
 		
-		Chapter tutorialChapter2 = new Chapter(4, 2,
+		Data tutorialChapter2 = new Data(4, DataType.CHAPTER, 2,
 				"Step 2",
 				"You've just changed chapter!",
 				"You can use this navigation menu like you would turn a page of a book, except that depending on the"
@@ -49,7 +64,7 @@ public class ModelFactory {
 				null,
 				null);
 		
-		Page tutorialChapter2Page1 = new Page(5, 0,
+		Data tutorialChapter2Page1 = new Data(5, DataType.PAGE, 0,
 				"Step 3",
 				"This is a page.",
 				"The link you've just clicked sent you here. This page belongs to the same chapter you were in. <br>" +
@@ -69,5 +84,5 @@ public class ModelFactory {
 		return superTree;
 		
 	}
-	
+	*/
 }

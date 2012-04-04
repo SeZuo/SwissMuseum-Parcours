@@ -107,11 +107,12 @@ public class TileWidget extends VerticalPanel implements EventBusListener {
 			}
 			
 			// Reload the tiles as necessary
-			int dataId = pageChangeEvent.getPageId();
+			Data data = pageChangeEvent.getData();
+			data.getParentIterator();
 			switch (pageChangeEvent.getPageType()) {
 			case RESSOURCE:
-				loadTiles(resourceMenu, dataId);
-				dataId = model.getParent(dataId);
+				loadTiles(resourceMenu, data);
+				data = data.getParent();
 			case PAGE:
 				loadTiles(pageMenu, dataId);
 				dataId = model.getParent(dataId);
@@ -136,7 +137,7 @@ public class TileWidget extends VerticalPanel implements EventBusListener {
 		LinkedList<Integer> siblingsIds = model.getSiblings(pageId);
 		for (Integer id : siblingsIds) {
 			Data data = model.getData(id);
-			menu.addTile(data.getSquareImgURL(), data.getTitle(), data.getContentHeader(), data.getPriorityNumber());
+			menu.addTile(data.getSquareImgURL(), data.getTitle(), data.getDescription(), data.getPriorityNumber());
 		}
 	}
 

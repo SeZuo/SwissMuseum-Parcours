@@ -2,13 +2,11 @@ package ch.sebastienzurfluh.client.control;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestHandler;
-import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.view.View;
 
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * This class creates the web app and adds it to the given panel.
@@ -27,12 +25,8 @@ public class AppPresenter {
 	public void start() {
 		eventBus = new EventBus();
 
-		model = new Model(eventBus);
+		model = ModelFactory.createModel(ModelFactory.Connector.TEST);
 		
-		
-		// Populate the model
-		//TODO replace this to load real data instead of test data.
-		model.setModelData(ModelFactory.createTutorialTree());
 		
 		PageRequestHandler pageRequestHandler = new PageRequestHandler(eventBus, model);
 		

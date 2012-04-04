@@ -1,9 +1,5 @@
 package ch.sebastienzurfluh.client.control.eventbus.events;
 
-import java.util.LinkedList;
-
-import com.google.gwt.http.client.URL;
-
 import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.model.structure.Data;
 
@@ -13,12 +9,13 @@ import ch.sebastienzurfluh.client.model.structure.Data;
  * @author Sebastien Zurfluh
  *
  */
-public class PageChangeEvent extends PageChangeRequest {
-	private PageType pageType;
+public class PageChangeEvent extends Event {
+	private DataType pageType;
+	private Data data;
 	
-	public PageChangeEvent(PageType pageType, int pageId) {
-		super(pageId);
+	public PageChangeEvent(DataType pageType, Data data) {
 		this.pageType = pageType;
+		this.data = data;
 	}
 
 	@Override
@@ -26,7 +23,11 @@ public class PageChangeEvent extends PageChangeRequest {
 		return EventType.PAGE_CHANGE_EVENT;
 	}
 	
-	public PageType getPageType() {
+	public DataType getPageType() {
 		return pageType;
+	}
+	
+	public Data getData() {
+		return data;
 	}
 }

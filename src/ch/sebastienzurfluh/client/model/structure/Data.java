@@ -1,84 +1,68 @@
 package ch.sebastienzurfluh.client.model.structure;
 
+import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
+
 /**
- * This is an mutable piece of data. It contains all the needed data to display a page or a menu.
+ * This is an immutable piece of data. It contains all the needed data to display a page and a menu.
+ *
  * @author Sebastien Zurfluh
  *
  */
 public class Data {
-	private int id, priorityNumber;
-	private String title, contentHeader, contentBody;
-	private String squareImgURL, rectangleImgURL;
+	private MenuData menuData;
+	private PageData pageData;
 	
-	public Data(int id,
+	public Data(DataReference reference,
+			DataType pageType,
 			int priorityNumber,
-			String title,
-			String contentHeader,
-			String contentBody,
+			String pageTitle,
+			String pageContentHeader,
+			String pageContentBody,
+			String menuTitle,
+			String menuDescription,
 			String squareImgURL,
 			String rectangleImgURL) {
-		setId(id);
-		setPriorityNumber(priorityNumber);
-		setTitle(title);
-		setContentHeader(contentHeader);
-		setContentBody(contentBody);
-		setSquareImgURL(squareImgURL);
-		setRectangleImgURL(rectangleImgURL);
+		menuData = new MenuData(reference, pageType, priorityNumber, menuTitle, menuDescription, squareImgURL, rectangleImgURL);
+		pageData = new PageData(reference, pageType, pageTitle, pageContentHeader, pageContentBody);
 	}
-
-	public int getId() {
-		return id;
+	
+	public DataReference getReference() {
+		return menuData.getReference();
 	}
-
-	private void setId(int id) {
-		this.id = id;
+	
+	public DataType getPageType() {
+		return menuData.getPageType();
 	}
 
 	public int getPriorityNumber() {
-		return priorityNumber;
+		return menuData.getPriorityNumber();
 	}
 
-	private void setPriorityNumber(int priorityNumber) {
-		this.priorityNumber = priorityNumber;
+	public String getMenuTitle() {
+		return menuData.getTitle();
+	}
+	
+	public String getMenuDescription() {
+		return menuData.getDescription();
+	}
+	
+	public String getPageTitle() {
+		return pageData.getTitle();
 	}
 
-	public String getTitle() {
-		return title;
+	public String getPageContentHeader() {
+		return pageData.getContentHeader();
 	}
-
-	private void setTitle(String title) {
-		this.title = title;
+	
+	public String getPageContentBody() {
+		return pageData.getContentBody();
 	}
-
-	public String getContentHeader() {
-		return contentHeader;
-	}
-
-	private void setContentHeader(String contentHeader) {
-		this.contentHeader = contentHeader;
-	}
-
-	public String getContentBody() {
-		return contentBody;
-	}
-
-	private void setContentBody(String contentBody) {
-		this.contentBody = contentBody;
-	}
-
-	public String getSquareImgURL() {
-		return squareImgURL;
-	}
-
-	private void setSquareImgURL(String squareImgURL) {
-		this.squareImgURL = squareImgURL;
+	
+	public String getSquareRectangleImgURL() {
+		return menuData.getSquareImgURL();
 	}
 
 	public String getRectangleImgURL() {
-		return rectangleImgURL;
-	}
-
-	private void setRectangleImgURL(String rectangleImgURL) {
-		this.rectangleImgURL = rectangleImgURL;
+		return menuData.getRectangleImgURL();
 	}
 }
