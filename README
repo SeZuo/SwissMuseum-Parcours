@@ -6,7 +6,7 @@ WELCOME to the Parcours Project
 About:
 ======
 This website is intended to run on tablets, but is compatible with mouse pointers.
-It is used as a frontend view of the "Parcours" (an exhibition booklet) stored by a CakePHP backend.
+It is used as a frontend view of the "Parcours" (an exhibition booklet) accessed by a CakePHP backend.
 
 Prerequisites:
 ==============
@@ -15,8 +15,7 @@ Prerequisites:
 
 Running:
 ========
-This is a normal GWT project. You may import it in eclipse, and that's as easy as that.
-All needed configuration files are provided.
+This is a normal GWT project. You may import it in eclipse, all needed configuration files are provided.
 
 
 Running the SERVER

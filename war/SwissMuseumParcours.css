@@ -80,3 +80,10 @@ body {
 .tileWidget {
 	
 }
+
+/********************** WIDGET - FOOTER *************************************/
+.footerWidget {
+	font-size: 1em;
+	font-family: monospace;
+	font-color: #110000;
+}
