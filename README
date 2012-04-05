@@ -1,8 +1,24 @@
-Parcours
-c 2012 Sebastien Zurfluh <www.sebastienzurfluh.com>
-
-All of this product's content was created by Sebastien Zurfluh.
-
-This code has been written using the GWT 2.4 SDK.
+WELCOME to the Parcours Project
+===============================
+© Copyright 2012 Sebastien Zurfluh <www.sebastienzurfluh.ch>
 
 
+About:
+======
+This website is intended to run on tablets, but is compatible with mouse pointers.
+It is used as a frontend view of the "Parcours" (an exhibition booklet) stored by a CakePHP backend.
+
+Prerequisites:
+==============
+ + GWT 2.4
+ + CakePHP 3.1 backend (see the "Parcours DB" project)
+
+Running:
+========
+This is a normal GWT project. You may import it in eclipse, and that's as easy as that.
+All needed configuration files are provided.
+
+
+Running the SERVER
+==================
+There is no Java Server nor Servlets. To run the backend see the "Parcours DB" project.
