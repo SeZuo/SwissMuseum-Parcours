@@ -21,8 +21,11 @@ package ch.sebastienzurfluh.client.control;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestHandler;
+import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
+import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.view.View;
 
 import com.google.gwt.user.client.ui.Panel;
@@ -54,6 +57,6 @@ public class AppPresenter {
 		parent.add(view);
 		
 		// Start the app
-		eventBus.fireEvent(new PageChangeRequest(0));
+		eventBus.fireEvent(new PageChangeEvent(DataType.SUPER, null));
 	}
 }

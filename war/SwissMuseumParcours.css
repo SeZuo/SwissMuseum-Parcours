@@ -81,6 +81,12 @@ body {
 	
 }
 
+.tileMenu-detailButton {
+	width: 3em;
+	height: 3em;
+	margin-left: 0.7em;
+}
+
 /********************** WIDGET - FOOTER *************************************/
 .footerWidget {
 	font-size: 1em;

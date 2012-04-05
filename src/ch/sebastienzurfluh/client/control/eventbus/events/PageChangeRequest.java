@@ -19,9 +19,8 @@
 
 package ch.sebastienzurfluh.client.control.eventbus.events;
 
-import com.google.gwt.http.client.URL;
-
 import ch.sebastienzurfluh.client.control.eventbus.Event;
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 
 /**
  * This event is fired after a page has been changed.
@@ -30,13 +29,13 @@ import ch.sebastienzurfluh.client.control.eventbus.Event;
  *
  */
 public class PageChangeRequest extends Event {
-	int pageId;
+	DataReference pageId;
 	
-	public PageChangeRequest(int pageId) {
+	public PageChangeRequest(DataReference pageId) {
 		this.pageId = pageId;
 	}
 
-	public int getPageId() {
+	public DataReference getPageId() {
 		return pageId;
 	}
 

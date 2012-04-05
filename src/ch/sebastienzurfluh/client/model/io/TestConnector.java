@@ -29,13 +29,14 @@ import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 
 public class TestConnector implements IOConnector {
-	private String testSquareURL = ""; //TODO add the url to the test imgs
-	private String testRectURL = "";
+	private String testSquareURL = "resources/images/pix_light_blue.gif"; //TODO add the url to the test imgs
+	private String testRectURL = "resources/images/pix_light_yellow.gif";
 	
 	
 	HashMap<DataReference, Data> dataMap = new HashMap<DataReference, Data>();
 	
 	public TestConnector() {
+
 		// Create the tutorial booklet
 		DataReference reference = new DataReference(DataType.BOOKLET, 1);
 		dataMap.put(reference, new Data(

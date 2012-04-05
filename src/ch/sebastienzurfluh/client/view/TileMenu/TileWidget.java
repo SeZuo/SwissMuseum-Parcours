@@ -19,10 +19,13 @@
 
 package ch.sebastienzurfluh.client.view.TileMenu;
 
+import java.util.Collection;
+
 import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
+import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
@@ -106,6 +109,9 @@ public class TileWidget extends VerticalPanel implements EventBusListener {
 			// Reload the tiles as necessary
 			Data data = pageChangeEvent.getData();
 			switch (pageChangeEvent.getPageType()) {
+			case SUPER:
+				reloadTiles(bookletMenu, model.getMenus(DataType.BOOKLET));
+				break;
 			case BOOKLET:
 				// list the booklet's chapters
 				reloadTiles(chapterMenu, data.getReference());
@@ -123,6 +129,13 @@ public class TileWidget extends VerticalPanel implements EventBusListener {
 	private void reloadTiles (TileMenu menu, DataReference parentReference) {
 		menu.clearTiles();
 		for (MenuData menuData : model.getSubMenus(parentReference.getType(), parentReference)) {
+			menu.addTile(menuData.getSquareImgURL(), menuData.getTitle(), menuData.getDescription(), menuData.getPriorityNumber());
+		}
+	}
+	
+	private void reloadTiles (TileMenu menu, Collection<MenuData> menus) {
+		menu.clearTiles();
+		for (MenuData menuData : menus) {
 			menu.addTile(menuData.getSquareImgURL(), menuData.getTitle(), menuData.getDescription(), menuData.getPriorityNumber());
 		}
 	}

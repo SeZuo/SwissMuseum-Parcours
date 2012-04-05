@@ -19,10 +19,13 @@
 
 package ch.sebastienzurfluh.client.view.TileMenu;
 
+import java.util.HashMap;
+
 import ch.sebastienzurfluh.client.view.TileMenu.Tile.TileMode;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -36,6 +39,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class TileMenu extends VerticalPanel {
 	private String stylePrimaryName = "tileMenu";
 	private FlowPanel tilePanel;
+	private HashMap<Integer, Tile> tileOrderList;
+	Image button;
 	
 	public TileMenu(String title) {
 		setStyleName(stylePrimaryName);
@@ -44,25 +49,35 @@ public class TileMenu extends VerticalPanel {
 		Label titleLabel = new Label(title);
 		titleLabel.setStyleName(stylePrimaryName + "-" + "title");
 		firstLine.add(titleLabel);
-		Label button = new Label("details button");
+		button = new Image();
+		button.setStyleName(stylePrimaryName + "-" + "detailButton");
 		firstLine.add(button);
 		add(firstLine);
 		
 		tilePanel = new FlowPanel();
+		tileOrderList = new HashMap<Integer, Tile>();
 		tilePanel.setStyleName(stylePrimaryName + "-" + "tileList");
 		add(tilePanel);
 	}
 	
 	public void addTile(String squareImgURL, String title, String description, int priorityNumber) {
-		tilePanel.insert(new Tile(squareImgURL, title, description), priorityNumber);
+		Tile tile = new Tile(squareImgURL, title, description);
+		
+		tilePanel.add(tile);
 	}
 	
 	public void clearTiles() {
 		//TODO test that. It didn't work before... maybe use a new tilePanel.
 		tilePanel.clear();
+		tileOrderList.clear();
 	}
 	
 	public void setMode(TileMode mode) {
+		if (mode.equals(TileMode.DETAILED)) {
+			button.setUrl("resources/images/detail_mode.gif");
+		} else {
+			button.setUrl("resources/images/icon_mode.gif");
+		}
 		for (Widget widget : tilePanel) {
 			if (widget instanceof Tile) {
 				((Tile)widget).setMode(mode);

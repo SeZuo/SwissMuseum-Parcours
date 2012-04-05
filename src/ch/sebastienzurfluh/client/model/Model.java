@@ -46,6 +46,7 @@ public class Model {
 	public Collection<MenuData> getMenus(DataType type) {
 		switch(type) {
 		case BOOKLET:
+			return connector.getAllBookletMenus();
 		case CHAPTER:
 		case PAGE:
 		case RESSOURCE:
