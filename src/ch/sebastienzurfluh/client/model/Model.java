@@ -1,6 +1,26 @@
+/*
+ * Copyright 2012 Sebastien Zurfluh
+ * 
+ * This file is part of "Parcours".
+ * 
+ * "Parcours" is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * "Parcours" is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU General Public License
+ *  along with "Parcours".  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package ch.sebastienzurfluh.client.model;
 
-import ch.sebastienzurfluh.client.control.eventbus.EventBus;
+import java.util.Collection;
+
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.io.IOConnector;
 import ch.sebastienzurfluh.client.model.structure.Data;
@@ -14,14 +34,25 @@ import ch.sebastienzurfluh.client.model.structure.MenuData;
  * @author Sebastien Zurfluh
  */
 public class Model {
-	public Model(IOConnector ioConnector) {
+	IOConnector connector;
+	
+	public Model(IOConnector connector) {
+		this.connector = connector;
 	}
 
 	/**
 	 * List all the menus of the given type.
 	 */
-	public MenuData getMenus(DataType type) {
-		return null;
+	public Collection<MenuData> getMenus(DataType type) {
+		switch(type) {
+		case BOOKLET:
+		case CHAPTER:
+		case PAGE:
+		case RESSOURCE:
+		default:
+			throw new Error("Impossible switch case in getMenus");
+		}
+		
 		
 	}
     
@@ -29,23 +60,34 @@ public class Model {
 	  * Get the data associated with the given reference of a booklet, chapter, page or resource.
 	  */
 	public Data getAssociatedData(DataReference reference) {
-		return modelTree;
-		
+		switch(reference.getType()) {
+		case BOOKLET:
+			return connector.getBookletDataOf(reference.getReferenceId());
+		case CHAPTER:
+			return connector.getChapterDataOf(reference.getReferenceId());
+		case PAGE:
+			return connector.getPageDataOf(reference.getReferenceId());
+		case RESSOURCE:
+			return connector.getRessourceDataOf(reference.getReferenceId());
+		default:
+			throw new Error("Impossible default switch case.");
+		}
 	}
 	
 	/**
-	 * List all the chapter data menus associated with a given booklet.
+	 * List all the sub-menus associated with a given referenced data object.
 	 */
-	public MenuData getMenus(DataType type, DataReference reference) {
-		return null;
-		
+	public Collection<MenuData> getSubMenus(DataType type, DataReference reference) {
+		switch(reference.getType()) {
+		case BOOKLET:
+			return connector.getSubMenusOfBooklet(reference.getReferenceId());
+		case CHAPTER:
+			return connector.getSubMenusOfChapter(reference.getReferenceId());
+		case PAGE:
+			return connector.getSubMenusOfPage(reference.getReferenceId());
+		case RESSOURCE:
+		default:
+			throw new Error("Impossible switch case in getSubMenus");
+		}
 	}
-	
-	/**
-	 * List all the booklets data menus.
-	 */
-	
-	/**
-	 * List all the page data menus associated with a given chapter.
-	 */
 }
