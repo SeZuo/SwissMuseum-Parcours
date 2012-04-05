@@ -92,15 +92,15 @@ public class TileWidget extends VerticalPanel implements EventBusListener {
 				chapterMenu.setVisible(true);
 				bookletMenu.setMode(TileMode.ICON_ONLY);
 				break;
-			case SUPER:
-				pageMenu.setVisible(false);
-				chapterMenu.setVisible(false);
-				bookletMenu.setMode(TileMode.DETAILED);
-				break;
 			case BOOKLET:
 				pageMenu.setVisible(false);
 				chapterMenu.setVisible(true);
 				bookletMenu.setMode(TileMode.ICON_ONLY);
+				break;
+			case SUPER:
+				pageMenu.setVisible(false);
+				chapterMenu.setVisible(false);
+				bookletMenu.setMode(TileMode.DETAILED);
 				break;
 			default:
 				break;

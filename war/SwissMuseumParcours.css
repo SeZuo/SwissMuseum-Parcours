@@ -54,12 +54,20 @@ body {
 	
 }
 .tile-tileImage {
-	width: 50px;
-	height: 50px;
-	margin: 15px;
-	padding: 0px;
-	border: 0px;
+	width: 4em;
+	height: 4em;
+	margin: 1em;
+	padding: 0em;
+	border: 0em;
 	background-color: grey;
+}
+.tile-tileDetails {
+	width: 100%;
+	height: 4em;
+	margin: 1em;
+	padding: 0em;
+	border: 0em;
+	background-color: white;
 }
 .tile-tileTitle {
 	font-size: 2em;
@@ -67,7 +75,6 @@ body {
 	font-color: #110000;
 }
 .tile-tileDescription {
-	
 }
 .tileMenu {
 	
@@ -82,6 +89,7 @@ body {
 }
 
 .tileMenu-detailButton {
+	valign: bottom;
 	width: 3em;
 	height: 3em;
 	margin-left: 0.7em;

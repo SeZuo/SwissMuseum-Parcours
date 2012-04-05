@@ -19,6 +19,8 @@
 
 package ch.sebastienzurfluh.client.view.TileMenu;
 
+import ch.sebastienzurfluh.client.model.Config;
+
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -38,7 +40,6 @@ public class Tile extends HorizontalPanel {
 	private String stylePrimaryName = "tile";
 	
 	Tile(String squareImgURL, String title, String description) {
-		setStylePrimaryName(stylePrimaryName);
 		
 		tileImage = new Image(squareImgURL);
 		tileImage.setStyleName(stylePrimaryName + "-" + "tileImage");
@@ -46,6 +47,7 @@ public class Tile extends HorizontalPanel {
 		add(tileImage);
 		
 		details = new VerticalPanel();
+		details.setStyleName(stylePrimaryName+ "-" + "tileDetails"); 
 		Label titleLabel = new Label(title);
 		titleLabel.setStyleName(stylePrimaryName + "-" + "tileTitle");
 		details.add(titleLabel);
@@ -54,8 +56,7 @@ public class Tile extends HorizontalPanel {
 		details.add(descriptionLabel);
 		add(details);
 		
-		
-		// default mode is icon only.
+		// Choose default
 		setIconOnlyMode();
 	}
 	
@@ -63,15 +64,15 @@ public class Tile extends HorizontalPanel {
 	private static String detailedStyleDependentName = TileMode.DETAILED.toString();
 
 	private void setIconOnlyMode() {
-		setStyleDependentName(detailedStyleDependentName, false);
-		setStyleDependentName(iconOnlyStyleDependentName, true);
+		System.out.println("Tile: set icon mode");
+		setStyleName(stylePrimaryName + "-" + iconOnlyStyleDependentName);
 		
 		details.setVisible(false);
 	}
 	
 	private void setDetailedMode() {
-		setStyleDependentName(iconOnlyStyleDependentName, false);
-		setStyleDependentName(detailedStyleDependentName, true);
+		System.out.println("Tile: set detailed mode");
+		setStyleName(stylePrimaryName + "-" + detailedStyleDependentName);
 		
 		details.setVisible(true);
 	}

@@ -29,7 +29,7 @@ import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 
 public class TestConnector implements IOConnector {
-	private String testSquareURL = "resources/images/pix_light_blue.gif"; //TODO add the url to the test imgs
+	private String testSquareURL = "resources/images/pix_light_blue.gif";
 	private String testRectURL = "resources/images/pix_light_yellow.gif";
 	
 	

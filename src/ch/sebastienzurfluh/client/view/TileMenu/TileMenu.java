@@ -21,14 +21,17 @@ package ch.sebastienzurfluh.client.view.TileMenu;
 
 import java.util.HashMap;
 
+import ch.sebastienzurfluh.client.model.Config;
+import ch.sebastienzurfluh.client.view.ImageButton;
+import ch.sebastienzurfluh.client.view.TwoStatesImageButton;
 import ch.sebastienzurfluh.client.view.TileMenu.Tile.TileMode;
 
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 
 /**
@@ -40,7 +43,7 @@ public class TileMenu extends VerticalPanel {
 	private String stylePrimaryName = "tileMenu";
 	private FlowPanel tilePanel;
 	private HashMap<Integer, Tile> tileOrderList;
-	Image button;
+	TwoStatesImageButton button;
 	
 	public TileMenu(String title) {
 		setStyleName(stylePrimaryName);
@@ -49,7 +52,26 @@ public class TileMenu extends VerticalPanel {
 		Label titleLabel = new Label(title);
 		titleLabel.setStyleName(stylePrimaryName + "-" + "title");
 		firstLine.add(titleLabel);
-		button = new Image();
+		ImageButton detailStateButton = new ImageButton("resources/images/to_icon_mode.gif");
+		ImageButton iconStateButton = new ImageButton("resources/images/to_detail_mode.gif");
+		button = new TwoStatesImageButton(
+						detailStateButton,
+						iconStateButton);
+		detailStateButton.addMouseUpHandler(new MouseUpHandler() {
+			@Override
+			public void onMouseUp(MouseUpEvent event) {
+				System.out.println("Detail State Button: set icon mode.");
+				setMode(TileMode.ICON_ONLY);
+			}
+		});
+		iconStateButton.addMouseUpHandler(new MouseUpHandler() {
+			@Override
+			public void onMouseUp(MouseUpEvent event) {
+				System.out.println("Icon State Button: set detail mode.");
+				setMode(TileMode.DETAILED);
+			}
+		});
+		
 		button.setStyleName(stylePrimaryName + "-" + "detailButton");
 		firstLine.add(button);
 		add(firstLine);
@@ -60,9 +82,11 @@ public class TileMenu extends VerticalPanel {
 		add(tilePanel);
 	}
 	
+	
 	public void addTile(String squareImgURL, String title, String description, int priorityNumber) {
 		Tile tile = new Tile(squareImgURL, title, description);
-		
+		tile.setMode(currentMode);
+		tileOrderList.put(priorityNumber, tile);
 		tilePanel.add(tile);
 	}
 	
@@ -72,16 +96,20 @@ public class TileMenu extends VerticalPanel {
 		tileOrderList.clear();
 	}
 	
+	private TileMode currentMode = TileMode.ICON_ONLY;
 	public void setMode(TileMode mode) {
+		if (mode.equals(currentMode))
+			return;
+		System.out.println("TileMenu: mode change.");
+		currentMode = mode;
+		System.out.println("TileMenu: current mode: "+mode);
 		if (mode.equals(TileMode.DETAILED)) {
-			button.setUrl("resources/images/detail_mode.gif");
+			button.setState(TwoStatesImageButton.State.ONE);
 		} else {
-			button.setUrl("resources/images/icon_mode.gif");
+			button.setState(TwoStatesImageButton.State.TWO);
 		}
-		for (Widget widget : tilePanel) {
-			if (widget instanceof Tile) {
-				((Tile)widget).setMode(mode);
-			}
+		for (Tile tile : tileOrderList.values()) {
+			tile.setMode(mode);
 		}
 	}
 
