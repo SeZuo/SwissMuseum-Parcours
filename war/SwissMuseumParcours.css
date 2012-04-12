@@ -27,6 +27,11 @@ body {
 	font-size: 16px; /* no px elsewhere */
 }
 
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
 .simplePage {
 	width: 100%;
 }
@@ -53,10 +58,21 @@ body {
 .tile {
 	
 }
+.tile-iconOnly {
+	
+}
+.tile-detailed {
+	
+}
+// This is supposed to be a special decoration only visible when
+// the mouse-clicking the tile.
+.tile-iconOnly-mouseDown, .tile-detailed-mouseDown {
+	border: 1em solid red;
+}
 .tile-tileImage {
 	width: 4em;
 	height: 4em;
-	margin: 1em;
+	margin: 1em 0em 0em 1em;
 	padding: 0em;
 	border: 0em;
 	background-color: grey;
@@ -71,13 +87,19 @@ body {
 }
 .tile-tileTitle {
 	font-size: 2em;
+	margin: 0em;
+	padding: 0em;
+	border: 0em;
 	font-family: monospace;
 	font-color: #110000;
 }
 .tile-tileDescription {
+	margin: 0em;
+	padding: 0em;
+	border: 0em;
 }
 .tileMenu {
-	
+	font-size: 2.5em;
 }
 .tileMenu-title {
 	font-size: 3em;
@@ -100,4 +122,25 @@ body {
 	font-size: 1em;
 	font-family: monospace;
 	font-color: #110000;
+}
+
+/********************** WIDGET - PAGE ***************************************/
+.pageWidget {
+	padding: 1em 0em 1em 0em;
+	margin: 0;
+}
+.pageWidget-title {
+	font-size: 3em;
+    font-family: monospace;
+    color: #110000;
+}
+.pageWidget-header {
+	font-size: 2.5em;
+    font-family: monospace;
+    color: #444444;
+}
+.pageWidget-content {
+	font-size: 1em;
+    font-family: monospace;
+    color: #000000;
 }

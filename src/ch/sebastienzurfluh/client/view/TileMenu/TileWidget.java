@@ -55,13 +55,14 @@ public class TileWidget extends VerticalPanel implements EventBusListener {
 		
 		pageChangeEventBus.addListener(this);
 		
+		
 		// Create a new TileMenu for each Data Level. Booklet, Chapter, Page, Resource.
-		bookletMenu = new TileMenu("Booklets");
-		add(bookletMenu);
-		chapterMenu = new TileMenu("Chapters");
-		add(chapterMenu);
-		pageMenu = new TileMenu("Pages");
+		pageMenu = new TileMenu("Pages", pageChangeEventBus);
 		add(pageMenu);
+		chapterMenu = new TileMenu("Chapters", pageChangeEventBus);
+		add(chapterMenu);
+		bookletMenu = new TileMenu("Booklets", pageChangeEventBus);
+		add(bookletMenu);
 		
 		// Default settings
 		chapterMenu.setVisible(false);
@@ -129,14 +130,14 @@ public class TileWidget extends VerticalPanel implements EventBusListener {
 	private void reloadTiles (TileMenu menu, DataReference parentReference) {
 		menu.clearTiles();
 		for (MenuData menuData : model.getSubMenus(parentReference.getType(), parentReference)) {
-			menu.addTile(menuData.getSquareImgURL(), menuData.getTitle(), menuData.getDescription(), menuData.getPriorityNumber());
+			menu.addTile(menuData);
 		}
 	}
 	
 	private void reloadTiles (TileMenu menu, Collection<MenuData> menus) {
 		menu.clearTiles();
 		for (MenuData menuData : menus) {
-			menu.addTile(menuData.getSquareImgURL(), menuData.getTitle(), menuData.getDescription(), menuData.getPriorityNumber());
+			menu.addTile(menuData);
 		}
 	}
 }

@@ -23,7 +23,6 @@ import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestHandler;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
-import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.view.View;
@@ -58,5 +57,8 @@ public class AppPresenter {
 		
 		// Start the app
 		eventBus.fireEvent(new PageChangeEvent(DataType.SUPER, null));
+		
+		// test
+		eventBus.fireEvent(new PageChangeEvent(DataType.BOOKLET, model.getAssociatedData(new DataReference(DataType.BOOKLET, 1))));
 	}
 }

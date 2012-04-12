@@ -23,9 +23,11 @@ import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
+import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 
-import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 /**
@@ -36,21 +38,53 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Sebastien Zurfluh
  *
  */
-public class PageWidget extends DockPanel implements EventBusListener {
-	private EventBus pageChangeEventBus;
-	
+public class PageWidget extends VerticalPanel implements EventBusListener {
+	private Label title;
+	private Label header;
+	private HTML content;
+
+	private static String primaryStyleName =  "pageWidget";
 	public PageWidget(EventBus pageChangeEventBus) {
-		this.pageChangeEventBus = pageChangeEventBus;
+		pageChangeEventBus.addListener(this);
+		
+		title = new Label("");
+		title.setStyleName(primaryStyleName + "-title");
+		header = new Label("");
+		header.setStyleName(primaryStyleName + "-header");
+		content = new HTML("");
+		content.setStyleName(primaryStyleName + "-content");
+		
+		this.add(title);
+		this.add(header);
+		this.add(content);
+		
+		this.setStyleName(primaryStyleName);
 	}
 
 	@Override
 	public EventType getEventType() {
-		return EventType.PAGE_CHANGE_REQUEST;
+		return EventType.PAGE_CHANGE_EVENT;
 	}
 
 	@Override
 	public void notify(Event e) {
-		// TODO Auto-generated method stub
-		
+		if (e instanceof PageChangeEvent) {
+			PageChangeEvent pageChangeEvent = (PageChangeEvent) e;
+			switch(pageChangeEvent.getPageType()) {
+			case RESSOURCE:
+			case PAGE:
+			case CHAPTER:
+			case BOOKLET:
+				this.setVisible(true);
+				this.title.setText(pageChangeEvent.getData().getPageTitle());
+				this.header.setText(pageChangeEvent.getData().getPageContentHeader());
+				this.content.setHTML(pageChangeEvent.getData().getPageContentBody());
+				break;
+			case SUPER:
+			default:
+				this.setVisible(false);
+				break;
+			}
+		}
 	}
 }

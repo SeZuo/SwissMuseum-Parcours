@@ -21,7 +21,8 @@ package ch.sebastienzurfluh.client.view.TileMenu;
 
 import java.util.HashMap;
 
-import ch.sebastienzurfluh.client.model.Config;
+import ch.sebastienzurfluh.client.control.eventbus.EventBus;
+import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.ImageButton;
 import ch.sebastienzurfluh.client.view.TwoStatesImageButton;
 import ch.sebastienzurfluh.client.view.TileMenu.Tile.TileMode;
@@ -44,8 +45,11 @@ public class TileMenu extends VerticalPanel {
 	private FlowPanel tilePanel;
 	private HashMap<Integer, Tile> tileOrderList;
 	TwoStatesImageButton button;
+	private EventBus pageChangeEventBus;
 	
-	public TileMenu(String title) {
+	public TileMenu(String title, EventBus pageChangeEventBus) {
+		this.pageChangeEventBus = pageChangeEventBus;
+		
 		setStyleName(stylePrimaryName);
 		
 		HorizontalPanel firstLine = new HorizontalPanel();
@@ -83,10 +87,10 @@ public class TileMenu extends VerticalPanel {
 	}
 	
 	
-	public void addTile(String squareImgURL, String title, String description, int priorityNumber) {
-		Tile tile = new Tile(squareImgURL, title, description);
+	public void addTile(MenuData menuData) {
+		Tile tile = new Tile(menuData, pageChangeEventBus);
 		tile.setMode(currentMode);
-		tileOrderList.put(priorityNumber, tile);
+		tileOrderList.put(menuData.getPriorityNumber(), tile);
 		tilePanel.add(tile);
 	}
 	
