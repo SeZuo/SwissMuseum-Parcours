@@ -1,0 +1,11 @@
+# Auto generated backups #
+*~
+
+# Some gwt speicial folders #
+.project
+.classpath
+.settings
+.gwt
+metadata/
+gwt-unitCache/
+war/WEB-INF/
