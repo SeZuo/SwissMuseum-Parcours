@@ -35,22 +35,22 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class HierarchyWidget extends HorizontalPanel implements EventBusListener {
-	private EventBus pageChangeEventBus;
+	private EventBus eventBus;
 	
-	public HierarchyWidget(EventBus pageChangeEventBus) {
-		this.pageChangeEventBus = pageChangeEventBus;
+	public HierarchyWidget(EventBus eventBus) {
+		this.eventBus = eventBus;
 		
-		pageChangeEventBus.addListener(this);
+		eventBus.addListener(this);
 	}
 
 	@Override
 	public EventType getEventType() {
-		return EventType.PAGE_CHANGE_REQUEST;
+		return EventType.PAGE_CHANGE_EVENT;
 	}
 
 	@Override
 	public void notify(Event e) {
-		// TODO Auto-generated method stub
+		// TODO update this panel with the new information.
 		
 	}
 

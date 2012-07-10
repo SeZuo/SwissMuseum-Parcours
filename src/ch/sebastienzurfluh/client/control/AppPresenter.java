@@ -20,7 +20,7 @@
 package ch.sebastienzurfluh.client.control;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
-import ch.sebastienzurfluh.client.control.eventbus.PageRequestHandler;
+import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.model.Model;
@@ -43,22 +43,28 @@ public class AppPresenter {
 		this.parent = parent;
 	}
 
+	/**
+	 * Loads and display the application in the panel defined at construction.
+	 */
 	public void start() {
 		eventBus = new EventBus();
 
 		model = ModelFactory.createModel(ModelFactory.Connector.TEST);
 		
 		
-		PageRequestHandler pageRequestHandler = new PageRequestHandler(eventBus, model);
+		PageRequestEventHandler pageRequestHandler = new PageRequestEventHandler(eventBus, model);
 		
 		View view = new View(eventBus, pageRequestHandler, model);
 		
 		parent.add(view);
 		
 		// Start the app
-		eventBus.fireEvent(new PageChangeEvent(DataType.SUPER, null));
+//		eventBus.fireEvent(new PageChangeEvent(DataType.SUPER, null));
 		
 		// test
 		eventBus.fireEvent(new PageChangeEvent(DataType.BOOKLET, model.getAssociatedData(new DataReference(DataType.BOOKLET, 1))));
+		eventBus.fireEvent(new PageChangeEvent(DataType.CHAPTER, model.getAssociatedData(new DataReference(DataType.CHAPTER, 1))));
+		eventBus.fireEvent(new PageChangeEvent(DataType.PAGE, model.getAssociatedData(new DataReference(DataType.PAGE, 1))));
+		eventBus.fireEvent(new PageChangeEvent(DataType.SUPER, null));
 	}
 }

@@ -1,5 +1,6 @@
 package ch.sebastienzurfluh.client.view.MenuInterface;
 
-public interface MenuWidget {
+import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
 
+public interface MenuWidget extends EventBusListener {
 }

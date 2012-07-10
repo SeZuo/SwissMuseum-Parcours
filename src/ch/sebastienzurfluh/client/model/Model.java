@@ -58,7 +58,7 @@ public class Model {
 	}
     
     /**
-	  * Get the data associated with the given reference of a booklet, chapter, page or resource.
+	  * @return data associated with the given reference of a booklet, chapter, page or resource.
 	  */
 	public Data getAssociatedData(DataReference reference) {
 		switch(reference.getType()) {

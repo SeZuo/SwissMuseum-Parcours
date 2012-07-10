@@ -19,21 +19,56 @@
 
 package ch.sebastienzurfluh.client.view.Navigation;
 
-import com.google.gwt.user.client.ui.Label;
+import java.util.HashMap;
+
+import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.view.MenuInterface.MenuList;
+import ch.sebastienzurfluh.client.view.MenuInterface.PageRequestHandler;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * This widget gives a way to navigate (next/previous) between pages. 
  * @author Sebastien Zurfluh
  */
-public class NavigationSlider extends SimplePanel {
-	public NavigationSlider() {
+public class NavigationSlider extends SimplePanel implements MenuList {
+	private HorizontalPanel tilePanel;
+	private HashMap<Integer, NavigationItem> tileOrderList;
+	private PageRequestHandler pageRequestHandler;
+	
+	public NavigationSlider(String string, PageRequestHandler pageRequestHandler) {
+		this.pageRequestHandler = pageRequestHandler;
+		
 		setStyleName("navigationSlider");
 		
-		// TODO navigation slider implementation
-		Label notDoneYet = new Label("This widget hasn't been done yet");
+		tilePanel = new HorizontalPanel();
+		tileOrderList = new HashMap<Integer, NavigationItem>();
 		
-		setWidget(notDoneYet);
+		setWidget(tilePanel);
+	}
+	
+	//TODO find another way to do that.
+	private final static Integer FIRST_TILE_PRIORITY_NUMBER = -1; 
+	public void addFirstTile(MenuData menuData) {
+		addTileOnPriority(menuData, FIRST_TILE_PRIORITY_NUMBER);
+	}
+	
+	public void addTile(MenuData menuData) {
+		addTileOnPriority(menuData, menuData.getPriorityNumber());
+	}
+	
+	private void addTileOnPriority(MenuData menuData, Integer priority) {
+		NavigationItem tile = new NavigationItem(menuData);
+		tile.addClickHandler(pageRequestHandler);
+		tileOrderList.put(priority, tile);
+		// TODO order the tiles in the menu according to their priority number
+		tilePanel.add(tile);
+	}
+	
+	public void clearTiles() {
+		//TODO test that. It didn't work before... maybe use a new tilePanel.
+		tilePanel.clear();
+		tileOrderList.clear();
 	}
 
 }

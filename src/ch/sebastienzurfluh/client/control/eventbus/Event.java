@@ -20,12 +20,15 @@
 package ch.sebastienzurfluh.client.control.eventbus;
 
 /**
- * This is the superclass for events using {@link EventBus}
+ * This is the superclass for events using {@link EventBus}.
  * @author Sebastien Zurfluh
  *
  */
 public abstract class Event {
 	
+	/**
+	 * This enum lists all possible UI (View) event types. 
+	 */
 	public enum EventType {
 		// Fired when a new page is requested.
 		PAGE_CHANGE_REQUEST,
@@ -33,6 +36,10 @@ public abstract class Event {
 		PAGE_CHANGE_EVENT;
 	}
 
+	/**
+	 * An event has one only event type which you can fetch with this method.
+	 * @return get the event's type
+	 */
 	public abstract EventType getType();
 
 }

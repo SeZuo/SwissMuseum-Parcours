@@ -19,11 +19,34 @@
 
 package ch.sebastienzurfluh.client.view.Navigation;
 
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.Image;
+
+import ch.sebastienzurfluh.client.model.structure.DataReference;
+import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.view.MenuInterface.MenuButton;
+
 /**
  * This is an item of the {@link NavigationSlider}.
  * @author Sebastien Zurfluh
  *
  */
-public class NavigationItem {
+public class NavigationItem extends FocusPanel implements MenuButton {
+	private Image tileImage;
+	private DataReference menuReference;
+	private String stylePrimaryName = "navigationItem";
+	
+	public NavigationItem(MenuData menuData) {
+		this.menuReference = menuData.getReference();
+		
+		tileImage = new Image(menuData.getRectangleImgURL());
+		tileImage.setStyleName(stylePrimaryName + "-" + "image");
+		tileImage.setAltText(menuData.getTitle());
+		
+		setWidget(tileImage);
+	}
 
+	public DataReference getReference() {
+		return menuReference;
+	}
 }

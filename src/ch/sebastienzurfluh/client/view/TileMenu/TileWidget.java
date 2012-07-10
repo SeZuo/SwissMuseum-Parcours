@@ -24,13 +24,14 @@ import java.util.Collection;
 import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
-import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.view.MenuInterface.MenuWidget;
+import ch.sebastienzurfluh.client.view.MenuInterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.TileMenu.Tile.TileMode;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -41,30 +42,36 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Sebastien Zurfluh
  *
  */
-public class TileWidget extends VerticalPanel implements EventBusListener {
+public class TileWidget extends VerticalPanel implements MenuWidget {
 	private String stylePrimaryName = "tileWidget";
 	private TileMenu bookletMenu;
 	private TileMenu chapterMenu;
 	private TileMenu pageMenu;
 	private Model model;
 	
-	public TileWidget(EventBus pageChangeEventBus, Model model) {
+	public TileWidget(EventBus pageChangeEventBus, PageRequestHandler pageRequestHandler, Model model) {
 		this.model = model;
 		
 		setStyleName(stylePrimaryName);
 		
+		initialise(pageRequestHandler);
+		
+		setDefaults();
+		
 		pageChangeEventBus.addListener(this);
-		
-		
-		// Create a new TileMenu for each Data Level. Booklet, Chapter, Page, Resource.
-		pageMenu = new TileMenu("Pages", pageChangeEventBus);
+	}
+	
+	private void initialise(PageRequestHandler pageRequestHandler) {
+		pageMenu = new TileMenu("Pages", pageRequestHandler);
 		add(pageMenu);
-		chapterMenu = new TileMenu("Chapters", pageChangeEventBus);
+		chapterMenu = new TileMenu("Chapters", pageRequestHandler);
 		add(chapterMenu);
-		bookletMenu = new TileMenu("Booklets", pageChangeEventBus);
+		bookletMenu = new TileMenu("Booklets", pageRequestHandler);
 		add(bookletMenu);
-		
-		// Default settings
+	}
+	
+	private void setDefaults() {
+
 		chapterMenu.setVisible(false);
 		pageMenu.setVisible(false);
 	}
@@ -89,7 +96,7 @@ public class TileWidget extends VerticalPanel implements EventBusListener {
 				bookletMenu.setMode(TileMode.ICON_ONLY);
 				break;
 			case CHAPTER:
-				pageMenu.setVisible(false);
+				pageMenu.setVisible(true);
 				chapterMenu.setVisible(true);
 				bookletMenu.setMode(TileMode.ICON_ONLY);
 				break;

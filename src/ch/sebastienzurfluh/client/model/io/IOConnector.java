@@ -40,9 +40,21 @@ public interface IOConnector {
 
 	Data getRessourceDataOf(int referenceId);
 
+	/**
+	 * @param referenceId of the booklet.
+	 * @return menus of the booklet's chapters, an empty one if there were none.
+	 */
 	Collection<MenuData> getSubMenusOfBooklet(int referenceId);
 
+	/**
+	 * @param referenceId of the chapter.
+	 * @return menus of the chapter's pages, an empty one if there were none.
+	 */
 	Collection<MenuData> getSubMenusOfChapter(int referenceId);
 
+	/**
+	 * @param referenceId of the page.
+	 * @return menus of the page's resources, an empty one if there were none.
+	 */
 	Collection<MenuData> getSubMenusOfPage(int referenceId);
 }

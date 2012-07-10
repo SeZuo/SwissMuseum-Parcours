@@ -19,15 +19,10 @@
 
 package ch.sebastienzurfluh.client.view.TileMenu;
 
-import ch.sebastienzurfluh.client.control.eventbus.EventBus;
-import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.view.MenuInterface.MenuButton;
 
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -42,23 +37,21 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Sebastien Zurfluh
  *
  */
-public class Tile extends FocusPanel implements MouseDownHandler, MouseUpHandler {
+public class Tile extends FocusPanel implements MenuButton {
 	private Image tileImage;
 	private VerticalPanel details;
 	private String stylePrimaryName = "tile";
 	
-	private HorizontalPanel mainPanel = new HorizontalPanel();
-	private EventBus eventBus;
+	private HorizontalPanel tilePanel = new HorizontalPanel();
 	private DataReference menuReference;
 	
-	Tile(MenuData menuData, EventBus eventBus) {
-		this.eventBus = eventBus;
+	Tile(MenuData menuData) {
 		this.menuReference = menuData.getReference();
 
 		tileImage = new Image(menuData.getSquareImgURL());
 		tileImage.setStyleName(stylePrimaryName + "-" + "tileImage");
 		tileImage.setAltText(menuData.getTitle());
-		mainPanel.add(tileImage);
+		tilePanel.add(tileImage);
 		
 		details = new VerticalPanel();
 		details.setStyleName(stylePrimaryName+ "-" + "tileDetails"); 
@@ -68,9 +61,9 @@ public class Tile extends FocusPanel implements MouseDownHandler, MouseUpHandler
 		Label descriptionLabel = new Label(menuData.getDescription());
 		descriptionLabel.setStyleName(stylePrimaryName + "-" + "tileDescription");
 		details.add(descriptionLabel);
-		mainPanel.add(details);
+		tilePanel.add(details);
 		
-		setWidget(mainPanel);
+		setWidget(tilePanel);
 		
 		// Choose default
 		setIconOnlyMode();
@@ -117,22 +110,8 @@ public class Tile extends FocusPanel implements MouseDownHandler, MouseUpHandler
 			return name;
 		}
 	}
-	
-	private String mouseDownStyleNameExtension =  "-mouseDown"; 
-	@Override
-	public void onMouseUp(MouseUpEvent event) {
-		setStyleName(getStyleName().replace(mouseDownStyleNameExtension, ""));
-		
-		System.out.println("Firing page change event.");
-		eventBus.fireEvent(new PageChangeRequest(this.getReference()));
-	}
 
-	private DataReference getReference() {
+	public DataReference getReference() {
 		return menuReference;
-	}
-
-	@Override
-	public void onMouseDown(MouseDownEvent event) {
-		setStyleName(getStyleName() + mouseDownStyleNameExtension);
 	}
 }

@@ -32,6 +32,13 @@ public class PageChangeEvent extends Event {
 	private DataType pageType;
 	private Data data;
 	
+	/**
+	 * This event is used to notify of a page change.
+	 * It is used by autonomous widgets or part of the code to
+	 * adapt to the change.
+	 * @param pageType
+	 * @param data
+	 */
 	public PageChangeEvent(DataType pageType, Data data) {
 		this.pageType = pageType;
 		this.data = data;
@@ -42,10 +49,21 @@ public class PageChangeEvent extends Event {
 		return EventType.PAGE_CHANGE_EVENT;
 	}
 	
+	/**
+	 * We have several page type corresponding to the nature of
+	 * the data we want to display. When notified about a page
+	 * change, it is appropriate to tell about the nature of
+	 * this change, hence of the page type. 
+	 * @return the type of data the page contains.
+	 */
 	public DataType getPageType() {
 		return pageType;
 	}
 	
+	/**
+	 * 
+	 * @return the data of the new page to display.
+	 */
 	public Data getData() {
 		return data;
 	}

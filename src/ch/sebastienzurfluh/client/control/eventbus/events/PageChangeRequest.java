@@ -29,13 +29,21 @@ import ch.sebastienzurfluh.client.model.structure.DataReference;
  *
  */
 public class PageChangeRequest extends Event {
-	DataReference pageId;
+	private DataReference pageId;
 	
+	/**
+	 * Create an event to notify of a page change request.
+	 * @param pageId the unique reference to the wanted page.
+	 */
 	public PageChangeRequest(DataReference pageId) {
 		this.pageId = pageId;
 	}
 
-	public DataReference getPageId() {
+	/**
+	 * 
+	 * @return the page's unique id.
+	 */
+	public DataReference getPageReference() {
 		return pageId;
 	}
 

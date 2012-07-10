@@ -21,14 +21,11 @@ package ch.sebastienzurfluh.client.view.TileMenu;
 
 import java.util.HashMap;
 
-import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
-import ch.sebastienzurfluh.client.view.ImageButton;
-import ch.sebastienzurfluh.client.view.TwoStatesImageButton;
+import ch.sebastienzurfluh.client.view.MenuInterface.MenuList;
+import ch.sebastienzurfluh.client.view.MenuInterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.TileMenu.Tile.TileMode;
 
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -40,15 +37,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Sebastien Zurfluh
  *
  */
-public class TileMenu extends VerticalPanel {
+public class TileMenu extends VerticalPanel implements MenuList {
 	private String stylePrimaryName = "tileMenu";
 	private FlowPanel tilePanel;
 	private HashMap<Integer, Tile> tileOrderList;
-	TwoStatesImageButton button;
-	private EventBus pageChangeEventBus;
+	private ModeSwapButton button;
+	private PageRequestHandler pageRequestHandler;
 	
-	public TileMenu(String title, EventBus pageChangeEventBus) {
-		this.pageChangeEventBus = pageChangeEventBus;
+	public TileMenu(String title, PageRequestHandler pageRequestHandler) {
+		this.pageRequestHandler = pageRequestHandler;
 		
 		setStyleName(stylePrimaryName);
 		
@@ -56,27 +53,11 @@ public class TileMenu extends VerticalPanel {
 		Label titleLabel = new Label(title);
 		titleLabel.setStyleName(stylePrimaryName + "-" + "title");
 		firstLine.add(titleLabel);
-		ImageButton detailStateButton = new ImageButton("resources/images/to_icon_mode.gif");
-		ImageButton iconStateButton = new ImageButton("resources/images/to_detail_mode.gif");
-		button = new TwoStatesImageButton(
-						detailStateButton,
-						iconStateButton);
-		detailStateButton.addMouseUpHandler(new MouseUpHandler() {
-			@Override
-			public void onMouseUp(MouseUpEvent event) {
-				System.out.println("Detail State Button: set icon mode.");
-				setMode(TileMode.ICON_ONLY);
-			}
-		});
-		iconStateButton.addMouseUpHandler(new MouseUpHandler() {
-			@Override
-			public void onMouseUp(MouseUpEvent event) {
-				System.out.println("Icon State Button: set detail mode.");
-				setMode(TileMode.DETAILED);
-			}
-		});
 		
-		button.setStyleName(stylePrimaryName + "-" + "detailButton");
+		button = new ModeSwapButton(stylePrimaryName, this);
+
+		setStyleName(stylePrimaryName + "-" + "detailButton");
+		
 		firstLine.add(button);
 		add(firstLine);
 		
@@ -86,11 +67,12 @@ public class TileMenu extends VerticalPanel {
 		add(tilePanel);
 	}
 	
-	
 	public void addTile(MenuData menuData) {
-		Tile tile = new Tile(menuData, pageChangeEventBus);
+		Tile tile = new Tile(menuData);
+		tile.addClickHandler(pageRequestHandler);
 		tile.setMode(currentMode);
 		tileOrderList.put(menuData.getPriorityNumber(), tile);
+		// TODO order the tiles in the menu according to their priority number
 		tilePanel.add(tile);
 	}
 	
@@ -116,5 +98,4 @@ public class TileMenu extends VerticalPanel {
 			tile.setMode(mode);
 		}
 	}
-
 }

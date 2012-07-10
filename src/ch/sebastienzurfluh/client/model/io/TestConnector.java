@@ -29,8 +29,12 @@ import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 
 public class TestConnector implements IOConnector {
-	private String testSquareURL = "resources/images/pix_light_blue.gif";
-	private String testRectURL = "resources/images/pix_light_yellow.gif";
+	private String testSquareURLBooklet = "resources/images/pix_light_yellow.gif";
+	private String testSquareURLChapter = "resources/images/pix_light_blue.gif";
+	private String testSquareURLPage = "resources/images/pix_light_green.gif";
+	private String testRectURLBooklet = "resources/images/pix_light_yellow.gif";
+	private String testRectURLChapter = "resources/images/pix_light_blue.gif";
+	private String testRectURLPage = "resources/images/pix_light_green.gif";
 	
 	
 	HashMap<DataReference, Data> dataMap = new HashMap<DataReference, Data>();
@@ -48,8 +52,8 @@ public class TestConnector implements IOConnector {
 				"To coninue to the next step of this tutorial, choose the first image in the \"Chapter\" menu below",
 				"Tutorial",
 				"This booklet explains how to use the application.",
-				testSquareURL,
-				testRectURL));
+				testSquareURLBooklet,
+				testRectURLBooklet));
 		
 		// Create the first chapter
 		DataReference reference2 = new DataReference(DataType.CHAPTER, 1);
@@ -66,15 +70,15 @@ public class TestConnector implements IOConnector {
 						+ "menu.",
 				"Step 1",
 				"Learn how to use the navigation bars.",
-				testSquareURL,
-				testRectURL));
+				testSquareURLChapter,
+				testRectURLChapter));
 		
 		// Create the second chapter
 		DataReference reference3 = new DataReference(DataType.CHAPTER, 2);
 		dataMap.put(reference3, new Data(
 				reference3,
 				DataType.CHAPTER,
-				1,
+				2,
 				"Step 2",
 				"You've just changed chapter!",
 				"You can use this navigation menu like you would turn a page of a book, except that depending on the"
@@ -85,53 +89,49 @@ public class TestConnector implements IOConnector {
 						+ "position in the booklet. To continue, click this <link>link</link>",
 				"Step 2",
 				"Learn how to follow text links.",
-				testSquareURL,
-				testRectURL));
+				testSquareURLChapter,
+				testRectURLChapter));
 		
 		// Create the third chapter
-				DataReference reference4 = new DataReference(DataType.PAGE, 1);
-				dataMap.put(reference4, new Data(
-						reference4,
-						DataType.PAGE,
-						1,
-						"Step 3",
-						"This is a page.",
-						"The link you've just clicked sent you here. This page belongs to the same chapter you were in. <br>" +
-								"Sometimes, this is not the case and a link in the page will send you to another chapter or" +
-								" another booklet. Don't worry you can always go back, using the back button on your device " +
-								"[img].<br> Go to the next page by either using the navigation menu (above) or the tile menu (below).",
-						"Step 3",
-						"Try it by yourself.",
-						testSquareURL,
-						testRectURL));
+		DataReference reference4 = new DataReference(DataType.PAGE, 1);
+		dataMap.put(reference4, new Data(
+				reference4,
+				DataType.PAGE,
+				1,
+				"Step 3",
+				"This is a page.",
+				"The link you've just clicked sent you here. This page belongs to the same chapter you were in. <br>" +
+						"Sometimes, this is not the case and a link in the page will send you to another chapter or" +
+						" another booklet. Don't worry you can always go back, using the back button on your device " +
+						"[img].<br> Go to the next page by either using the navigation menu (above) or the tile menu (below).",
+				"Step 3",
+				"Try it by yourself.",
+				testSquareURLPage,
+				testRectURLPage));
 	}
 
 	@Override
 	public Data getBookletDataOf(int referenceId) {
-		DataReference dataReference = new DataReference(DataType.BOOKLET, referenceId);
-		
-		return dataMap.get(dataReference);
+		return getDataOf(DataType.BOOKLET, referenceId);
 	}
 	
 	@Override
 	public Data getChapterDataOf(int referenceId) {
-		DataReference dataReference = new DataReference(DataType.CHAPTER, referenceId);
-		
-		return dataMap.get(dataReference);
+		return getDataOf(DataType.CHAPTER, referenceId);
 	}
 
 	@Override
 	public Data getPageDataOf(int referenceId) {
-		DataReference dataReference = new DataReference(DataType.PAGE, referenceId);
-		
-		return dataMap.get(dataReference);
+		return getDataOf(DataType.PAGE, referenceId);
 	}
 
 	@Override
-	public Data getRessourceDataOf(int referenceId) {
-		DataReference dataReference = new DataReference(DataType.RESSOURCE, referenceId);
-		
-		return dataMap.get(dataReference);
+	public Data getRessourceDataOf(int referenceId) {		
+		return getDataOf(DataType.RESSOURCE, referenceId);
+	}
+	
+	private Data getDataOf(DataType type, int referenceId) {
+		return dataMap.get(new DataReference(type, referenceId));
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class TestConnector implements IOConnector {
 			menus.add(dataMap.get(new DataReference(DataType.CHAPTER, 2)).getMenu());
 		}
 		
-		return menus.isEmpty() ? null : menus;
+		return menus;
 	}
 
 	@Override
@@ -152,12 +152,12 @@ public class TestConnector implements IOConnector {
 			menus.add(dataMap.get(new DataReference(DataType.PAGE, 1)).getMenu());
 		}
 		
-		return menus.isEmpty() ? null : menus;
+		return menus;
 	}
 
 	@Override
 	public LinkedList<MenuData> getSubMenusOfPage(int referenceId) {
-		return null;
+		return new LinkedList<MenuData>();
 	}
 
 	@Override

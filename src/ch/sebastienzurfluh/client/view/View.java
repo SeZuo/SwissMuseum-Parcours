@@ -19,9 +19,11 @@
 
 package ch.sebastienzurfluh.client.view;
 
+import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
-import ch.sebastienzurfluh.client.control.eventbus.PageRequestHandler;
+import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.view.MenuInterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.Navigation.NavigationWidget;
 import ch.sebastienzurfluh.client.view.TileMenu.TileWidget;
 
@@ -34,23 +36,25 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Sebastien Zurfluh
  */
 public class View extends SimplePanel {
-	public View(EventBus eventBus, PageRequestHandler pageRequestHandler, Model model) {
+	public View(EventBus eventBus, PageRequestEventHandler pageRequestEventHandler, Model model) {
 		assert eventBus != null;
 		assert model != null;
-		assert pageRequestHandler != null;
+		assert pageRequestEventHandler != null;
 		
 		
 		// Setup main panel
 		VerticalPanel mainPanel = new VerticalPanel();
-		mainPanel.setWidth("100%");
 		mainPanel.setStyleName("mainPanel");
+		
+		// Shared handler for page requests
+		PageRequestHandler pageRequestHandler = new PageRequestHandler(eventBus);
 		
 		
 		// Create main sections
-		NavigationWidget navigation = new NavigationWidget(eventBus);
+		NavigationWidget navigation = new NavigationWidget(eventBus, pageRequestHandler, model);
 		HierarchyWidget hierarchy = new HierarchyWidget(eventBus);
 		PageWidget page = new PageWidget(eventBus);
-		TileWidget tileMenu = new TileWidget(eventBus, model);
+		TileWidget tileMenu = new TileWidget(eventBus, pageRequestHandler, model);
 		FooterWidget footer = new FooterWidget();
 		
 		// Add main sections to main panel
@@ -61,5 +65,8 @@ public class View extends SimplePanel {
 		mainPanel.add(footer);
 		
 		setWidget(mainPanel);
+		
+		// Add some functionalities
+		ScrollToPanelOnEvent.addRule(eventBus, page, EventType.PAGE_CHANGE_EVENT);
 	}
 }
