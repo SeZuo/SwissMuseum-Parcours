@@ -9,3 +9,10 @@
 metadata/
 gwt-unitCache/
 war/WEB-INF/
+src/META-INF/
+src/log4j.properties
+war/SwissMuseumParcours/*cache.*
+war/SwissMuseumParcours/hosted.html
+war/SwissMuseumParcours/junit-standards.html
+war/SwissMuseumParcours/junit.html
+war/SwissMuseumParcours/.junit_symbolMaps/

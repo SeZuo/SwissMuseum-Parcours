@@ -49,7 +49,7 @@ public class Model {
 			return connector.getAllBookletMenus();
 		case CHAPTER:
 		case PAGE:
-		case RESSOURCE:
+		case RESOURCE:
 		default:
 			throw new Error("Impossible switch case in getMenus");
 		}
@@ -68,7 +68,7 @@ public class Model {
 			return connector.getChapterDataOf(reference.getReferenceId());
 		case PAGE:
 			return connector.getPageDataOf(reference.getReferenceId());
-		case RESSOURCE:
+		case RESOURCE:
 			return connector.getRessourceDataOf(reference.getReferenceId());
 		default:
 			throw new Error("Impossible default switch case.");
@@ -86,9 +86,17 @@ public class Model {
 			return connector.getSubMenusOfChapter(reference.getReferenceId());
 		case PAGE:
 			return connector.getSubMenusOfPage(reference.getReferenceId());
-		case RESSOURCE:
+		case RESOURCE:
 		default:
 			throw new Error("Impossible switch case in getSubMenus");
 		}
+	}
+	
+	/**
+	 * @param reference is the child's reference
+	 * @return the parent reference
+	 */
+	public Data getParentOf(DataReference reference) {
+		return connector.getParentOf(reference);
 	}
 }

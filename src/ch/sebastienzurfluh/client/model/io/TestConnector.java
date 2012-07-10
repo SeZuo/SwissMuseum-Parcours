@@ -127,7 +127,7 @@ public class TestConnector implements IOConnector {
 
 	@Override
 	public Data getRessourceDataOf(int referenceId) {		
-		return getDataOf(DataType.RESSOURCE, referenceId);
+		return getDataOf(DataType.RESOURCE, referenceId);
 	}
 	
 	private Data getDataOf(DataType type, int referenceId) {
@@ -166,6 +166,33 @@ public class TestConnector implements IOConnector {
 		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
 		
 		return booklets;
+	}
+
+	@Override
+	public Data getParentOf(DataReference childReference) {
+		switch(childReference.getType()) {
+		case RESOURCE:
+		case PAGE:
+			switch(childReference.getReferenceId()) {
+			case 1:
+				return getChapterDataOf(2);
+			}
+			break;
+		case CHAPTER:
+			switch(childReference.getReferenceId()) {
+			case 1:
+			case 2:
+				return getBookletDataOf(1);
+			}
+			break;
+		case BOOKLET:
+			break;
+		case SUPER:
+			break;
+		default:
+			break;
+		}
+		return null;
 	}
 
 }

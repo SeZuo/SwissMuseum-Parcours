@@ -71,7 +71,7 @@ public class PageWidget extends VerticalPanel implements EventBusListener {
 		if (e instanceof PageChangeEvent) {
 			PageChangeEvent pageChangeEvent = (PageChangeEvent) e;
 			switch(pageChangeEvent.getPageType()) {
-			case RESSOURCE:
+			case RESOURCE:
 			case PAGE:
 			case CHAPTER:
 			case BOOKLET:

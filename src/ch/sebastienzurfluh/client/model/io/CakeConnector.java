@@ -22,6 +22,7 @@ package ch.sebastienzurfluh.client.model.io;
 import java.util.Collection;
 
 import ch.sebastienzurfluh.client.model.structure.Data;
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 
 /**
@@ -71,6 +72,11 @@ public class CakeConnector implements IOConnector {
 
 	@Override
 	public Collection<MenuData> getSubMenusOfPage(int referenceId) {
+		return null;
+	}
+
+	@Override
+	public Data getParentOf(DataReference childReference) {
 		return null;
 	}
 }

@@ -19,13 +19,18 @@
 
 package ch.sebastienzurfluh.client.view;
 
+import java.util.Stack;
+
 import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
+import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
+import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
-
+import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.structure.Data;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * Hierarchy widget gives a way to go up in the booklet's hierarchy. For instance, when looking at a page, the user
@@ -36,9 +41,20 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class HierarchyWidget extends HorizontalPanel implements EventBusListener {
 	private EventBus eventBus;
+	private Data currentPage;
+	private Label label;
 	
-	public HierarchyWidget(EventBus eventBus) {
+	private String separator = " > ";
+	private Model model;
+	
+	public HierarchyWidget(EventBus eventBus, Model model) {
 		this.eventBus = eventBus;
+		this.model = model;
+		
+		label = new Label();
+		this.add(label);
+		
+		this.setStyleName("hierarchyWidget");
 		
 		eventBus.addListener(this);
 	}
@@ -50,8 +66,48 @@ public class HierarchyWidget extends HorizontalPanel implements EventBusListener
 
 	@Override
 	public void notify(Event e) {
-		// TODO update this panel with the new information.
-		
+		if(e instanceof PageChangeEvent) {
+			PageChangeEvent pageChangeEvent = (PageChangeEvent) e;
+			
+			if(pageChangeEvent.getPageType() == DataType.SUPER) {
+				this.setVisible(false);
+			} else {
+				this.setVisible(true);
+			}
+			
+			currentPage = pageChangeEvent.getData();
+			int depth = 0;
+			StringBuilder labelContent = new StringBuilder();
+			
+			
+			switch (pageChangeEvent.getPageType()) {
+			case PAGE:
+				depth++;
+			case CHAPTER:
+				depth++;
+			case BOOKLET:
+				depth++;
+			case SUPER:
+			default:
+			}
+			
+			Stack<String> stack = new Stack<String>();
+			
+			while(depth > 0) {
+				stack.push(currentPage.getPageTitle());
+				currentPage = model.getParentOf(currentPage.getReference());
+				depth--;
+			}
+			
+			while(!stack.isEmpty()) {
+				labelContent.append(separator);
+				labelContent.append(stack.pop());
+			}
+			if (labelContent.length() == 0) {
+				return;
+			}
+			label.setText(labelContent.substring(separator.length()));
+		}
 	}
 
 }

@@ -25,6 +25,7 @@
 
 body {
 	font-size: 16px; /* no px elsewhere */
+	font-family: sans-serif;
 }
 
 table {
@@ -45,6 +46,8 @@ table {
 
 /********************** MENUS **************************************************/
 
+				
+
 /********************** MENUS - NAVIGATION *************************************/
 .navigationItem {
 	
@@ -63,6 +66,12 @@ table {
 	
 }
 .navigaionWidget {
+	
+}
+
+/********************** MENUS - HIERARCHY **************************************/
+
+.hierarchyWidget {
 	
 }
 

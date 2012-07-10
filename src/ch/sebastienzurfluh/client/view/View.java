@@ -52,7 +52,7 @@ public class View extends SimplePanel {
 		
 		// Create main sections
 		NavigationWidget navigation = new NavigationWidget(eventBus, pageRequestHandler, model);
-		HierarchyWidget hierarchy = new HierarchyWidget(eventBus);
+		HierarchyWidget hierarchy = new HierarchyWidget(eventBus, model);
 		PageWidget page = new PageWidget(eventBus);
 		TileWidget tileMenu = new TileWidget(eventBus, pageRequestHandler, model);
 		FooterWidget footer = new FooterWidget();

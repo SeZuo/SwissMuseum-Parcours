@@ -22,6 +22,7 @@ package ch.sebastienzurfluh.client.model.io;
 import java.util.Collection;
 
 import ch.sebastienzurfluh.client.model.structure.Data;
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 
 /**
@@ -57,4 +58,11 @@ public interface IOConnector {
 	 * @return menus of the page's resources, an empty one if there were none.
 	 */
 	Collection<MenuData> getSubMenusOfPage(int referenceId);
+
+	/**
+	 * @param childReference of the parent
+	 * @return the parent, null if there were none.
+	 */
+	Data getParentOf(DataReference childReference);
+	
 }
