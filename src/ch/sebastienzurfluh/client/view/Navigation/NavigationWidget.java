@@ -22,17 +22,16 @@ package ch.sebastienzurfluh.client.view.Navigation;
 import java.util.Collection;
 
 import ch.sebastienzurfluh.client.control.eventbus.Event;
-import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
+import ch.sebastienzurfluh.client.control.eventbus.EventBus;
+import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
-import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.MenuInterface.PageRequestHandler;
-import ch.sebastienzurfluh.client.view.TileMenu.TileMenu;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
 

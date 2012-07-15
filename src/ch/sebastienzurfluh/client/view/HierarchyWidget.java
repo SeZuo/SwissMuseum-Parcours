@@ -29,8 +29,11 @@ import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
+
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Hierarchy widget gives a way to go up in the booklet's hierarchy. For instance, when looking at a page, the user
@@ -39,20 +42,16 @@ import com.google.gwt.user.client.ui.Label;
  * @author Sebastien Zurfluh
  *
  */
-public class HierarchyWidget extends HorizontalPanel implements EventBusListener {
-	private EventBus eventBus;
+public class HierarchyWidget extends SimplePanel implements EventBusListener {
 	private Data currentPage;
-	private Label label;
+	private EventBus eventBus;
 	
-	private String separator = " > ";
+	private Label separator = new Label(" > ");
 	private Model model;
 	
 	public HierarchyWidget(EventBus eventBus, Model model) {
-		this.eventBus = eventBus;
 		this.model = model;
-		
-		label = new Label();
-		this.add(label);
+		this.eventBus = eventBus;
 		
 		this.setStyleName("hierarchyWidget");
 		
@@ -77,7 +76,7 @@ public class HierarchyWidget extends HorizontalPanel implements EventBusListener
 			
 			currentPage = pageChangeEvent.getData();
 			int depth = 0;
-			StringBuilder labelContent = new StringBuilder();
+			FlowPanel historyPanel = new FlowPanel();
 			
 			
 			switch (pageChangeEvent.getPageType()) {
@@ -91,22 +90,26 @@ public class HierarchyWidget extends HorizontalPanel implements EventBusListener
 			default:
 			}
 			
-			Stack<String> stack = new Stack<String>();
+			Stack<TextLink> stack = new Stack<TextLink>();
 			
 			while(depth > 0) {
-				stack.push(currentPage.getPageTitle());
+				stack.push(new TextLink(eventBus, currentPage.getReference(), currentPage.getPageTitle()));
 				currentPage = model.getParentOf(currentPage.getReference());
 				depth--;
 			}
 			
 			while(!stack.isEmpty()) {
-				labelContent.append(separator);
-				labelContent.append(stack.pop());
+				historyPanel.add(separator);
+				historyPanel.add(stack.pop());
 			}
-			if (labelContent.length() == 0) {
-				return;
+			if (historyPanel.getWidgetCount() == 0) {
+				this.setVisible(false);
+			} else {
+				this.setVisible(true);
+				historyPanel.remove(0);
 			}
-			label.setText(labelContent.substring(separator.length()));
+			
+			setWidget(historyPanel);
 		}
 	}
 

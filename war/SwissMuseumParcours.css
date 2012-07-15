@@ -72,7 +72,6 @@ table {
 /********************** MENUS - HIERARCHY **************************************/
 
 .hierarchyWidget {
-	
 }
 
 /********************** MENUS - TILE ******************************************/
@@ -142,7 +141,15 @@ table {
 	color: #110000;
 }
 
+/********************** WIDGET - TEXT LINK **********************************/
+.textLink {
+	color: light-blue;
+	style: underlined;
+	cursor: pointer;
+}
+
 /********************** WIDGET - PAGE ***************************************/
+
 .pageWidget {
 	padding: 1em 0em 1em 0em;
 	margin: 0;
