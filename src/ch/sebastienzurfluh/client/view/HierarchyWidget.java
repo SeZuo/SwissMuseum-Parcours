@@ -46,7 +46,7 @@ public class HierarchyWidget extends SimplePanel implements EventBusListener {
 	private Data currentPage;
 	private EventBus eventBus;
 	
-	private Label separator = new Label(" > ");
+	private String separator = " > ";
 	private Model model;
 	
 	public HierarchyWidget(EventBus eventBus, Model model) {
@@ -99,7 +99,9 @@ public class HierarchyWidget extends SimplePanel implements EventBusListener {
 			}
 			
 			while(!stack.isEmpty()) {
-				historyPanel.add(separator);
+				Label label = new Label(separator);
+				label.setStyleName("hierarchyWidget-separator");
+				historyPanel.add(label);
 				historyPanel.add(stack.pop());
 			}
 			if (historyPanel.getWidgetCount() == 0) {

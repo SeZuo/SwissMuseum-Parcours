@@ -72,6 +72,10 @@ table {
 /********************** MENUS - HIERARCHY **************************************/
 
 .hierarchyWidget {
+	
+}
+.hierarchyWidget-separator {
+	display: inline;
 }
 
 /********************** MENUS - TILE ******************************************/
@@ -146,6 +150,7 @@ table {
 	color: light-blue;
 	style: underlined;
 	cursor: pointer;
+	display: inline;
 }
 
 /********************** WIDGET - PAGE ***************************************/
