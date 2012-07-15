@@ -81,13 +81,16 @@ table {
 /********************** MENUS - TILE ******************************************/
 
 .tile {
-	
+	display: inline;
+	float: left;
 }
 .tile-iconOnly {
-	
+	display: inline;
+	float: left;
 }
 .tile-detailed {
-	
+	display: inline;
+	float: none;
 }
 // This is supposed to be a special decoration only visible when
 // the mouse-clicking the tile.
@@ -123,6 +126,7 @@ table {
 }
 .tileMenu {
 	font-size: 2.5em;
+	width: 100%;
 }
 .tileMenu-title {
 	font-size: 3em;
@@ -130,7 +134,7 @@ table {
     color: #110000;
 }
 .tileWidget {
-	
+	width: 100%;
 }
 
 .tileMenu-detailButton {

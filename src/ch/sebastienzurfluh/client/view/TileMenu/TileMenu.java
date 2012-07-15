@@ -55,8 +55,7 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		firstLine.add(titleLabel);
 		
 		button = new ModeSwapButton(stylePrimaryName, this);
-
-		setStyleName(stylePrimaryName + "-" + "detailButton");
+		button.setStyleName(stylePrimaryName + "-" + "detailButton");
 		
 		firstLine.add(button);
 		add(firstLine);
