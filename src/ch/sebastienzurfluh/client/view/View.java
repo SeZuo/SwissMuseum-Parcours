@@ -23,9 +23,10 @@ import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.view.MenuInterface.PageRequestHandler;
-import ch.sebastienzurfluh.client.view.Navigation.NavigationWidget;
-import ch.sebastienzurfluh.client.view.TileMenu.TileWidget;
+import ch.sebastienzurfluh.client.view.eventbushooks.ScrollToPanelOnEvent;
+import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
+import ch.sebastienzurfluh.client.view.navigation.NavigationWidget;
+import ch.sebastienzurfluh.client.view.tilemenu.TileWidget;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;

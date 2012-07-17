@@ -24,6 +24,7 @@ import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 
 /**
  * This object will handle the page change requests.
@@ -51,6 +52,7 @@ public class PageRequestEventHandler implements EventBusListener {
 		return EventType.PAGE_CHANGE_REQUEST;
 	}
 
+	private DataReference cachedReference = null;
 	@Override
 	public void notify(Event e) {
 		if(e instanceof PageChangeRequest) {
@@ -58,10 +60,16 @@ public class PageRequestEventHandler implements EventBusListener {
 			
 			//TODO Check if the requested page is OK.
 			
+			// Abort in case the page is already loaded.
+			if (pageChangeRequest.getPageReference().equals(cachedReference))
+				return;
 			
 			// Collect the necessary data and fire an event.
 			Data data = model.getAssociatedData(pageChangeRequest.getPageReference());
 			eventBus.fireEvent(new PageChangeEvent(data.getPageType(), data));
+			
+			// Cache the loaded page.
+			cachedReference = pageChangeRequest.getPageReference();
 			
 			System.out.println("PageRequestHandler: PageChangeEvent sent.");
 		}

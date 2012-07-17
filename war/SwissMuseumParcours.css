@@ -42,6 +42,7 @@ table {
 
 .mainPanel {
 	border-spacing: 25em 0 25em 0;
+	width: 600px;
 }
 
 /********************** MENUS **************************************************/
@@ -59,14 +60,16 @@ table {
 	margin: 0.1em;
 	padding: 0em;
 	border: 0em;
-	background-color: grey;
+	background-color: light-grey;
 }
 
 .navigationSlider {
-	
+	width: 600px;
+	height: 8em; // should be the same as the navigationItem height.
+	overflow: hidden;
+	cursor: pointer;
 }
 .navigaionWidget {
-	
 }
 
 /********************** MENUS - HIERARCHY **************************************/

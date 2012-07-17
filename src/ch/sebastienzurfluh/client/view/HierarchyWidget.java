@@ -29,9 +29,9 @@ import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
+import ch.sebastienzurfluh.client.view.supportwidgets.TextLink;
 
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 
