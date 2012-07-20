@@ -35,9 +35,11 @@ public class NavigationItem extends FocusPanel implements MenuButton {
 	private Image tileImage;
 	private DataReference menuReference;
 	private String stylePrimaryName = "navigationItem";
+	private int priority;
 	
 	public NavigationItem(MenuData menuData) {
 		this.menuReference = menuData.getReference();
+		this.priority = menuData.getPriorityNumber();
 		
 		tileImage = new Image(menuData.getRectangleImgURL());
 		tileImage.setStyleName(stylePrimaryName + "-" + "image");
@@ -48,5 +50,9 @@ public class NavigationItem extends FocusPanel implements MenuButton {
 
 	public DataReference getReference() {
 		return menuReference;
+	}
+	
+	public int getPriority() {
+		return priority;
 	}
 }

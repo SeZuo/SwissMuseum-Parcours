@@ -19,30 +19,20 @@
 	
 package ch.sebastienzurfluh.client.view.navigation;
 
-import java.util.HashMap;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.navigation.ScrollAnimation;
 
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.dom.client.TouchEndEvent;
-import com.google.gwt.event.dom.client.TouchEndHandler;
-import com.google.gwt.event.dom.client.TouchMoveEvent;
-import com.google.gwt.event.dom.client.TouchMoveHandler;
-import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.thirdparty.guava.common.collect.Iterables;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -53,12 +43,11 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
  * This widget gives a way to navigate (next/previous) between pages. 
  * @author Sebastien Zurfluh
  */
-public class NavigationSlider extends FocusPanel implements MenuList, 
-		TouchMoveHandler, TouchEndHandler, TouchStartHandler,
-		MouseDownHandler, MouseUpHandler, MouseMoveHandler {
+public class NavigationSlider extends FocusPanel implements MenuList {
 	private AbsolutePanel animationPanel;
 	private HorizontalPanel tilePanel;
-	private HashMap<Integer, NavigationItem> tileOrderList;
+	private TreeSet<NavigationItem> tileOrderList;
+	
 	private PageRequestHandler pageRequestHandler;
 	private ScrollAnimation scrollAnimation;
 	
@@ -68,7 +57,12 @@ public class NavigationSlider extends FocusPanel implements MenuList,
 		setStyleName("navigationSlider");
 		
 		tilePanel = new HorizontalPanel();
-		tileOrderList = new HashMap<Integer, NavigationItem>();
+		tileOrderList = new TreeSet<NavigationItem>(new Comparator<NavigationItem>() {
+			@Override
+			public int compare(NavigationItem o1, NavigationItem o2) {
+				return ((Integer) o1.getPriority()).compareTo(o2.getPriority());
+			}
+		});
 		
 		animationPanel = new AbsolutePanel();
 		animationPanel.add(tilePanel);
@@ -76,12 +70,14 @@ public class NavigationSlider extends FocusPanel implements MenuList,
 		add(animationPanel);
 		animationPanel.setSize("100%", "100%");
 		
-		scrollAnimation = new ScrollAnimation(animationPanel, tilePanel);
+		scrollAnimation = new ScrollAnimation(
+				animationPanel, tilePanel,
+				this);
 		
-		addTouchStartHandler(this);	
-		addTouchEndHandler(this);
-		addMouseDownHandler(this);
-		addMouseUpHandler(this);
+		addTouchStartHandler(scrollAnimation);	
+		addTouchEndHandler(scrollAnimation);
+		addMouseDownHandler(scrollAnimation);
+		addMouseUpHandler(scrollAnimation);
 		
 		preventBrowserInterference();
 	}
@@ -102,7 +98,7 @@ public class NavigationSlider extends FocusPanel implements MenuList,
 	private void addTileOnPriority(MenuData menuData, Integer priority) {
 		NavigationItem tile = new NavigationItem(menuData);
 		tile.addClickHandler(pageRequestHandler);
-		tileOrderList.put(priority, tile);
+		tileOrderList.add(tile);
 		// TODO order the tiles in the menu according to their priority number
 		tilePanel.add(tile);
 	}
@@ -112,71 +108,8 @@ public class NavigationSlider extends FocusPanel implements MenuList,
 		tilePanel.clear();
 		tileOrderList.clear();
 	}
-
 	
 	
-	
-	@Override
-	public void onTouchStart(TouchStartEvent event) {
-		onStart(event.getChangedTouches().get(0).getClientX());
-	}
-
-	@Override
-	public void onTouchEnd(TouchEndEvent event) {
-		onEnd(event.getChangedTouches().get(0).getClientX());
-	}
-
-	@Override
-	public void onTouchMove(TouchMoveEvent event) {
-		onMove(event.getChangedTouches().get(0).getClientX());
-	}
-
-	@Override
-	public void onMouseMove(MouseMoveEvent event) {
-		onMove(event.getClientX());
-		
-	}
-
-	@Override
-	public void onMouseUp(MouseUpEvent event) {
-		onEnd(event.getClientX());
-	}
-
-	@Override
-	public void onMouseDown(MouseDownEvent event) {
-		onStart(event.getClientX());
-	}
-	
-	private HandlerRegistration mouseMoveHandler;
-	private HandlerRegistration touchMoveHandler;
-	private int initialXPos;
-	
-	private void onStart(int newXPos) {
-		// adding and removing the handlers is the best solution to
-		// avoid unwanted move events.
-		mouseMoveHandler = addMouseMoveHandler(this);
-		touchMoveHandler = addTouchMoveHandler(this);
-		
-		initialXPos = newXPos;
-	}
-	
-	private void onMove(int newXPos) {
-		int delta = initialXPos-newXPos;
-		movePanel(delta);
-	}
-	
-	private void onEnd(int newXPos) {
-		// see {@code onStart}
-		mouseMoveHandler.removeHandler();
-		touchMoveHandler.removeHandler();
-		// select the right tile
-		// move to the right place
-		// load the corresponding page
-	}
-
-	private void movePanel(int delta) {
-		scrollAnimation.scroll(delta);
-	}
 	
 	/*******************************************************************************/	
 	/************* Prevent browser's mouse/touch events ****************************/
@@ -217,6 +150,17 @@ public class NavigationSlider extends FocusPanel implements MenuList,
 				}
 			}
 		}, MouseOutEvent.getType());
+	}
+
+	/**
+	 * @return the number of menu items in the widget
+	 */
+	public int size() {
+		return tileOrderList.size();
+	}
+	
+	public NavigationItem getWidget(int number) {
+		return Iterables.get(tileOrderList, number);
 	}
 	
 	/*******************************************************************************/
