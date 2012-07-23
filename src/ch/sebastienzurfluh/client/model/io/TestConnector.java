@@ -42,11 +42,12 @@ public class TestConnector implements IOConnector {
 	public TestConnector() {
 
 		// Create the tutorial booklet
-		DataReference reference = new DataReference(DataType.BOOKLET, 1);
+		for(int bookletNumber = 1; bookletNumber < 10; bookletNumber++) {
+			DataReference reference = new DataReference(DataType.BOOKLET, 1);
 		dataMap.put(reference, new Data(
 				reference,
 				DataType.BOOKLET,
-				1,
+				bookletNumber,
 				"Tutorial",
 				"This booklet explains how to use the application.",
 				"To coninue to the next step of this tutorial, choose the first image in the \"Chapter\" menu below",
@@ -54,6 +55,8 @@ public class TestConnector implements IOConnector {
 				"This booklet explains how to use the application.",
 				testSquareURLBooklet,
 				testRectURLBooklet));
+		}
+		
 		
 		// Create the first chapter
 		DataReference reference2 = new DataReference(DataType.CHAPTER, 1);
@@ -164,7 +167,11 @@ public class TestConnector implements IOConnector {
 	public Collection<MenuData> getAllBookletMenus() {
 		LinkedList<MenuData> booklets = new LinkedList<MenuData>();
 		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
-		
+		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
+		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
+		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
+		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
+		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
 		return booklets;
 	}
 

@@ -20,19 +20,21 @@
 package ch.sebastienzurfluh.client.view.navigation;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
-import ch.sebastienzurfluh.client.view.navigation.ScrollAnimation;
+import ch.sebastienzurfluh.client.view.navigation.animation.AnimatorFactory;
+import ch.sebastienzurfluh.client.view.navigation.animation.AnimatorFactory.AnimatorType;
+import ch.sebastienzurfluh.client.view.navigation.animation.NavigationAnimator;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.thirdparty.guava.common.collect.Iterables;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -49,7 +51,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	private TreeSet<NavigationItem> tileOrderList;
 	
 	private PageRequestHandler pageRequestHandler;
-	private ScrollAnimation scrollAnimation;
+	private NavigationAnimator animatedScroller;
 	
 	public NavigationSlider(String string, PageRequestHandler pageRequestHandler) {
 		this.pageRequestHandler = pageRequestHandler;
@@ -70,14 +72,14 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		add(animationPanel);
 		animationPanel.setSize("100%", "100%");
 		
-		scrollAnimation = new ScrollAnimation(
-				animationPanel, tilePanel,
-				this);
+		animatedScroller = AnimatorFactory.createAnimator(
+				AnimatorType.SWIPE,
+				animationPanel, tilePanel, this);
 		
-		addTouchStartHandler(scrollAnimation);	
-		addTouchEndHandler(scrollAnimation);
-		addMouseDownHandler(scrollAnimation);
-		addMouseUpHandler(scrollAnimation);
+		addTouchStartHandler(animatedScroller);	
+		addTouchEndHandler(animatedScroller);
+		addMouseDownHandler(animatedScroller);
+		addMouseUpHandler(animatedScroller);
 		
 		preventBrowserInterference();
 	}
@@ -89,7 +91,6 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	}
 	
 	public void addTile(MenuData menuData) {
-		//TODO remove the next line after test
 		for(int i=0; i<10; i++) {
 			addTileOnPriority(menuData, menuData.getPriorityNumber());			
 		}
@@ -159,8 +160,18 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		return tileOrderList.size();
 	}
 	
+	/**
+	 * 
+	 * @param number the rank of the widget to retrieve
+	 * @return the {@code number}th widget or null if there's none at this position.
+	 */
 	public NavigationItem getWidget(int number) {
-		return Iterables.get(tileOrderList, number);
+		int i = 0;
+		for (Iterator<NavigationItem> iterator = tileOrderList.iterator(); iterator.hasNext(); i++) {
+			if (i == number)
+				return  iterator.next();
+		}
+		return null;
 	}
 	
 	/*******************************************************************************/
