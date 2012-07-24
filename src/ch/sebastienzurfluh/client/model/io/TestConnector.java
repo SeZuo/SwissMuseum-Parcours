@@ -167,11 +167,6 @@ public class TestConnector implements IOConnector {
 	public Collection<MenuData> getAllBookletMenus() {
 		LinkedList<MenuData> booklets = new LinkedList<MenuData>();
 		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
-		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
-		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
-		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
-		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
-		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
 		return booklets;
 	}
 
