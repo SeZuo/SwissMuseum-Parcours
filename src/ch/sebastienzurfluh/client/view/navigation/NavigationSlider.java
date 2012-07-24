@@ -21,6 +21,7 @@ package ch.sebastienzurfluh.client.view.navigation;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Observer;
 import java.util.TreeSet;
 
 import ch.sebastienzurfluh.client.model.structure.MenuData;
@@ -73,6 +74,10 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		animationPanel.setSize("100%", "100%");
 		
 		animatedScroller = AnimatorFactory.createAnimator(
+				AnimatorType.STATIC,
+				animationPanel, tilePanel, this);
+		
+		animatedScroller = AnimatorFactory.createAnimator(
 				AnimatorType.SWIPE,
 				animationPanel, tilePanel, this);
 		
@@ -91,9 +96,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	}
 	
 	public void addTile(MenuData menuData) {
-		for(int i=0; i<10; i++) {
-			addTileOnPriority(menuData, menuData.getPriorityNumber());			
-		}
+		addTileOnPriority(menuData, menuData.getPriorityNumber());			
 	}
 	
 	private void addTileOnPriority(MenuData menuData, Integer priority) {
@@ -105,11 +108,35 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	}
 	
 	public void clearTiles() {
-		//TODO test that. It didn't work before... maybe use a new tilePanel.
 		tilePanel.clear();
 		tileOrderList.clear();
 	}
+
+	/*******************************************************************************/	
+	/************* Centralised widget selection ************************************/
+	/**
+	 * @return *****************************************************************************/
+	public void addTileChangeListener(Observer listener) {
+		
+	}
+	private int currentItemNumber = 0;
+	/**
+	 * @return the number of menu items in the widget
+	 */
+	public int getItemCount() {
+		return tileOrderList.size();
+	}
 	
+	public void setCurrentItem(int number) {
+		currentItemNumber = number;
+	}
+	public int getCurrentItemNumber() {
+		return currentItemNumber;
+	}
+	
+	/*******************************************************************************/	
+	/******** END - Centralised widget selection ***********************************/
+	/*******************************************************************************/
 	
 	
 	/*******************************************************************************/	
@@ -153,12 +180,6 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		}, MouseOutEvent.getType());
 	}
 
-	/**
-	 * @return the number of menu items in the widget
-	 */
-	public int size() {
-		return tileOrderList.size();
-	}
 	
 	/**
 	 * 

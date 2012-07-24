@@ -45,21 +45,21 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class NavigationWidget extends VerticalPanel implements EventBusListener {
 	private Model model;
-	
+
 	private NavigationSlider bookletSlider;
 	private NavigationSlider chapterSlider;
 	private NavigationSlider pageSlider;
-	
+
 	public NavigationWidget(EventBus pageChangeEventBus, PageRequestHandler pageRequestHandler, Model model) {
 		this.model = model;
-		
+
 		initialise(pageRequestHandler);
-		
+
 		setDefaults();
-		
+
 		pageChangeEventBus.addListener(this);
 	}
-	
+
 	private void initialise(PageRequestHandler pageRequestHandler) {
 		bookletSlider = new NavigationSlider("Booklets", pageRequestHandler);
 		add(bookletSlider);
@@ -67,9 +67,8 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 		add(chapterSlider);
 		pageSlider = new NavigationSlider("Pages", pageRequestHandler);
 		add(pageSlider);
-		
 	}
-	
+
 	private void setDefaults() {
 		bookletSlider.setVisible(false);
 		chapterSlider.setVisible(false);
@@ -85,7 +84,7 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 	public void notify(Event e) {
 		if(e instanceof PageChangeEvent) {
 			PageChangeEvent pageChangeEvent = (PageChangeEvent) e;
-			
+
 			// Reload the tiles as necessary
 			Data data = pageChangeEvent.getData();
 			switch (pageChangeEvent.getPageType()) {
@@ -103,8 +102,8 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 			default:
 				break;
 			}
-			
-			
+
+
 			// Change layout according to the new page type.
 			switch (pageChangeEvent.getPageType()) {
 			case PAGE:
@@ -132,24 +131,22 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 			}
 		}
 	}
-	
+
 	private void reloadTiles (NavigationSlider menu, Collection<MenuData> menus) {
 		menu.clearTiles();
 		for (MenuData menuData : menus) {
 			menu.addTile(menuData);
 		}
 	}
-	
+
 	private void reloadTilesWithParentFirst(NavigationSlider menu, DataReference parentReference) {
 		menu.clearTiles();
 		menu.addFirstTile(model.getAssociatedData(parentReference).getMenu());
-		
+
 		for (MenuData menuData : model.getSubMenus(parentReference.getType(), parentReference)) {
 			menu.addTile(menuData);
 		}
 	}
-	
-	
 }
 
 

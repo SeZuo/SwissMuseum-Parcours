@@ -31,7 +31,7 @@ import ch.sebastienzurfluh.client.view.navigation.NavigationSlider;
  */
 public class AnimatorFactory {
 	public enum AnimatorType {
-		CONTINUOUS, SWIPE;
+		CONTINUOUS, SWIPE, STATIC;
 	}
 	
 	public static NavigationAnimator createAnimator(AnimatorType type,
@@ -41,8 +41,10 @@ public class AnimatorFactory {
 				return new ContinuousScroller(animatedPanel, movingWidget, parentSlider);
 			case SWIPE:
 				return new SwipeScroller(animatedPanel, movingWidget, parentSlider);
+			case STATIC:
+				return new StaticFlipper(animatedPanel, movingWidget, parentSlider);
 			default:
-				throw(new Error(""));
+				throw(new Error("AnimatorFactory: animation wrong name"));
 		}
 	}
 }

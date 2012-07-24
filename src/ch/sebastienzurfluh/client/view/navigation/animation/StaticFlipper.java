@@ -3,14 +3,18 @@ package ch.sebastienzurfluh.client.view.navigation.animation;
 import ch.sebastienzurfluh.client.view.navigation.NavigationSlider;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.TouchEndEvent;
 import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -20,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Sebastien Zurfluh
  *
  */
-public class SwipeScroller extends Animation  implements NavigationAnimator {
+public class StaticFlipper extends Animation  implements NavigationAnimator {
 	private static final int SLOW = 400; //ms
 	private static final int QUICK = 40; //ms
 	private AbsolutePanel animatedPanel;
@@ -35,10 +39,62 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	 * @param animatedPanel parent of the moving widget
 	 * @param movingWidget itself
 	 */
-	public SwipeScroller(AbsolutePanel animatedPanel, Widget movingWidget, NavigationSlider slider) {
+	public StaticFlipper(AbsolutePanel animatedPanel, Widget movingWidget, final NavigationSlider slider) {
 		this.animatedPanel = animatedPanel;
 		this.movingWidget = movingWidget;
 		this.slider = slider;
+		
+		FocusPanel outerPrevious = new FocusPanel();
+		SimplePanel innerPrevious = new SimplePanel();
+		Label previous = new Label("<");
+		
+		outerPrevious.setStyleName("navigationSlider-button-inner");
+		innerPrevious.setStyleName("navigationSlider-button-outer");
+		previous.setStyleName("navigationSlider-button-text");
+		
+		outerPrevious.add(innerPrevious);
+		innerPrevious.add(previous);
+		
+		outerPrevious.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (slider.getCurrentItemNumber() == 0)
+					return;
+				
+				// move to the right place
+				setFocusWidget(slider.getCurrentItemNumber()-1);
+
+				slider.getWidget(slider.getCurrentItemNumber()).ignite();
+			}
+		});
+		animatedPanel.add(outerPrevious, 35, 35);
+		
+		
+		FocusPanel outerNext = new FocusPanel();
+		SimplePanel innerNext = new SimplePanel();
+		Label next = new Label(">");
+		
+		outerNext.setStyleName("navigationSlider-button-inner");
+		innerNext.setStyleName("navigationSlider-button-outer");
+		next.setStyleName("navigationSlider-button-text");
+		
+		outerNext.add(innerNext);
+		innerNext.add(next);
+		
+		next.setStyleName("navigationSlider-button-text");
+		outerNext.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (slider.getCurrentItemNumber() == slider.getItemCount()-1)
+					return;
+				
+				// move to the right place
+				setFocusWidget(slider.getCurrentItemNumber()+1);
+				
+				slider.getWidget(slider.getCurrentItemNumber()).ignite();
+			}
+		});
+		animatedPanel.add(outerNext, 535, 35);
     }
 	
 	/**
@@ -64,17 +120,24 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	 * Pixel size of a benu item.
 	 */
 	private int itemWidth = 0;
+	/**
+	 * The width of the entire widget
+	 */
 	private int widgetWidth = 0;
 	
 	private boolean updated = false;
 	/**
-	 * Move the scroller to the specified widget
+	 * Focus the widget at rank {@code number}.
 	 * @param number -th widget
 	 */
 	public void setFocusWidget(int number) {
+		if(!updated)
+			update();
+
 		slider.getWidget(slider.getCurrentItemNumber()).setFocus(false);
 
 		slider.setCurrentItem(number);
+
 		int itemPosition = number * itemWidth;
 		scrollTo(itemPosition, SLOW);
 		
@@ -82,20 +145,14 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	}
 
 	int positionBeforeAnimation, delta;
-    private void scroll(int delta, int duration) {
-    	positionBeforeAnimation = movingWidget.getAbsoluteLeft() - animatedPanel.getAbsoluteLeft();
-    	this.delta = delta;
-    	
-    	run(duration);
-    }
     
     /**
      * @param newPos -ition absolute
      * @param duration in ms
      */
     private void scrollTo(int newPos, int duration) {
+    	positionBeforeAnimation = movingWidget.getAbsoluteLeft() + animatedPanel.getAbsoluteLeft();
     	
-    	positionBeforeAnimation = movingWidget.getAbsoluteLeft() - animatedPanel.getAbsoluteLeft();
     	// we scroll the opposite way of the direction we want
     	// in order to bring the widget to us.
     	this.delta = - newPos - positionBeforeAnimation;
@@ -108,101 +165,29 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
         int position = (int) (positionBeforeAnimation + (progress * delta));
         animatedPanel.setWidgetPosition(movingWidget, position, 0);
     }
-    
-    
-	private HandlerRegistration mouseMoveHandler;
-	private HandlerRegistration touchMoveHandler;
-	
-	private int startPosition;
-	
-	/**
-	 * Position relative to the last update
-	 */
-	private int movingRelativePosition;
-	private void onStart(int xPosition) {
-		// adding and removing the handlers is the best solution to
-		// avoid unwanted move events.
-		mouseMoveHandler = slider.addMouseMoveHandler(this);
-		touchMoveHandler = slider.addTouchMoveHandler(this);
-		
-		if (!updated)
-			update();
-		
-		startPosition = xPosition;
-		movingRelativePosition = startPosition;
-	}
-	
-	/**
-     * @param newXPos -ition absolute
-     */
-	private void onMove(int newXPosition) {
-		scroll(movingRelativePosition - newXPosition, QUICK);
-		movingRelativePosition = newXPosition;
-	}
-
-	/**
-     * @param newXPos -ition absolute
-     */
-	private void onEnd(int newXPos) {
-		// see {@code onStart}
-		mouseMoveHandler.removeHandler();
-		touchMoveHandler.removeHandler();
-		
-		int previousItem = slider.getCurrentItemNumber();
-
-		// get the widget back into boundaries.
-		int leftDelta = animatedPanel.getAbsoluteLeft() - movingWidget.getAbsoluteLeft();
-    	if (leftDelta < 0) {
-    		scrollTo(0, SLOW);
-    		slider.setCurrentItem(0);
-    	} else {
-    		int delta = newXPos - startPosition;
-    		// movement has to be more than a third of the screen
-    		if (delta > widgetWidth * 0.3) {
-    			slider.setCurrentItem(slider.getCurrentItemNumber()+1);
-    		} else if (delta < - widgetWidth * 0.3) {
-    			slider.setCurrentItem(slider.getCurrentItemNumber()-1);
-    		} else {
-    			// re-focus the same widget
-    		}
-    	}
-    	
-    	
-		// move to the right place
-		setFocusWidget(slider.getCurrentItemNumber());
-		
-		if (previousItem != slider.getCurrentItemNumber())
-    		slider.getWidget(slider.getCurrentItemNumber()).ignite();
-	}
 
 	@Override
 	public void onTouchStart(TouchStartEvent event) {
-		onStart(event.getChangedTouches().get(0).getRelativeX(event.getRelativeElement()));
 	}
 
 	@Override
 	public void onTouchEnd(TouchEndEvent event) {
-		onEnd(event.getChangedTouches().get(0).getRelativeX(event.getRelativeElement()));
 	}
 
 	@Override
 	public void onTouchMove(TouchMoveEvent event) {
-		onMove(event.getChangedTouches().get(0).getRelativeX(event.getRelativeElement()));
 	}
 
 	@Override
 	public void onMouseMove(MouseMoveEvent event) {
-		onMove(event.getRelativeX(event.getRelativeElement()));
 		
 	}
 
 	@Override
 	public void onMouseUp(MouseUpEvent event) {
-		onEnd(event.getRelativeX(event.getRelativeElement()));
 	}
 
 	@Override
 	public void onMouseDown(MouseDownEvent event) {
-		onStart(event.getRelativeX(event.getRelativeElement()));
 	}
 }

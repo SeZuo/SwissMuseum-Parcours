@@ -72,7 +72,7 @@ public class ContinuousScroller extends Animation  implements NavigationAnimator
      * @param duration in ms
      */
     private void scrollRight(int duration) {
-    	int numberOfItems = slider.size();
+    	int numberOfItems = slider.getItemCount();
     	int itemSize = movingWidget.getOffsetWidth() / numberOfItems;
 	
     	scrollTo(movingWidget.getOffsetWidth() - itemSize, duration);
