@@ -54,6 +54,7 @@ public class ScrollToPanelOnEvent extends Animation implements EventBusListener 
 
 	@Override
 	public void notify(Event e) {
+		origin = Window.getScrollTop();
 		destination = panel.getElement().getAbsoluteTop();
 		
 		run(400);
