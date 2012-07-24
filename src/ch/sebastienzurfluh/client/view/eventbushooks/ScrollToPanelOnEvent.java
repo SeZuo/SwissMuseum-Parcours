@@ -19,6 +19,7 @@
 
 package ch.sebastienzurfluh.client.view.eventbushooks;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
 
@@ -35,7 +36,7 @@ import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
  * @author Sebastien Zurfluh
  *
  */
-public class ScrollToPanelOnEvent implements EventBusListener {
+public class ScrollToPanelOnEvent extends Animation implements EventBusListener {
 	private Panel panel;
 	private EventType eventType;
 	
@@ -53,11 +54,20 @@ public class ScrollToPanelOnEvent implements EventBusListener {
 
 	@Override
 	public void notify(Event e) {
-		Window.scrollTo(0 , panel.getElement().getAbsoluteTop());
+		destination = panel.getElement().getAbsoluteTop();
+		
+		run(400);
 	}
 
 	public static ScrollToPanelOnEvent addRule(EventBus eventBus, Panel panel, EventType eventType) {
 		return new ScrollToPanelOnEvent(eventBus, panel, eventType);
+	}
+
+	private int destination = 0;
+	private int origin = 0;
+	@Override
+	protected void onUpdate(double progress) {
+		Window.scrollTo(0 , (int) (origin + (destination - origin) * progress));
 	}
 
 }
