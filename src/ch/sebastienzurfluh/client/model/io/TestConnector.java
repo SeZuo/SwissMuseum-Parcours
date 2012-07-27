@@ -24,9 +24,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
+import ch.sebastienzurfluh.client.control.eventbus.events.ResourceType;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 public class TestConnector implements IOConnector {
 	private String testSquareURLBooklet = "resources/images/pix_light_yellow.gif";
@@ -38,6 +40,7 @@ public class TestConnector implements IOConnector {
 	
 	
 	HashMap<DataReference, Data> dataMap = new HashMap<DataReference, Data>();
+	HashMap<DataReference, ResourceData> resourceDataMap = new HashMap<DataReference, ResourceData>();
 	
 	public TestConnector() {
 
@@ -111,6 +114,15 @@ public class TestConnector implements IOConnector {
 				"Try it by yourself.",
 				testSquareURLPage,
 				testRectURLPage));
+		
+		// Create some resources
+		DataReference reference5 = new DataReference(DataType.RESOURCE, 1);
+		resourceDataMap.put(reference5, new ResourceData(
+				reference5,
+				ResourceType.IMAGE,
+				"Resource One",
+				"This is a page. Images tend to have a lot of stupid details.",
+				"This is the url"));
 	}
 
 	@Override
@@ -129,8 +141,8 @@ public class TestConnector implements IOConnector {
 	}
 
 	@Override
-	public Data getRessourceDataOf(int referenceId) {		
-		return getDataOf(DataType.RESOURCE, referenceId);
+	public ResourceData getRessourceDataOf(int referenceId) {		
+		return resourceDataMap.get(new DataReference(DataType.RESOURCE, referenceId));
 	}
 	
 	private Data getDataOf(DataType type, int referenceId) {

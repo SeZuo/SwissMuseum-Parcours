@@ -26,6 +26,7 @@ import ch.sebastienzurfluh.client.model.io.IOConnector;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 
 /**
@@ -69,10 +70,13 @@ public class Model {
 		case PAGE:
 			return connector.getPageDataOf(reference.getReferenceId());
 		case RESOURCE:
-			return connector.getRessourceDataOf(reference.getReferenceId());
 		default:
 			throw new Error("Impossible default switch case.");
 		}
+	}
+	
+	public ResourceData getResourceData(DataReference reference) {
+		return connector.getRessourceDataOf(reference.getReferenceId());
 	}
 	
 	/**

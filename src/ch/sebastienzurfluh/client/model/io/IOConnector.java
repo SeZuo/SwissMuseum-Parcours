@@ -24,6 +24,7 @@ import java.util.Collection;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 /**
  * Handles communication with the ADBMS.
@@ -39,7 +40,7 @@ public interface IOConnector {
 
 	Data getPageDataOf(int referenceId);
 
-	Data getRessourceDataOf(int referenceId);
+	ResourceData getRessourceDataOf(int referenceId);
 
 	/**
 	 * @param referenceId of the booklet.

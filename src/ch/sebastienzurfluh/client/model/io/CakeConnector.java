@@ -24,6 +24,7 @@ import java.util.Collection;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 /**
  * Handles communication with CakePHP which in turn handles the ADBMS.
@@ -56,7 +57,7 @@ public class CakeConnector implements IOConnector {
 	}
 
 	@Override
-	public Data getRessourceDataOf(int referenceId) {
+	public ResourceData getRessourceDataOf(int referenceId) {
 		return null;
 	}
 

@@ -49,7 +49,7 @@ public class TextParser {
 	private String getImageHTML(DataReference reference) {
 		Data data = model.getAssociatedData(reference);
 		
-		
+		String title = data.getPageTitle();
 		
 		return "<img src=\"%1\"></img>";
 	}
