@@ -37,6 +37,7 @@ public class TestConnector implements IOConnector {
 	private String testRectURLBooklet = "resources/images/pix_light_yellow.gif";
 	private String testRectURLChapter = "resources/images/pix_light_blue.gif";
 	private String testRectURLPage = "resources/images/pix_light_green.gif";
+	private String testInlineImageURL = "resources/images/pix_light_violet.gif";
 	
 	
 	HashMap<DataReference, Data> dataMap = new HashMap<DataReference, Data>();
@@ -45,20 +46,19 @@ public class TestConnector implements IOConnector {
 	public TestConnector() {
 
 		// Create the tutorial booklet
-		for(int bookletNumber = 1; bookletNumber < 10; bookletNumber++) {
-			DataReference reference = new DataReference(DataType.BOOKLET, 1);
+		DataReference reference = new DataReference(DataType.BOOKLET, 1);
 		dataMap.put(reference, new Data(
-				reference,
-				DataType.BOOKLET,
-				bookletNumber,
-				"Tutorial",
-				"This booklet explains how to use the application.",
-				"To coninue to the next step of this tutorial, choose the first image in the \"Chapter\" menu below",
-				"Tutorial",
-				"This booklet explains how to use the application.",
-				testSquareURLBooklet,
-				testRectURLBooklet));
-		}
+			reference,
+			DataType.BOOKLET,
+			1,
+			"Tutorial",
+			"This booklet explains how to use the application.",
+			"To coninue to the next step of this tutorial, choose the first image in the " +
+					"\"Chapter\" menu below. [img]1[/img] I'm putting some more text to see if this works.",
+			"Tutorial",
+			"This booklet explains how to use the application.",
+			testSquareURLBooklet,
+			testRectURLBooklet));
 		
 		
 		// Create the first chapter
@@ -109,7 +109,7 @@ public class TestConnector implements IOConnector {
 				"The link you've just clicked sent you here. This page belongs to the same chapter you were in. <br>" +
 						"Sometimes, this is not the case and a link in the page will send you to another chapter or" +
 						" another booklet. Don't worry you can always go back, using the back button on your device " +
-						"[img].<br> Go to the next page by either using the navigation menu (above) or the tile menu (below).",
+						"[img]1[/img].<br> Go to the next page by either using the navigation menu (above) or the tile menu (below).",
 				"Step 3",
 				"Try it by yourself.",
 				testSquareURLPage,
@@ -122,7 +122,7 @@ public class TestConnector implements IOConnector {
 				ResourceType.IMAGE,
 				"Resource One",
 				"This is a page. Images tend to have a lot of stupid details.",
-				"This is the url"));
+				testInlineImageURL));
 	}
 
 	@Override

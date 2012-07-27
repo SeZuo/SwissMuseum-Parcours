@@ -95,7 +95,7 @@ public class ResourceData {
 		this.title = title;
 	}
 
-	public String getContentHeader() {
+	public String getDetails() {
 		return details;
 	}
 
@@ -103,7 +103,7 @@ public class ResourceData {
 		this.details = details;
 	}
 
-	public String getContentBody() {
+	public String getURL() {
 		return url;
 	}
 

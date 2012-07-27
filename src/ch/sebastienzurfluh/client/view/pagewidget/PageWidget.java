@@ -42,9 +42,12 @@ public class PageWidget extends VerticalPanel implements EventBusListener {
 	private Label title;
 	private Label header;
 	private HTML content;
+	private TextParser parser;
 
 	private static String primaryStyleName =  "pageWidget";
-	public PageWidget(EventBus pageChangeEventBus) {
+	public PageWidget(EventBus pageChangeEventBus,
+			TextParser parser) {
+		this.parser = parser;
 		pageChangeEventBus.addListener(this);
 		
 		title = new Label("");
@@ -78,7 +81,7 @@ public class PageWidget extends VerticalPanel implements EventBusListener {
 				this.setVisible(true);
 				this.title.setText(pageChangeEvent.getData().getPageTitle());
 				this.header.setText(pageChangeEvent.getData().getPageContentHeader());
-				this.content.setHTML(pageChangeEvent.getData().getPageContentBody());
+				this.content.setHTML(parser.parse(pageChangeEvent.getData().getPageContentBody()));
 				break;
 			case SUPER:
 			default:

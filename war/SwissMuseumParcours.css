@@ -208,3 +208,22 @@ table {
     font-family: monospace;
     color: #000000;
 }
+
+.pageWidget-image-container {
+	font-family: serif;
+	border: 1px solid black;
+	margin: 1em 0em 1em 5em;
+	text-align: left; 
+}
+.pageWidget-image-title {
+	padding: 0.1em;
+}
+.pageWidget-image-details {
+	font-style: italic;
+	padding: 0.1em;
+}
+.pageWidget-image-image {
+	text-align: right;
+	width: 150px;
+	height: 150px;
+}
