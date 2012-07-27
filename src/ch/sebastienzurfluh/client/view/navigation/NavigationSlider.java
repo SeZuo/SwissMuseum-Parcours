@@ -114,11 +114,8 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 
 	/*******************************************************************************/	
 	/************* Centralised widget selection ************************************/
-	/**
-	 * @return *****************************************************************************/
-	public void addTileChangeListener(Observer listener) {
-		
-	}
+	/*******************************************************************************/
+	
 	private int currentItemNumber = 0;
 	/**
 	 * @return the number of menu items in the widget

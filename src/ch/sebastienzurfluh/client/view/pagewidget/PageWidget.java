@@ -17,7 +17,7 @@
  *  along with "Parcours".  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ch.sebastienzurfluh.client.view;
+package ch.sebastienzurfluh.client.view.pagewidget;
 
 import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;

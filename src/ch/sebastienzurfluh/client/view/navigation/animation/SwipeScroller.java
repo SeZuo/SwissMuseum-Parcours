@@ -136,7 +136,7 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
      * @param newXPos -ition absolute
      */
 	private void onMove(int newXPosition) {
-		scroll(movingRelativePosition - newXPosition, QUICK);
+		scroll(- movingRelativePosition + newXPosition, QUICK);
 		movingRelativePosition = newXPosition;
 	}
 
@@ -159,9 +159,9 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
     		int delta = newXPos - startPosition;
     		// movement has to be more than a third of the screen
     		if (delta > widgetWidth * 0.3) {
-    			slider.setCurrentItem(slider.getCurrentItemNumber()+1);
-    		} else if (delta < - widgetWidth * 0.3) {
     			slider.setCurrentItem(slider.getCurrentItemNumber()-1);
+    		} else if (delta < - widgetWidth * 0.3) {
+    			slider.setCurrentItem(slider.getCurrentItemNumber()+1);
     		} else {
     			// re-focus the same widget
     		}
