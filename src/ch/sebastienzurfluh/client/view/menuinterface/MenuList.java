@@ -1,5 +1,7 @@
 package ch.sebastienzurfluh.client.view.menuinterface;
 
-public interface MenuList {
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 
+public interface MenuList {
+	void setFocus(DataReference menuData);
 }

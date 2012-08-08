@@ -21,6 +21,7 @@ package ch.sebastienzurfluh.client.view;
 
 import java.util.Stack;
 
+import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
@@ -43,8 +44,9 @@ import com.google.gwt.user.client.ui.SimplePanel;
  *
  */
 public class HierarchyWidget extends SimplePanel implements EventBusListener {
-	private Data currentPage;
 	private EventBus eventBus;
+	
+	private FlowPanel historyPanel;
 	
 	private String separator = " > ";
 	private Model model;
@@ -74,9 +76,9 @@ public class HierarchyWidget extends SimplePanel implements EventBusListener {
 				this.setVisible(true);
 			}
 			
-			currentPage = pageChangeEvent.getData();
+			Data currentPage = pageChangeEvent.getData();
 			int depth = 0;
-			FlowPanel historyPanel = new FlowPanel();
+			historyPanel = new FlowPanel();
 			
 			
 			switch (pageChangeEvent.getPageType()) {
@@ -90,29 +92,46 @@ public class HierarchyWidget extends SimplePanel implements EventBusListener {
 			default:
 			}
 			
-			Stack<TextLink> stack = new Stack<TextLink>();
+			final Stack<TextLink> stack = new Stack<TextLink>();
+			recursiveParentSearchAndFill(stack, currentPage, depth);
 			
-			while(depth > 0) {
-				stack.push(new TextLink(eventBus, currentPage.getReference(), currentPage.getPageTitle()));
-				currentPage = model.getParentOf(currentPage.getReference());
-				depth--;
-			}
-			
-			while(!stack.isEmpty()) {
-				Label label = new Label(separator);
-				label.setStyleName("hierarchyWidget-separator");
-				historyPanel.add(label);
-				historyPanel.add(stack.pop());
-			}
-			if (historyPanel.getWidgetCount() == 0) {
-				this.setVisible(false);
-			} else {
-				this.setVisible(true);
-				historyPanel.remove(0);
-			}
 			
 			setWidget(historyPanel);
 		}
 	}
-
+	
+	/**
+	 * Search the model asynchronously in order to find all parents, then fill the history panel accordingly.
+	 * @param stack
+	 * @param page
+	 * @param depth
+	 */
+	private void recursiveParentSearchAndFill(final Stack<TextLink> stack, final Data page, final int depth) {
+		if (depth == 0) {
+			printParentHood(stack);
+		} else {
+			model.getParentOf(new ModelAsyncPlug<Data>() {
+				@Override
+				public void update(Data data) {
+					stack.push(new TextLink(eventBus, page.getReference(), page.getPageTitle()));
+					recursiveParentSearchAndFill(stack, data, depth-1);
+				}
+			}, page.getReference());
+		}
+	}
+	
+	private void printParentHood(Stack<TextLink> stack) {
+		while(!stack.isEmpty()) {
+			Label label = new Label(separator);
+			label.setStyleName("hierarchyWidget-separator");
+			historyPanel.add(label);
+			historyPanel.add(stack.pop());
+		}
+		if (historyPanel.getWidgetCount() == 0) {
+			this.setVisible(false);
+		} else {
+			this.setVisible(true);
+			historyPanel.remove(0);
+		}
+	}
 }

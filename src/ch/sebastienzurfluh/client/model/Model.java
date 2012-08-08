@@ -21,6 +21,7 @@ package ch.sebastienzurfluh.client.model;
 
 import java.util.Collection;
 
+import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.io.IOConnector;
 import ch.sebastienzurfluh.client.model.structure.Data;
@@ -44,52 +45,60 @@ public class Model {
 	/**
 	 * List all the menus of the given type.
 	 */
-	public Collection<MenuData> getMenus(DataType type) {
+	public void getMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug, DataType type) {
 		switch(type) {
 		case BOOKLET:
-			return connector.getAllBookletMenus();
+			connector.getAllBookletMenus(asyncPlug);
+			break;
 		case CHAPTER:
 		case PAGE:
 		case RESOURCE:
+			break;
 		default:
 			throw new Error("Impossible switch case in getMenus");
 		}
-		
-		
 	}
     
     /**
-	  * @return data associated with the given reference of a booklet, chapter, page or resource.
+	  * Asynchronously returns data associated with the given reference of a booklet,
+	  * chapter, page or resource.
 	  */
-	public Data getAssociatedData(DataReference reference) {
+	public void getAssociatedData(ModelAsyncPlug<Data> asyncPlug, DataReference reference) {
 		switch(reference.getType()) {
 		case BOOKLET:
-			return connector.getBookletDataOf(reference.getReferenceId());
+			connector.getBookletDataOf(asyncPlug, reference.getReferenceId());
+			break;
 		case CHAPTER:
-			return connector.getChapterDataOf(reference.getReferenceId());
+			connector.getChapterDataOf(asyncPlug, reference.getReferenceId());
+			break;
 		case PAGE:
-			return connector.getPageDataOf(reference.getReferenceId());
+			connector.getPageDataOf(asyncPlug, reference.getReferenceId());
+			break;
 		case RESOURCE:
+			break;
 		default:
 			throw new Error("Impossible default switch case.");
 		}
 	}
 	
-	public ResourceData getResourceData(DataReference reference) {
-		return connector.getRessourceDataOf(reference.getReferenceId());
+	public void getResourceData(ModelAsyncPlug<ResourceData> asyncPlug, DataReference reference) {
+		connector.getRessourceDataOf(asyncPlug, reference.getReferenceId());
 	}
 	
 	/**
 	 * List all the sub-menus associated with a given referenced data object.
 	 */
-	public Collection<MenuData> getSubMenus(DataType type, DataReference reference) {
+	public void getSubMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug, DataType type, DataReference reference) {
 		switch(reference.getType()) {
 		case BOOKLET:
-			return connector.getSubMenusOfBooklet(reference.getReferenceId());
+			connector.getSubMenusOfBooklet(asyncPlug, reference.getReferenceId());
+			break;
 		case CHAPTER:
-			return connector.getSubMenusOfChapter(reference.getReferenceId());
+			connector.getSubMenusOfChapter(asyncPlug, reference.getReferenceId());
+			break;
 		case PAGE:
-			return connector.getSubMenusOfPage(reference.getReferenceId());
+			connector.getSubMenusOfPage(asyncPlug, reference.getReferenceId());
+			break;
 		case RESOURCE:
 		default:
 			throw new Error("Impossible switch case in getSubMenus");
@@ -97,10 +106,11 @@ public class Model {
 	}
 	
 	/**
+	 * Asynchronously returns the parent reference
+	 * 
 	 * @param reference is the child's reference
-	 * @return the parent reference
 	 */
-	public Data getParentOf(DataReference reference) {
-		return connector.getParentOf(reference);
+	public void getParentOf(ModelAsyncPlug<Data> asyncPlug, DataReference reference) {
+		connector.getParentOf(asyncPlug, reference);
 	}
 }

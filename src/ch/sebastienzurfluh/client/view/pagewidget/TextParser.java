@@ -1,5 +1,6 @@
 package ch.sebastienzurfluh.client.view.pagewidget;
 
+import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
@@ -38,13 +39,17 @@ public class TextParser {
 			} else {
 				parsed.append(parsing.substring(0, imgDefBegin));
 				
-				parsed.append(getImageHTML(
+				
+				int positionOfImageHTML = parsed.length();
+				asyncInsertImageHTML(
 						new DataReference(
 								DataType.RESOURCE,
 								Integer.parseInt(
 										parsing.substring(
 												imgDefBegin + IMG_BALISE_START.length(),
-												imgDefEnd)))));
+												imgDefEnd))),
+						parsed,
+						positionOfImageHTML);
 				
 				parsing = parsing.substring(imgDefEnd + IMG_BALISE_END.length());
 			}
@@ -58,19 +63,22 @@ public class TextParser {
 	private String detailsExtension = "-details";
 	private String imageExtension = "-image";
 	
-	private String getImageHTML(DataReference reference) {
-		ResourceData resource = model.getResourceData(reference);
-		
-		return 
-			"<div class=\"" + primaryStyle+containerExtension + "\"> " +
-				"<img class=\"" + primaryStyle+imageExtension + "\"src=\"" + 
-				resource.getURL() + "\" alt=\"" + resource.getTitle() + "\"></img>" +
-				"<div class=\"" + primaryStyle+titleExtension + "\">" +
-					resource.getTitle() +
-				"</div>" +
-				"<div class=\"" + primaryStyle+detailsExtension + "\">" +
-					resource.getDetails() +
-				"</div>" +
-			"</div>";
+	private void asyncInsertImageHTML(DataReference reference, final StringBuilder text, final int position) {
+		model.getResourceData(new ModelAsyncPlug<ResourceData>() {
+			@Override
+			public void update(ResourceData resource) {
+				text.insert(position, 
+						"<div class=\"" + primaryStyle+containerExtension + "\"> " +
+							"<img class=\"" + primaryStyle+imageExtension + "\"src=\"" + 
+							resource.getURL() + "\" alt=\"" + resource.getTitle() + "\"></img>" +
+							"<div class=\"" + primaryStyle+titleExtension + "\">" +
+								resource.getTitle() +
+							"</div>" +
+							"<div class=\"" + primaryStyle+detailsExtension + "\">" +
+								resource.getDetails() +
+							"</div>" +
+						"</div>");
+			}
+		}, reference);
 	}
 }

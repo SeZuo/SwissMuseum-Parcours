@@ -19,6 +19,7 @@
 
 package ch.sebastienzurfluh.client.control.eventbus;
 
+import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
@@ -56,7 +57,7 @@ public class PageRequestEventHandler implements EventBusListener {
 	@Override
 	public void notify(Event e) {
 		if(e instanceof PageChangeRequest) {
-			PageChangeRequest pageChangeRequest = (PageChangeRequest) e;
+			final PageChangeRequest pageChangeRequest = (PageChangeRequest) e;
 			
 			//TODO Check if the requested page is OK.
 			
@@ -65,13 +66,13 @@ public class PageRequestEventHandler implements EventBusListener {
 				return;
 			
 			// Collect the necessary data and fire an event.
-			Data data = model.getAssociatedData(pageChangeRequest.getPageReference());
-			eventBus.fireEvent(new PageChangeEvent(data.getPageType(), data));
-			
-			// Cache the loaded page.
-			cachedReference = pageChangeRequest.getPageReference();
-			
-			System.out.println("PageRequestHandler: PageChangeEvent sent.");
+			model.getAssociatedData(new ModelAsyncPlug<Data>() {
+				public void update(Data data) {
+					eventBus.fireEvent(new PageChangeEvent(data.getPageType(), data));
+					// Cache the loaded page.
+					cachedReference = pageChangeRequest.getPageReference();
+				};
+			}, pageChangeRequest.getPageReference());
 		}
 	}
 

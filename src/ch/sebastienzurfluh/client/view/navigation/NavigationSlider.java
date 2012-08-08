@@ -20,10 +20,12 @@
 package ch.sebastienzurfluh.client.view.navigation;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Observer;
 import java.util.TreeSet;
 
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
@@ -129,6 +131,18 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	}
 	public int getCurrentItemNumber() {
 		return currentItemNumber;
+	}
+	public void setFocus(DataReference menuReference) {
+		// retrieve the menu in the list.
+		int menuRank = 0;
+		for (NavigationItem menu : tileOrderList) {
+			if (menu.getReference().equals(menuReference.getReferenceId())) {
+				animatedScroller.setFocusWidget(menuRank);
+				break;
+			}
+			menuRank++;
+		}
+		
 	}
 	
 	/*******************************************************************************/	

@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.ResourceType;
 import ch.sebastienzurfluh.client.model.structure.Data;
@@ -109,7 +110,7 @@ public class TestConnector implements IOConnector {
 				"The link you've just clicked sent you here. This page belongs to the same chapter you were in. <br>" +
 						"Sometimes, this is not the case and a link in the page will send you to another chapter or" +
 						" another booklet. Don't worry you can always go back, using the back button on your device " +
-						"[img]1[/img].<br> Go to the next page by either using the navigation menu (above) or the tile menu (below).",
+						"[img]1[/img] Go to the next page by either using the navigation menu (above) or the tile menu (below).",
 				"Step 3",
 				"Try it by yourself.",
 				testSquareURLPage,
@@ -126,23 +127,23 @@ public class TestConnector implements IOConnector {
 	}
 
 	@Override
-	public Data getBookletDataOf(int referenceId) {
-		return getDataOf(DataType.BOOKLET, referenceId);
+	public void getBookletDataOf(ModelAsyncPlug asyncPlug, int referenceId) {
+		asyncPlug.update(getDataOf(DataType.BOOKLET, referenceId));
 	}
 	
 	@Override
-	public Data getChapterDataOf(int referenceId) {
-		return getDataOf(DataType.CHAPTER, referenceId);
+	public void getChapterDataOf(ModelAsyncPlug asyncPlug, int referenceId) {
+		asyncPlug.update(getDataOf(DataType.CHAPTER, referenceId));
 	}
 
 	@Override
-	public Data getPageDataOf(int referenceId) {
-		return getDataOf(DataType.PAGE, referenceId);
+	public void getPageDataOf(ModelAsyncPlug asyncPlug, int referenceId) {
+		asyncPlug.update(getDataOf(DataType.PAGE, referenceId));
 	}
 
 	@Override
-	public ResourceData getRessourceDataOf(int referenceId) {		
-		return resourceDataMap.get(new DataReference(DataType.RESOURCE, referenceId));
+	public void getRessourceDataOf(ModelAsyncPlug asyncPlug, int referenceId) {		
+		asyncPlug.update(resourceDataMap.get(new DataReference(DataType.RESOURCE, referenceId)));
 	}
 	
 	private Data getDataOf(DataType type, int referenceId) {
@@ -150,53 +151,55 @@ public class TestConnector implements IOConnector {
 	}
 
 	@Override
-	public LinkedList<MenuData> getSubMenusOfBooklet(int referenceId) {
+	public void getSubMenusOfBooklet(ModelAsyncPlug asyncPlug, int referenceId) {
 		LinkedList<MenuData> menus = new LinkedList<MenuData>();
 		if (referenceId == 1) {
 			menus.add(dataMap.get(new DataReference(DataType.CHAPTER, 1)).getMenu());
 			menus.add(dataMap.get(new DataReference(DataType.CHAPTER, 2)).getMenu());
 		}
 		
-		return menus;
+		asyncPlug.update(menus);
 	}
 
 	@Override
-	public LinkedList<MenuData> getSubMenusOfChapter(int referenceId) {
+	public void getSubMenusOfChapter(ModelAsyncPlug asyncPlug, int referenceId) {
 		LinkedList<MenuData> menus = new LinkedList<MenuData>();
 		if (referenceId == 2) {
 			menus.add(dataMap.get(new DataReference(DataType.PAGE, 1)).getMenu());
 		}
 		
-		return menus;
+		asyncPlug.update(menus);
 	}
 
 	@Override
-	public LinkedList<MenuData> getSubMenusOfPage(int referenceId) {
-		return new LinkedList<MenuData>();
+	public void getSubMenusOfPage(ModelAsyncPlug asyncPlug, int referenceId) {
+		asyncPlug.update(new LinkedList<MenuData>());
 	}
 
 	@Override
-	public Collection<MenuData> getAllBookletMenus() {
+	public void getAllBookletMenus(ModelAsyncPlug asyncPlug) {
 		LinkedList<MenuData> booklets = new LinkedList<MenuData>();
 		booklets.add(dataMap.get(new DataReference(DataType.BOOKLET, 1)).getMenu());
-		return booklets;
+		asyncPlug.update(booklets);
 	}
 
 	@Override
-	public Data getParentOf(DataReference childReference) {
+	public void getParentOf(ModelAsyncPlug asyncPlug, DataReference childReference) {
 		switch(childReference.getType()) {
 		case RESOURCE:
 		case PAGE:
 			switch(childReference.getReferenceId()) {
 			case 1:
-				return getChapterDataOf(2);
+				asyncPlug.update(getDataOf(DataType.CHAPTER, 2));
+				return;
 			}
 			break;
 		case CHAPTER:
 			switch(childReference.getReferenceId()) {
 			case 1:
 			case 2:
-				return getBookletDataOf(1);
+				asyncPlug.update(getDataOf(DataType.BOOKLET, 1));
+				return;
 			}
 			break;
 		case BOOKLET:
@@ -206,7 +209,6 @@ public class TestConnector implements IOConnector {
 		default:
 			break;
 		}
-		return null;
 	}
 
 }

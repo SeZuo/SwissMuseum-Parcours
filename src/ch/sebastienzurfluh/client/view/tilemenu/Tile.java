@@ -114,4 +114,8 @@ public class Tile extends FocusPanel implements MenuButton {
 	public DataReference getReference() {
 		return menuReference;
 	}
+	
+	public int getPriority() {
+		return 0; //TODO
+	}
 }

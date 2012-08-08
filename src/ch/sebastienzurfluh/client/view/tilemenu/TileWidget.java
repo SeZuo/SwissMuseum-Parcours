@@ -21,6 +21,7 @@ package ch.sebastienzurfluh.client.view.tilemenu;
 
 import java.util.Collection;
 
+import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
@@ -118,7 +119,11 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 			Data data = pageChangeEvent.getData();
 			switch (pageChangeEvent.getPageType()) {
 			case SUPER:
-				reloadTiles(bookletMenu, model.getMenus(DataType.BOOKLET));
+				model.getMenus(new ModelAsyncPlug<Collection<MenuData>>() {
+					public void update(Collection<MenuData> data) {
+						reloadTiles(bookletMenu, data);
+					};
+				}, DataType.BOOKLET);
 				break;
 			case BOOKLET:
 				// list the booklet's chapters
@@ -134,11 +139,16 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 		}
 	}
 	
-	private void reloadTiles (TileMenu menu, DataReference parentReference) {
+	private void reloadTiles (final TileMenu menu, DataReference parentReference) {
 		menu.clearTiles();
-		for (MenuData menuData : model.getSubMenus(parentReference.getType(), parentReference)) {
-			menu.addTile(menuData);
-		}
+		model.getSubMenus(new ModelAsyncPlug<Collection<MenuData>>() {
+			@Override
+			public void update(Collection<MenuData> data) {
+				for (MenuData menuData : data) {
+					menu.addTile(menuData);
+				}
+			}
+		}, parentReference.getType(), parentReference);
 	}
 	
 	private void reloadTiles (TileMenu menu, Collection<MenuData> menus) {

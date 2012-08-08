@@ -19,11 +19,15 @@
 
 package ch.sebastienzurfluh.client.view.tilemenu;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.TreeSet;
 
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
+import ch.sebastienzurfluh.client.view.navigation.NavigationItem;
 import ch.sebastienzurfluh.client.view.tilemenu.Tile.TileMode;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -40,7 +44,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class TileMenu extends VerticalPanel implements MenuList {
 	private String stylePrimaryName = "tileMenu";
 	private FlowPanel tilePanel;
-	private HashMap<Integer, Tile> tileOrderList;
+	private TreeSet<Tile> tileOrderList;
 	private ModeSwapButton button;
 	private PageRequestHandler pageRequestHandler;
 	
@@ -61,7 +65,13 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		add(firstLine);
 		
 		tilePanel = new FlowPanel();
-		tileOrderList = new HashMap<Integer, Tile>();
+		tileOrderList = new TreeSet<Tile>(new Comparator<Tile>() {
+			@Override
+			public int compare(Tile o1, Tile o2) {
+				return ((Integer) o1.getPriority()).compareTo(o2.getPriority());
+			}
+		});
+		
 		tilePanel.setStyleName(stylePrimaryName + "-" + "tileList");
 		add(tilePanel);
 	}
@@ -70,7 +80,7 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		Tile tile = new Tile(menuData);
 		tile.addClickHandler(pageRequestHandler);
 		tile.setMode(currentMode);
-		tileOrderList.put(menuData.getPriorityNumber(), tile);
+		tileOrderList.add(tile);
 		// TODO order the tiles in the menu according to their priority number
 		tilePanel.add(tile);
 	}
@@ -93,8 +103,13 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		} else {
 			button.setState(TwoStatesImageButton.State.TWO);
 		}
-		for (Tile tile : tileOrderList.values()) {
+		for (Tile tile : tileOrderList) {
 			tile.setMode(mode);
 		}
+	}
+
+	@Override
+	public void setFocus(DataReference menuData) {
+		
 	}
 }

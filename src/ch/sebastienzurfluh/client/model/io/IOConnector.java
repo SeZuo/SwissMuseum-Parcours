@@ -19,12 +19,8 @@
 
 package ch.sebastienzurfluh.client.model.io;
 
-import java.util.Collection;
-
-import ch.sebastienzurfluh.client.model.structure.Data;
+import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
-import ch.sebastienzurfluh.client.model.structure.MenuData;
-import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 /**
  * Handles communication with the ADBMS.
@@ -32,38 +28,38 @@ import ch.sebastienzurfluh.client.model.structure.ResourceData;
  *
  */
 public interface IOConnector {
-	Collection<MenuData> getAllBookletMenus();
+	void getAllBookletMenus(ModelAsyncPlug asyncPlug);
 
-	Data getBookletDataOf(int referenceId);
+	void getBookletDataOf(ModelAsyncPlug asyncPlug, int referenceId);
 
-	Data getChapterDataOf(int referenceId);
+	void getChapterDataOf(ModelAsyncPlug asyncPlug, int referenceId);
 
-	Data getPageDataOf(int referenceId);
+	void getPageDataOf(ModelAsyncPlug asyncPlug, int referenceId);
 
-	ResourceData getRessourceDataOf(int referenceId);
+	void getRessourceDataOf(ModelAsyncPlug asyncPlug, int referenceId);
 
 	/**
 	 * @param referenceId of the booklet.
 	 * @return menus of the booklet's chapters, an empty one if there were none.
 	 */
-	Collection<MenuData> getSubMenusOfBooklet(int referenceId);
+	void getSubMenusOfBooklet(ModelAsyncPlug asyncPlug, int referenceId);
 
 	/**
 	 * @param referenceId of the chapter.
 	 * @return menus of the chapter's pages, an empty one if there were none.
 	 */
-	Collection<MenuData> getSubMenusOfChapter(int referenceId);
+	void getSubMenusOfChapter(ModelAsyncPlug asyncPlug, int referenceId);
 
 	/**
 	 * @param referenceId of the page.
 	 * @return menus of the page's resources, an empty one if there were none.
 	 */
-	Collection<MenuData> getSubMenusOfPage(int referenceId);
+	void getSubMenusOfPage(ModelAsyncPlug asyncPlug, int referenceId);
 
 	/**
 	 * @param childReference of the parent
 	 * @return the parent, null if there were none.
 	 */
-	Data getParentOf(DataReference childReference);
+	void getParentOf(ModelAsyncPlug asyncPlug, DataReference childReference);
 	
 }

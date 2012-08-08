@@ -21,6 +21,7 @@ package ch.sebastienzurfluh.client.view.navigation;
 
 import java.util.Collection;
 
+import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
@@ -31,6 +32,7 @@ import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.model.structure.ResourceData;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -89,17 +91,25 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 			Data data = pageChangeEvent.getData();
 			switch (pageChangeEvent.getPageType()) {
 			case SUPER:
-				reloadTiles(bookletSlider, model.getMenus(DataType.BOOKLET));
+				model.getMenus(new ModelAsyncPlug<Collection<MenuData>>() {
+					@Override
+					public void update(Collection<MenuData> dataList) {
+						reloadTiles(bookletSlider, dataList);
+					}
+				}, DataType.BOOKLET);
 				break;
 			case BOOKLET:
 				// list the booklet's chapters
 				reloadTilesWithParentFirst(chapterSlider, data.getReference());
+				bookletSlider.setFocus(data.getReference());
 				break;
 			case CHAPTER:
 				// list the chapter's pages
 				reloadTilesWithParentFirst(pageSlider, data.getReference());
+				chapterSlider.setFocus(data.getReference());
 				break;
 			default:
+				pageSlider.setFocus(data.getReference());
 				break;
 			}
 
@@ -139,13 +149,24 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 		}
 	}
 
-	private void reloadTilesWithParentFirst(NavigationSlider menu, DataReference parentReference) {
+	private void reloadTilesWithParentFirst(final NavigationSlider menu, DataReference parentReference) {
 		menu.clearTiles();
-		menu.addFirstTile(model.getAssociatedData(parentReference).getMenu());
 
-		for (MenuData menuData : model.getSubMenus(parentReference.getType(), parentReference)) {
-			menu.addTile(menuData);
-		}
+		model.getAssociatedData(new ModelAsyncPlug<Data>() {
+			@Override
+			public void update(Data data) {
+				menu.addFirstTile(data.getMenu());
+			}
+		}, parentReference);
+
+		model.getSubMenus(new ModelAsyncPlug<Collection<MenuData>>() {
+			@Override
+			public void update(Collection<MenuData> dataList) {
+				for (MenuData menuData : dataList) {
+					menu.addTile(menuData);
+				}
+			}
+		}, parentReference.getType(), parentReference);
 	}
 }
 
