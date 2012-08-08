@@ -35,14 +35,13 @@ public class MenuData {
 	private DataType pageType;
 	
 	public MenuData(DataReference reference,
-			DataType pageType,
 			int priorityNumber,
 			String title,
 			String description,
 			String squareImgURL,
 			String rectangleImgURL) {
 		setReference(reference);
-		setPageType(pageType);
+		setPageType(reference.getType());
 		setPriorityNumber(priorityNumber);
 		setTitle(title);
 		setDescription(description);

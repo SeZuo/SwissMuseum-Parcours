@@ -32,7 +32,6 @@ public class Data {
 	private PageData pageData;
 	
 	public Data(DataReference reference,
-			DataType pageType,
 			int priorityNumber,
 			String pageTitle,
 			String pageContentHeader,
@@ -41,8 +40,8 @@ public class Data {
 			String menuDescription,
 			String squareImgURL,
 			String rectangleImgURL) {
-		menuData = new MenuData(reference, pageType, priorityNumber, menuTitle, menuDescription, squareImgURL, rectangleImgURL);
-		pageData = new PageData(reference, pageType, pageTitle, pageContentHeader, pageContentBody);
+		menuData = new MenuData(reference, priorityNumber, menuTitle, menuDescription, squareImgURL, rectangleImgURL);
+		pageData = new PageData(reference, pageTitle, pageContentHeader, pageContentBody);
 	}
 	
 	public MenuData getMenu() {

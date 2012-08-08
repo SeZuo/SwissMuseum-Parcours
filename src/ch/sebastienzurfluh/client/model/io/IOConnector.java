@@ -19,8 +19,13 @@
 
 package ch.sebastienzurfluh.client.model.io;
 
+import java.util.Collection;
+
 import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
+import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
+import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 /**
  * Handles communication with the ADBMS.
@@ -28,38 +33,38 @@ import ch.sebastienzurfluh.client.model.structure.DataReference;
  *
  */
 public interface IOConnector {
-	void getAllBookletMenus(ModelAsyncPlug asyncPlug);
+	void getAllBookletMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug);
 
-	void getBookletDataOf(ModelAsyncPlug asyncPlug, int referenceId);
+	void getBookletDataOf(ModelAsyncPlug<Data> asyncPlug, int referenceId);
 
-	void getChapterDataOf(ModelAsyncPlug asyncPlug, int referenceId);
+	void getChapterDataOf(ModelAsyncPlug<Data> asyncPlug, int referenceId);
 
-	void getPageDataOf(ModelAsyncPlug asyncPlug, int referenceId);
+	void getPageDataOf(ModelAsyncPlug<Data> asyncPlug, int referenceId);
 
-	void getRessourceDataOf(ModelAsyncPlug asyncPlug, int referenceId);
+	void getRessourceDataOf(ModelAsyncPlug<ResourceData> asyncPlug, int referenceId);
 
 	/**
 	 * @param referenceId of the booklet.
 	 * @return menus of the booklet's chapters, an empty one if there were none.
 	 */
-	void getSubMenusOfBooklet(ModelAsyncPlug asyncPlug, int referenceId);
+	void getSubMenusOfBooklet(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId);
 
 	/**
 	 * @param referenceId of the chapter.
 	 * @return menus of the chapter's pages, an empty one if there were none.
 	 */
-	void getSubMenusOfChapter(ModelAsyncPlug asyncPlug, int referenceId);
+	void getSubMenusOfChapter(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId);
 
 	/**
 	 * @param referenceId of the page.
 	 * @return menus of the page's resources, an empty one if there were none.
 	 */
-	void getSubMenusOfPage(ModelAsyncPlug asyncPlug, int referenceId);
+	void getSubMenusOfPage(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId);
 
 	/**
 	 * @param childReference of the parent
 	 * @return the parent, null if there were none.
 	 */
-	void getParentOf(ModelAsyncPlug asyncPlug, DataReference childReference);
+	void getParentOf(ModelAsyncPlug<Data> asyncPlug, DataReference childReference);
 	
 }

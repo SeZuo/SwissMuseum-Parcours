@@ -50,7 +50,6 @@ public class TestConnector implements IOConnector {
 		DataReference reference = new DataReference(DataType.BOOKLET, 1);
 		dataMap.put(reference, new Data(
 			reference,
-			DataType.BOOKLET,
 			1,
 			"Tutorial",
 			"This booklet explains how to use the application.",
@@ -66,7 +65,6 @@ public class TestConnector implements IOConnector {
 		DataReference reference2 = new DataReference(DataType.CHAPTER, 1);
 		dataMap.put(reference2, new Data(
 				reference2,
-				DataType.CHAPTER,
 				1,
 				"Step 1",
 				"You've just used the \"tile menu\". Use this menu to choose which object you want to see.",
@@ -84,7 +82,6 @@ public class TestConnector implements IOConnector {
 		DataReference reference3 = new DataReference(DataType.CHAPTER, 2);
 		dataMap.put(reference3, new Data(
 				reference3,
-				DataType.CHAPTER,
 				2,
 				"Step 2",
 				"You've just changed chapter!",
@@ -103,7 +100,6 @@ public class TestConnector implements IOConnector {
 		DataReference reference4 = new DataReference(DataType.PAGE, 1);
 		dataMap.put(reference4, new Data(
 				reference4,
-				DataType.PAGE,
 				1,
 				"Step 3",
 				"This is a page.",

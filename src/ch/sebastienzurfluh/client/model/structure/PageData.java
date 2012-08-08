@@ -52,12 +52,11 @@ public class PageData {
 	private DataType pageType;
 	
 	public PageData(DataReference reference,
-			DataType pageType,
 			String title,
 			String contentHeader,
 			String contentBody) {
 		setReference(reference);
-		setPageType(pageType);
+		setPageType(reference.getType());
 		setTitle(title);
 		setContentHeader(contentHeader);
 		setContentBody(contentBody);

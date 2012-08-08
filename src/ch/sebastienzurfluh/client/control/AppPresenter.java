@@ -50,9 +50,10 @@ public class AppPresenter {
 	public void start() {
 		eventBus = new EventBus();
 
-		model = ModelFactory.createModel(ModelFactory.Connector.TEST);
+//		model = ModelFactory.createModel(ModelFactory.Connector.TEST);
+		model = ModelFactory.createModel(ModelFactory.Connector.CAKE);
 
-
+		
 		PageRequestEventHandler pageRequestHandler = new PageRequestEventHandler(eventBus, model);
 
 		View view = new View(eventBus, pageRequestHandler, model);
