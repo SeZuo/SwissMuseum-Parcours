@@ -72,7 +72,6 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 	}
 	
 	private void setDefaults() {
-
 		chapterMenu.setVisible(false);
 		pageMenu.setVisible(false);
 	}

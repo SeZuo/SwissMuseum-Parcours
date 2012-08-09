@@ -24,8 +24,11 @@ import java.util.LinkedList;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.jsonp.client.JsonpRequestBuilder;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 
 import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
@@ -41,14 +44,11 @@ import ch.sebastienzurfluh.client.model.structure.ResourceData;
  *
  */
 public class CakeConnector implements IOConnector {
-	private final static String CAKE_PATH = "www.sebastienzurfluh.ch/cakePHP/index.php/";
+	private final static String CAKE_PATH = "http://www.sebastienzurfluh.ch/swissmuseumbooklets/cakePHP/index.php/";
 	private final static String CAKE_SUFFIX = ".json";
 	private final static String CAKE_ARGS_SEPARATOR = "/";
-	
-	private JsonpRequestBuilder jsonp;
 
 	public CakeConnector() {
-		jsonp = new JsonpRequestBuilder();
 	}
 	
 	private void asyncRequest(
@@ -57,36 +57,45 @@ public class CakeConnector implements IOConnector {
 			final DataType expectedReturnDataType, 
 			final ResourceType expectedReturnResourceType,
 			String args,
-			final ModelAsyncPlug asyncPlug) {
+			final ModelAsyncPlug<?> asyncPlug) {
 		String url = CAKE_PATH + request.getURL();
-				
-		if(!args.isEmpty()) {
-			url += args + CAKE_ARGS_SEPARATOR + referenceId;
-		} else if (referenceId != -1) {
-			url += referenceId;
+		
+		if (referenceId != -1) {
+			if(!args.isEmpty()) {
+				url += args + CAKE_ARGS_SEPARATOR + referenceId;
+			} else {
+				url += referenceId;
+			}
 		}
 		url += CAKE_SUFFIX;
 		
+		System.out.println("Making async request on "+url);
 		
-		jsonp.requestObject(
-				url,
-				new AsyncCallback<Feed>() {
-					public void onFailure(Throwable throwable) {
-						// I don't care.
-					}
-		
-					public void onSuccess(Feed feed) {
-						JsArray<Entry> entries = feed.getEntries();
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 
+		try {
+			builder.sendRequest(null, new RequestCallback() {
+				public void onError(Request httpRequest, Throwable exception) {
+					System.out.println("JSON request failure. " + exception.getLocalizedMessage());
+				}
+
+				@SuppressWarnings("unchecked")
+				public void onResponseReceived(Request httpRequest, Response response) {
+					if (200 == response.getStatusCode()) {
+						System.out.println("Got answer from async request.");
+						JsArray<Entry> entries = convertToOverlayedJava(response.getText());
+						
+						System.out.println("Parsing request with entry" + entries.get(0).getMenuTitle());
+						
 						switch(request) {
 						case GETBOOKLETDATAOF:
 						case GETCHAPTERDATAOF:
 						case GETPAGEDATAOF:
 						case GETPARENTOF:
-							asyncPlug.update(parseData(entries.get(0), referenceId, expectedReturnDataType));
+							((ModelAsyncPlug<Data>)asyncPlug).update(parseData(entries.get(0), referenceId, expectedReturnDataType));
 							break;
 						case GETRESOURCEDATAOF:
-							asyncPlug.update(
+							((ModelAsyncPlug<ResourceData>)asyncPlug).update(
 									parseResourceData(entries.get(0), referenceId, expectedReturnResourceType));
 							break;
 						case GETALLBOOKLETMENUS:
@@ -98,15 +107,30 @@ public class CakeConnector implements IOConnector {
 								Entry entry = entries.get(i);
 								dataList.add(parseMenuData(entry, referenceId, expectedReturnDataType));
 							}
-							asyncPlug.update(dataList);
+							((ModelAsyncPlug<Collection<MenuData>>)asyncPlug).update(dataList);
 							break;
 						default:
 							throw new Error("Yo, the request is wrong.");
 						}
-						
+					} else {
+						System.out.println("JSON request failure. Status " + response.getStatusCode() + ".");
 					}
-				});
+				}
+			});
+		} catch (RequestException e) {
+			System.out.println("JSON request failure. Request exception.");
+		}
+		
 	}
+	
+	/**
+	 * Converts json data into java objects.
+	 * @param json
+	 * @return a java converted
+	 */
+	private final native JsArray<Entry> convertToOverlayedJava(String json) /*-{
+    	return eval(json);
+  	}-*/;
 	
 	private Data parseData(Entry entry, int referenceId, DataType expectedDataType) {
 		return new Data(
@@ -140,63 +164,6 @@ public class CakeConnector implements IOConnector {
 				entry.getResourceURL());
 	}
 
-	class Feed extends JavaScriptObject {
-		protected Feed() {}
-
-		public final native JsArray<Entry> getEntries() /*-{
-		     return this.feed.entry;
-		   }-*/;
-	}
-
-	class Entry extends JavaScriptObject {
-		protected Entry() {}
-		
-		// Page
-		public final native String getPageTitle() /*-{
-			return this.page_datas.title;
-		}-*/;
-		
-		public final native String getPageContentHeader() /*-{
-			return this.page_datas.subtitle;
-		}-*/;
-		
-		public final native String getPageContentBody() /*-{
-			return this.page_datas.content;
-		}-*/;
-
-		// Menu
-		public final native String getMenuTitle() /*-{
-			return this.menus.title;
-		}-*/;
-		
-		public final native String getMenuDescription() /*-{
-			return this.menus.description;
-		}-*/;
-		
-		public final native String getMenuPriorityNumber() /*-{
-			return this.menus.priority_number;
-		}-*/;
-
-		public final native String getMenuTileImgURL() /*-{
-			return this.menus.tile_url_img;
-		}-*/;
-		
-		public final native String getMenuSliderImgURL() /*-{
-			return this.menus.slider_url_img;
-		}-*/;
-		
-		// Resource
-		public final native String getResourceTitles() /*-{
-    		return this.resources.title;
-		}-*/;
-
-		public final native String getResourceDetails() /*-{
-    		return this.resources.details;
-		}-*/;
-		public final native String getResourceURL() /*-{
-	    	return this.resources.url;
-		}-*/;
-	}
 
 
 	private enum Requests {
@@ -224,6 +191,7 @@ public class CakeConnector implements IOConnector {
 
 	@Override
 	public void getAllBookletMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug) {
+		System.out.println("Async request made: getAllBookletMenus.");
 		asyncRequest(
 				Requests.GETALLBOOKLETMENUS,
 				-1,
@@ -342,4 +310,54 @@ public class CakeConnector implements IOConnector {
 				parentTypeString,
 				asyncPlug);
 	}
+}
+
+class Entry extends JavaScriptObject {
+	protected Entry() {}
+	
+	// Page
+	public final native String getPageTitle() /*-{
+			return this.page_datas.title;
+		}-*/;
+	
+	public final native String getPageContentHeader() /*-{
+			return this.page_datas.subtitle;
+		}-*/;
+	
+	public final native String getPageContentBody() /*-{
+			return this.page_datas.content;
+		}-*/;
+	
+	// Menu
+	public final native String getMenuTitle() /*-{
+			return this.menus.title;
+		}-*/;
+	
+	public final native String getMenuDescription() /*-{
+			return this.menus.description;
+		}-*/;
+	
+	public final native String getMenuPriorityNumber() /*-{
+			return this.menus.priority_number;
+		}-*/;
+	
+	public final native String getMenuTileImgURL() /*-{
+			return this.menus.tile_url_img;
+		}-*/;
+	
+	public final native String getMenuSliderImgURL() /*-{
+			return this.menus.slider_url_img;
+		}-*/;
+	
+	// Resource
+	public final native String getResourceTitles() /*-{
+    		return this.resources.title;
+		}-*/;
+	
+	public final native String getResourceDetails() /*-{
+    		return this.resources.details;
+		}-*/;
+	public final native String getResourceURL() /*-{
+	    	return this.resources.url;
+		}-*/;
 }

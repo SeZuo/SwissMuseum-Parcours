@@ -23,6 +23,7 @@ import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
+import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
@@ -61,29 +62,7 @@ public class AppPresenter {
 		parent.add(view);
 
 		// Start the app
-		//		eventBus.fireEvent(new PageChangeEvent(DataType.SUPER, null));
-
-		model.getAssociatedData(new ModelAsyncPlug<Data>() {
-			@Override
-			public void update(Data data) {
-				eventBus.fireEvent(new PageChangeEvent(DataType.BOOKLET, data));
-			}
-		}, new DataReference(DataType.BOOKLET, 1));
-
-		model.getAssociatedData(new ModelAsyncPlug<Data>() {
-			@Override
-			public void update(Data data) {
-				eventBus.fireEvent(new PageChangeEvent(DataType.CHAPTER, data));
-			}
-		}, new DataReference(DataType.CHAPTER, 1));
-
-		model.getAssociatedData(new ModelAsyncPlug<Data>() {
-			@Override
-			public void update(Data data) {
-				eventBus.fireEvent(new PageChangeEvent(DataType.PAGE, data));
-			}
-		}, new DataReference(DataType.PAGE, 1));
-		
 		eventBus.fireEvent(new PageChangeEvent(DataType.SUPER, null));
+//		eventBus.fireEvent(new PageChangeRequest(new DataReference(DataType.PAGE, 1)));
 	}
 }
