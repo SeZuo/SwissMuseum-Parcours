@@ -32,16 +32,22 @@ public class MenuData {
 	private int priorityNumber;
 	private String title, description;
 	private String squareImgURL, rectangleImgURL;
-	private DataType pageType;
 	
-	public MenuData(DataReference reference,
+	/**
+	 * @param linkReference reference of the page the menu is linking to
+	 * @param priorityNumber
+	 * @param title
+	 * @param description
+	 * @param squareImgURL
+	 * @param rectangleImgURL
+	 */
+	public MenuData(DataReference linkReference,
 			int priorityNumber,
 			String title,
 			String description,
 			String squareImgURL,
 			String rectangleImgURL) {
-		setReference(reference);
-		setPageType(reference.getType());
+		setReference(linkReference);
 		setPriorityNumber(priorityNumber);
 		setTitle(title);
 		setDescription(description);
@@ -58,13 +64,9 @@ public class MenuData {
 	private void setReference(DataReference reference) {
 		this.reference = reference;
 	}
-
-	private void setPageType(DataType pageType) {
-		this.pageType = pageType;
-	}
 	
 	public DataType getPageType() {
-		return pageType;
+		return reference.getType();
 	}
 
 	public int getPriorityNumber() {

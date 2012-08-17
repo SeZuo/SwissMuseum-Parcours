@@ -61,7 +61,7 @@ public class CakeConnector implements IOConnector {
 		String url = CAKE_PATH + request.getURL();
 		
 		if (referenceId != -1) {
-			if(!args.isEmpty()) {
+			if(args != null && !args.isEmpty()) {
 				url += args + CAKE_ARGS_SEPARATOR + referenceId;
 			} else {
 				url += referenceId;
@@ -84,8 +84,6 @@ public class CakeConnector implements IOConnector {
 					if (200 == response.getStatusCode()) {
 						System.out.println("Got answer from async request.");
 						JsArray<Entry> entries = convertToOverlayedJava(response.getText());
-						
-						System.out.println("Parsing request with entry" + entries.get(0).getMenuTitle());
 						
 						switch(request) {
 						case GETBOOKLETDATAOF:
@@ -133,8 +131,12 @@ public class CakeConnector implements IOConnector {
   	}-*/;
 	
 	private Data parseData(Entry entry, int referenceId, DataType expectedDataType) {
+		// Create data reference
+		
+		
+		
 		return new Data(
-				new DataReference(expectedDataType, referenceId),
+				getDataReference(expectedDataType, entry),
 				Integer.parseInt(entry.getMenuPriorityNumber()), 
 				entry.getPageTitle(),
 				entry.getPageContentHeader(),
@@ -147,7 +149,7 @@ public class CakeConnector implements IOConnector {
 	
 	private MenuData parseMenuData(Entry entry, int referenceId, DataType expectedDataType) {
 		return new MenuData(
-				new DataReference(expectedDataType, referenceId),
+				getDataReference(expectedDataType, entry),
 				Integer.parseInt(entry.getMenuPriorityNumber()),
 				entry.getMenuTitle(),
 				entry.getMenuDescription(),
@@ -163,9 +165,24 @@ public class CakeConnector implements IOConnector {
 				entry.getResourceDetails(),
 				entry.getResourceURL());
 	}
+	
+	private DataReference getDataReference(DataType type, Entry entry) {
+		switch(type) {
+		case BOOKLET:
+			return new DataReference(type, Integer.parseInt(entry.getBookletReference()));
+		case CHAPTER:
+			return new DataReference(type, Integer.parseInt(entry.getChapterReference()));
+		case PAGE:
+			return new DataReference(type, Integer.parseInt(entry.getPageReference()));
+		default:
+			return null;
+		}
+	}
 
 
-
+	/**
+	 *  list all possible requests and their command (url) in cake
+	 */
 	private enum Requests {
 		GETALLBOOKLETMENUS("booklets/listMenus"),
 		GETBOOKLETDATAOF("booklets/getData/"),
@@ -315,49 +332,63 @@ public class CakeConnector implements IOConnector {
 class Entry extends JavaScriptObject {
 	protected Entry() {}
 	
+	// Reference ids
+	public final native String getBookletReference() /*-{
+		return this.booklets.id;
+	}-*/;
+	
+	public final native String getChapterReference() /*-{
+		return this.chapters.id;
+	}-*/;
+	
+	public final native String getPageReference() /*-{
+		return this.pages.id;
+	}-*/;
+	
 	// Page
 	public final native String getPageTitle() /*-{
-			return this.page_datas.title;
-		}-*/;
+		return this.page_datas.title;
+	}-*/;
 	
 	public final native String getPageContentHeader() /*-{
-			return this.page_datas.subtitle;
-		}-*/;
+		return this.page_datas.subtitle;
+	}-*/;
 	
 	public final native String getPageContentBody() /*-{
-			return this.page_datas.content;
-		}-*/;
+		return this.page_datas.content;
+	}-*/;
 	
 	// Menu
 	public final native String getMenuTitle() /*-{
-			return this.menus.title;
-		}-*/;
+		return this.menus.title;
+	}-*/;
 	
 	public final native String getMenuDescription() /*-{
-			return this.menus.description;
-		}-*/;
+		return this.menus.description;
+	}-*/;
 	
 	public final native String getMenuPriorityNumber() /*-{
-			return this.menus.priority_number;
-		}-*/;
+		return this.menus.priority_number;
+	}-*/;
 	
 	public final native String getMenuTileImgURL() /*-{
-			return this.menus.tile_url_img;
-		}-*/;
+		return this.menus.tile_url_img;
+	}-*/;
 	
 	public final native String getMenuSliderImgURL() /*-{
-			return this.menus.slider_url_img;
-		}-*/;
+		return this.menus.slider_url_img;
+	}-*/;
 	
 	// Resource
 	public final native String getResourceTitles() /*-{
-    		return this.resources.title;
-		}-*/;
+    	return this.resources.title;
+	}-*/;
 	
 	public final native String getResourceDetails() /*-{
-    		return this.resources.details;
-		}-*/;
+    	return this.resources.details;
+	}-*/;
+	
 	public final native String getResourceURL() /*-{
-	    	return this.resources.url;
-		}-*/;
+	   	return this.resources.url;
+	}-*/;
 }

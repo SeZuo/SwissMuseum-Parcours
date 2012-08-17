@@ -145,6 +145,20 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		
 	}
 	
+	/**
+	 * 
+	 * @param number the rank of the widget to retrieve
+	 * @return the {@code number}th widget or null if there's none at this position.
+	 */
+	public NavigationItem getWidget(int number) {
+		int i = 0;
+		for (Iterator<NavigationItem> iterator = tileOrderList.iterator(); iterator.hasNext(); i++) {
+			if (i == number)
+				return  iterator.next();
+		}
+		return null;
+	}
+	
 	/*******************************************************************************/	
 	/******** END - Centralised widget selection ***********************************/
 	/*******************************************************************************/
@@ -191,21 +205,6 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		}, MouseOutEvent.getType());
 	}
 
-	
-	/**
-	 * 
-	 * @param number the rank of the widget to retrieve
-	 * @return the {@code number}th widget or null if there's none at this position.
-	 */
-	public NavigationItem getWidget(int number) {
-		int i = 0;
-		for (Iterator<NavigationItem> iterator = tileOrderList.iterator(); iterator.hasNext(); i++) {
-			if (i == number)
-				return  iterator.next();
-		}
-		return null;
-	}
-	
 	/*******************************************************************************/
 	/***** END *** Prevent browser's mouse/touch events ****************************/
 	/*******************************************************************************/
