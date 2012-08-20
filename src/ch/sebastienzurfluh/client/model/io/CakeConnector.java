@@ -20,6 +20,7 @@
 package ch.sebastienzurfluh.client.model.io;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -52,8 +53,12 @@ public class CakeConnector implements IOConnector {
 
 	public CakeConnector() {
 	}
-	
-	
+	/**
+	 * The queue will prevent multiple identical requests to be sent.
+	 * The request will be processed once, then update all the sources.
+	 */
+	HashMap<Requests, HashMap<Integer, LinkedList<ModelAsyncPlug<?>>>> requestsQueue
+		= new HashMap<Requests, HashMap<Integer, LinkedList<ModelAsyncPlug<?>>>>();
 	private void asyncRequest(
 			final Requests request,
 			final int referenceId,
@@ -62,77 +67,98 @@ public class CakeConnector implements IOConnector {
 			String args,
 			final ModelAsyncPlug<?> asyncPlug,
 			final Cache<?, ?> cache) {
-		String url = CAKE_PATH + request.getURL();
+		if (requestsQueue.get(request) == null) {
+			requestsQueue.put(request, new HashMap<Integer, LinkedList<ModelAsyncPlug<?>>>());
+		}
+		if (requestsQueue.get(request).get(referenceId) == null) {
+			requestsQueue.get(request).put(referenceId, new LinkedList<ModelAsyncPlug<?>>());
+		}
+		requestsQueue.get(request).get(referenceId).add(asyncPlug);
 		
-		if (referenceId != -1) {
-			if(args != null && !args.isEmpty()) {
-				url += args + CAKE_ARGS_SEPARATOR + referenceId;
-			} else {
-				url += referenceId;
+		if (requestsQueue.get(request).get(referenceId).size() > 1) {
+			/* There is already a request processing.
+			 this is valid only because the request will always be the same
+			 and because javascript is single threaded. */
+		} else {
+			String url = CAKE_PATH + request.getURL();
+			
+			if (referenceId != -1) {
+				if(args != null && !args.isEmpty()) {
+					url += args + CAKE_ARGS_SEPARATOR + referenceId;
+				} else {
+					url += referenceId;
+				}
+			}
+			url += CAKE_SUFFIX;
+			
+			System.out.println("Making async request on "+url);
+			
+			RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
+
+			try {
+				builder.sendRequest(null, new RequestCallback() {
+					public void onError(Request httpRequest, Throwable exception) {
+						System.out.println("JSON request failure. " + exception.getLocalizedMessage());
+					}
+
+					@SuppressWarnings("unchecked")
+					public void onResponseReceived(Request httpRequest, Response response) {
+						if (200 == response.getStatusCode()) {
+							System.out.println("Got answer from async request.");
+							JsArray<Entry> entries = convertToOverlayedJava(response.getText());
+							
+							switch(request) {
+							case GETBOOKLETDATAOF:
+							case GETCHAPTERDATAOF:
+							case GETPAGEDATAOF:
+							case GETPARENTOF:
+								Data parsedData1 = parseData(entries.get(0), referenceId, expectedReturnDataType);
+								((Cache<Integer, Data>)cache).put(referenceId,
+										parsedData1);
+								/*
+								 * This request cannot be queued with the current system as there is one queue per
+								 * request type and there may be several different requests of the GETPARENTOF type. 
+								 */
+								((ModelAsyncPlug<Data>)asyncPlug).update(
+										parsedData1);
+								break;
+							case GETRESOURCEDATAOF:
+								ResourceData parsedData2 =
+									parseResourceData(entries.get(0), referenceId, expectedReturnResourceType);
+								((Cache<Integer, ResourceData>)cache).put(referenceId,
+										parsedData2);
+								for (ModelAsyncPlug<?> plug : requestsQueue.get(request).get(referenceId)) {
+									((ModelAsyncPlug<ResourceData>)plug).update(
+											parsedData2);
+								}
+								break;
+							case GETALLBOOKLETMENUS:
+							case GETSUBMENUOFBOOKLET:
+							case GETSUBMENUOFCHAPTER:
+							case GETSUBMENUOFPAGE:
+								LinkedList<MenuData> dataList = new LinkedList<MenuData>();
+								for (int i = 0; i < entries.length(); i++) {
+									Entry entry = entries.get(i);
+									dataList.add(parseMenuData(entry, referenceId, expectedReturnDataType));
+								}
+								((Cache<Integer, Collection<MenuData>>)cache).put(referenceId,
+										dataList);
+								for (ModelAsyncPlug<?> plug : requestsQueue.get(request).get(referenceId)) {
+									((ModelAsyncPlug<Collection<MenuData>>)plug).update(dataList);
+								}
+								break;
+							default:
+								throw new Error("Yo, the request is wrong.");
+							}
+						} else {
+							System.out.println("JSON request failure. Status " + response.getStatusCode() + ".");
+						}
+					}
+				});
+			} catch (RequestException e) {
+				System.out.println("JSON request failure. Request exception.");
 			}
 		}
-		url += CAKE_SUFFIX;
-		
-		System.out.println("Making async request on "+url);
-		
-		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
-
-		try {
-			builder.sendRequest(null, new RequestCallback() {
-				public void onError(Request httpRequest, Throwable exception) {
-					System.out.println("JSON request failure. " + exception.getLocalizedMessage());
-				}
-
-				@SuppressWarnings("unchecked")
-				public void onResponseReceived(Request httpRequest, Response response) {
-					if (200 == response.getStatusCode()) {
-						System.out.println("Got answer from async request.");
-						JsArray<Entry> entries = convertToOverlayedJava(response.getText());
-						
-						switch(request) {
-						case GETBOOKLETDATAOF:
-						case GETCHAPTERDATAOF:
-						case GETPAGEDATAOF:
-						case GETPARENTOF:
-							Data parsedData1 = parseData(entries.get(0), referenceId, expectedReturnDataType);
-							((Cache<Integer, Data>)cache).put(referenceId,
-									parsedData1);
-							((ModelAsyncPlug<Data>)asyncPlug).update(
-									parsedData1);
-							break;
-						case GETRESOURCEDATAOF:
-							ResourceData parsedData2 =
-								parseResourceData(entries.get(0), referenceId, expectedReturnResourceType);
-							((Cache<Integer, ResourceData>)cache).put(referenceId,
-									parsedData2);
-							((ModelAsyncPlug<ResourceData>)asyncPlug).update(
-									parsedData2);
-							break;
-						case GETALLBOOKLETMENUS:
-						case GETSUBMENUOFBOOKLET:
-						case GETSUBMENUOFCHAPTER:
-						case GETSUBMENUOFPAGE:
-							LinkedList<MenuData> dataList = new LinkedList<MenuData>();
-							for (int i = 0; i < entries.length(); i++) {
-								Entry entry = entries.get(i);
-								dataList.add(parseMenuData(entry, referenceId, expectedReturnDataType));
-							}
-							((Cache<Integer, Collection<MenuData>>)cache).put(referenceId,
-									dataList);
-							((ModelAsyncPlug<Collection<MenuData>>)asyncPlug).update(dataList);
-							break;
-						default:
-							throw new Error("Yo, the request is wrong.");
-						}
-					} else {
-						System.out.println("JSON request failure. Status " + response.getStatusCode() + ".");
-					}
-				}
-			});
-		} catch (RequestException e) {
-			System.out.println("JSON request failure. Request exception.");
-		}
-		
 	}
 	
 	/**
