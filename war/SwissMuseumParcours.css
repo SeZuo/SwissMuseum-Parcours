@@ -42,7 +42,7 @@ table {
 
 .mainPanel {
 	border-spacing: 25em 0 25em 0;
-	width: 600px;
+	width: 37.5em;
 }
 
 /********************** MENUS **************************************************/
@@ -55,8 +55,8 @@ table {
 }
 
 .navigationItem-image {
-	width: 16em;
-	height: 8em;
+	width: 37.5em;
+	height: 12.5em;
 	margin: 0.1em;
 	padding: 0em;
 	border: 0em;
@@ -64,13 +64,13 @@ table {
 }
 
 .navigationSlider {
-	width: 600px;
-	height: 8em; // should be the same as the navigationItem height.
+	width: 37.5em;
+	height: 12.5em; // should be the same as the navigationItem height.
 	overflow: hidden;
 	cursor: pointer;
 }
 .navigationSlider-button-text {
-	font-size: 3em;
+	font-size: 1em;
 	margin: 0em;
 	padding: 0em;
 	color: white;
@@ -80,12 +80,12 @@ table {
 	margin: 0em;
 	padding: 0.1em;
 	background-color: #121212;
-	border-radius: 25px;
+	border-radius: 0.5em;
 }
 .navigationSlider-button-outer {
 	margin: 0em;
 	padding: 0.1em;
-	border-radius: 360px;
+	border-radius: 0.5em;
 	/* Fallback for web browsers that doesn't support RGBa */
 	background: rgb(156, 156, 156);
 	/* RGBa with 0.6 opacity */
@@ -155,27 +155,30 @@ table {
 	border: 0em;
 }
 .tileMenu {
-	font-size: 2.5em;
+	font-size: 1em;
 	width: 100%;
+	padding-bottom: 0.5em;
 }
 .tileMenu-title {
-	font-size: 3em;
+	font-size: 2em;
     font-family: monospace;
     color: #110000;
 }
 .tileWidget {
+	font-size: 1em;
 	width: 100%;
 }
 
 .tileMenu-detailButton {
+	margin: 0em 0em 0em 0.5em;
 }
 .tileMenu-tileList {
 }
 
 /********************** WIDGET - FOOTER *************************************/
 .footerWidget {
-	font-size: 1em;
-	font-family: monospace;
+	font-size: 0.8em;
+	font-family: courier;
 	color: #110000;
 }
 
@@ -194,18 +197,21 @@ table {
 	margin: 0;
 }
 .pageWidget-title {
-	font-size: 5em;
-    font-family: monospace;
+	font-size: 3em;
+    font-family: courier;
     color: #110000;
 }
+.pageWidget-spanTitle {
+	background-color: #8CD9A7
+}
 .pageWidget-header {
-	font-size: 4em;
-    font-family: monospace;
+	font-size: 2em;
+    font-family: verdana;
     color: #444444;
 }
 .pageWidget-content {
-	font-size: 2em;
-    font-family: monospace;
+	font-size: 1em;
+    font-family: verdana;
     color: #000000;
 }
 

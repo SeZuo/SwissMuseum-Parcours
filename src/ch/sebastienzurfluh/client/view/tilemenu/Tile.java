@@ -45,7 +45,7 @@ public class Tile extends FocusPanel implements MenuButton {
 	private HorizontalPanel tilePanel = new HorizontalPanel();
 	private DataReference menuReference;
 	
-	Tile(MenuData menuData) {
+	public Tile(MenuData menuData) {
 		this.menuReference = menuData.getReference();
 
 		tileImage = new Image(menuData.getSquareImgURL());

@@ -33,6 +33,8 @@ import com.google.gwt.http.client.Response;
 import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.ResourceType;
+import ch.sebastienzurfluh.client.model.cache.Cache;
+import ch.sebastienzurfluh.client.model.cache.SimpleCache;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
@@ -51,13 +53,15 @@ public class CakeConnector implements IOConnector {
 	public CakeConnector() {
 	}
 	
+	
 	private void asyncRequest(
 			final Requests request,
 			final int referenceId,
 			final DataType expectedReturnDataType, 
 			final ResourceType expectedReturnResourceType,
 			String args,
-			final ModelAsyncPlug<?> asyncPlug) {
+			final ModelAsyncPlug<?> asyncPlug,
+			final Cache<?, ?> cache) {
 		String url = CAKE_PATH + request.getURL();
 		
 		if (referenceId != -1) {
@@ -90,11 +94,19 @@ public class CakeConnector implements IOConnector {
 						case GETCHAPTERDATAOF:
 						case GETPAGEDATAOF:
 						case GETPARENTOF:
-							((ModelAsyncPlug<Data>)asyncPlug).update(parseData(entries.get(0), referenceId, expectedReturnDataType));
+							Data parsedData1 = parseData(entries.get(0), referenceId, expectedReturnDataType);
+							((Cache<Integer, Data>)cache).put(referenceId,
+									parsedData1);
+							((ModelAsyncPlug<Data>)asyncPlug).update(
+									parsedData1);
 							break;
 						case GETRESOURCEDATAOF:
+							ResourceData parsedData2 =
+								parseResourceData(entries.get(0), referenceId, expectedReturnResourceType);
+							((Cache<Integer, ResourceData>)cache).put(referenceId,
+									parsedData2);
 							((ModelAsyncPlug<ResourceData>)asyncPlug).update(
-									parseResourceData(entries.get(0), referenceId, expectedReturnResourceType));
+									parsedData2);
 							break;
 						case GETALLBOOKLETMENUS:
 						case GETSUBMENUOFBOOKLET:
@@ -105,6 +117,8 @@ public class CakeConnector implements IOConnector {
 								Entry entry = entries.get(i);
 								dataList.add(parseMenuData(entry, referenceId, expectedReturnDataType));
 							}
+							((Cache<Integer, Collection<MenuData>>)cache).put(referenceId,
+									dataList);
 							((ModelAsyncPlug<Collection<MenuData>>)asyncPlug).update(dataList);
 							break;
 						default:
@@ -131,10 +145,6 @@ public class CakeConnector implements IOConnector {
   	}-*/;
 	
 	private Data parseData(Entry entry, int referenceId, DataType expectedDataType) {
-		// Create data reference
-		
-		
-		
 		return new Data(
 				getDataReference(expectedDataType, entry),
 				Integer.parseInt(entry.getMenuPriorityNumber()), 
@@ -178,6 +188,21 @@ public class CakeConnector implements IOConnector {
 			return null;
 		}
 	}
+	
+	/**
+	 * Caches
+	 */
+	private Cache<Integer, Collection<MenuData>> menuDataCache =
+			new SimpleCache<Integer, Collection<MenuData>>();
+	
+	private Cache<Integer, Data> dataCache =
+			new SimpleCache<Integer, Data>();
+	
+	private Cache<DataReference, Data> referencedDataCache =
+			new SimpleCache<DataReference, Data>();
+	
+	private Cache<Integer, ResourceData> resourceDataCache =
+			new SimpleCache<Integer, ResourceData>();
 
 
 	/**
@@ -215,7 +240,8 @@ public class CakeConnector implements IOConnector {
 				DataType.BOOKLET,
 				null,
 				"",
-				asyncPlug);
+				asyncPlug,
+				menuDataCache);
 	}
 
 	@Override
@@ -226,7 +252,8 @@ public class CakeConnector implements IOConnector {
 				DataType.BOOKLET,
 				null, 
 				"",
-				asyncPlug);
+				asyncPlug,
+				dataCache);
 	}
 
 	@Override
@@ -237,7 +264,8 @@ public class CakeConnector implements IOConnector {
 				DataType.CHAPTER,
 				null, 
 				"",
-				asyncPlug);
+				asyncPlug,
+				dataCache);
 	}
 
 	@Override
@@ -248,7 +276,8 @@ public class CakeConnector implements IOConnector {
 				DataType.PAGE,
 				null, 
 				"",
-				asyncPlug);
+				asyncPlug,
+				dataCache);
 	}
 
 	@Override
@@ -259,40 +288,60 @@ public class CakeConnector implements IOConnector {
 				DataType.RESOURCE,
 				ResourceType.UNDEFINED, 
 				"",
-				asyncPlug);
+				asyncPlug,
+				resourceDataCache);
 	}
 
 	@Override
 	public void getSubMenusOfBooklet(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId) {
-		asyncRequest(
+		Collection<MenuData> cached = menuDataCache.get(referenceId);
+		if (cached != null) {
+			asyncPlug.update(cached);
+		} else {
+			asyncRequest(
 				Requests.GETSUBMENUOFBOOKLET,
 				referenceId,
 				DataType.CHAPTER,
 				null, 
 				"",
-				asyncPlug);
+				asyncPlug,
+				menuDataCache);
+		}
 	}
-
+	
 	@Override
 	public void getSubMenusOfChapter(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId) {
-		asyncRequest(
+		Collection<MenuData> cached = menuDataCache.get(referenceId);
+		if (cached != null) {
+			asyncPlug.update(cached);
+		} else {
+			asyncRequest(
 				Requests.GETSUBMENUOFCHAPTER,
 				referenceId,
 				DataType.PAGE,
 				null, 
 				"",
-				asyncPlug);
+				asyncPlug,
+				menuDataCache);
+		}
 	}
-
+	
+	
 	@Override
 	public void getSubMenusOfPage(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId) {
-		asyncRequest(
+		Collection<MenuData> cached = menuDataCache.get(referenceId);
+		if (cached != null) {
+			asyncPlug.update(cached);
+		} else {
+			asyncRequest(
 				Requests.GETSUBMENUOFPAGE,
 				referenceId,
 				DataType.RESOURCE,
 				null,
 				"",
-				asyncPlug);
+				asyncPlug,
+				menuDataCache);
+		}
 	}
 
 	@Override
@@ -319,13 +368,19 @@ public class CakeConnector implements IOConnector {
 		case SUPER:
 			break;
 		}
-		asyncRequest(
-				Requests.GETPARENTOF,
-				childReference.getReferenceId(),
-				parentType,
-				null,
-				parentTypeString,
-				asyncPlug);
+		Data cached = referencedDataCache.get(childReference);
+		if (cached != null) {
+			asyncPlug.update(cached);
+		} else {
+			asyncRequest(
+					Requests.GETPARENTOF,
+					childReference.getReferenceId(),
+					parentType,
+					null,
+					parentTypeString,
+					asyncPlug,
+					referencedDataCache);
+		}
 	}
 }
 

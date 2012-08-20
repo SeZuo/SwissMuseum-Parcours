@@ -58,7 +58,7 @@ public class Model {
 			throw new Error("Impossible switch case in getMenus");
 		}
 	}
-    
+	
     /**
 	  * Asynchronously returns data associated with the given reference of a booklet,
 	  * chapter, page or resource.

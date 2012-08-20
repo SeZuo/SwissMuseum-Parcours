@@ -20,9 +20,7 @@
 package ch.sebastienzurfluh.client.view.navigation;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Observer;
 import java.util.TreeSet;
 
 import ch.sebastienzurfluh.client.model.structure.DataReference;
@@ -151,7 +149,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	 * @return the {@code number}th widget or null if there's none at this position.
 	 */
 	public NavigationItem getWidget(int number) {
-		int i = 0;
+		int i = 1;
 		for (Iterator<NavigationItem> iterator = tileOrderList.iterator(); iterator.hasNext(); i++) {
 			if (i == number)
 				return  iterator.next();

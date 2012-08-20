@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 public class PageWidget extends VerticalPanel implements EventBusListener {
-	private Label title;
+	private HTML title;
 	private Label header;
 	private HTML content;
 	private TextParser parser;
@@ -50,7 +50,7 @@ public class PageWidget extends VerticalPanel implements EventBusListener {
 		this.parser = parser;
 		pageChangeEventBus.addListener(this);
 		
-		title = new Label("");
+		title = new HTML("");
 		title.setStyleName(primaryStyleName + "-title");
 		header = new Label("");
 		header.setStyleName(primaryStyleName + "-header");
@@ -79,7 +79,10 @@ public class PageWidget extends VerticalPanel implements EventBusListener {
 			case CHAPTER:
 			case BOOKLET:
 				this.setVisible(true);
-				this.title.setText(pageChangeEvent.getData().getPageTitle());
+				this.title.setHTML(
+						"<span class='" + primaryStyleName + "-spanTitle'>"
+						+ pageChangeEvent.getData().getPageTitle()
+						+ "</span>");
 				this.header.setText(pageChangeEvent.getData().getPageContentHeader());
 				this.content.setHTML(parser.parse(pageChangeEvent.getData().getPageContentBody()));
 				break;

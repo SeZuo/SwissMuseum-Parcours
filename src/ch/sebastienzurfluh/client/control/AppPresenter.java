@@ -23,10 +23,7 @@ import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
-import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.model.structure.Data;
-import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.view.View;
 
 import com.google.gwt.user.client.ui.Panel;
@@ -60,6 +57,8 @@ public class AppPresenter {
 		View view = new View(eventBus, pageRequestHandler, model);
 
 		parent.add(view);
+		
+		view.init();
 
 		// Start the app
 		eventBus.fireEvent(new PageChangeEvent(DataType.SUPER, null));
