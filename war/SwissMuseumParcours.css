@@ -113,14 +113,17 @@ table {
 .tile {
 	display: inline;
 	float: left;
+	cursor: pointer;
 }
 .tile-iconOnly {
 	display: inline;
 	float: left;
+	cursor: pointer;
 }
 .tile-detailed {
 	display: inline;
 	float: none;
+	cursor: pointer;
 }
 // This is supposed to be a special decoration only visible when
 // the mouse-clicking the tile.
@@ -199,7 +202,7 @@ table {
 .pageWidget-title {
 	font-size: 3em;
     font-family: courier;
-    color: #110000;
+    color: #FFFFFF;
 }
 .pageWidget-spanTitle {
 	background-color: #8CD9A7

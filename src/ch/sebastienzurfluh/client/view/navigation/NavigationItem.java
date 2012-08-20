@@ -75,7 +75,7 @@ public class NavigationItem extends FocusPanel implements MenuButton {
 	 * the item it has been selected.
 	 */
 	public void ignite() {
-		pageRequestHandler.requestPage(menuReference);
+		pageRequestHandler.requestPage(getReference());
 	}
 	
 	/**
