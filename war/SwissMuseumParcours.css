@@ -96,6 +96,22 @@ table {
 }
 .navigaionWidget {
 }
+.navigationWidget-bookletLink {
+	padding: 0.1em 0em 0.1em 0.3em;
+	margin: 0.1em;
+	background-color: #fffebe;
+	font-size: 1em;
+	font-weight: normal;
+    font-family: courier;	
+}
+.navigationWidget-chapterLink {
+	padding: 0.1em 0em 0.1em 0.3em;
+	margin: 0.1em;
+	background-color: #b4deff;
+	font-size: 1em;
+	font-weight: normal;
+    font-family: courier;
+}
 
 
 
@@ -213,6 +229,7 @@ table {
     color: #444444;
 }
 .pageWidget-content {
+	margin: 0.3em 0em;
 	font-size: 1em;
     font-family: verdana;
     color: #000000;

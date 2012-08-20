@@ -88,7 +88,7 @@ public class Model {
 	/**
 	 * List all the sub-menus associated with a given referenced data object.
 	 */
-	public void getSubMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug, DataType type, DataReference reference) {
+	public void getSubMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug, DataReference reference) {
 		switch(reference.getType()) {
 		case BOOKLET:
 			connector.getSubMenusOfBooklet(asyncPlug, reference.getReferenceId());
@@ -112,5 +112,54 @@ public class Model {
 	 */
 	public void getParentOf(ModelAsyncPlug<Data> asyncPlug, DataReference reference) {
 		connector.getParentOf(asyncPlug, reference);
+	}
+
+	/**
+	 * Get the next menu after this given one.
+	 * @param nextMenuAsyncPlug
+	 * @param reference
+	 */
+	public void getNextMenu(final ModelAsyncPlug<MenuData> nextMenuAsyncPlug,
+			final DataReference reference) {
+		getAssociatedData(new ModelAsyncPlug<Data>() {
+			
+			@Override
+			public void update(final Data associatedData) {
+				
+
+				
+				getParentOf(new ModelAsyncPlug<Data>() {
+					@Override
+					public void update(Data parentData) {
+						
+
+						
+						getSubMenus(new ModelAsyncPlug<Collection<MenuData>>() {
+							@Override
+							public void update(Collection<MenuData> data) {
+								
+								
+								MenuData nextMenu = new MenuData(null, Integer.MIN_VALUE, "", "", "", "");
+								for (MenuData menuData : data) {
+									if (menuData.getPriorityNumber() > associatedData.getPriorityNumber()) {
+										nextMenu = nextMenu.getPriorityNumber() > menuData.getPriorityNumber() ?
+												menuData : nextMenu;
+									}
+								}
+
+								if (nextMenu.getReference() == null) {
+									// if there is no next to the element return to main screen.
+									nextMenuAsyncPlug.update(MenuData.SUPER);
+								} else {
+									nextMenuAsyncPlug.update(nextMenu);
+								}
+								
+							}
+						}, parentData.getReference());
+					}
+					
+				}, reference);
+			}
+		}, reference);
 	}
 }

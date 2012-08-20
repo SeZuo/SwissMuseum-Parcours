@@ -147,7 +147,7 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 					menu.addTile(menuData);
 				}
 			}
-		}, parentReference.getType(), parentReference);
+		}, parentReference);
 	}
 	
 	private void reloadTiles (TileMenu menu, Collection<MenuData> menus) {

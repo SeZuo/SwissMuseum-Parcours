@@ -32,10 +32,10 @@ import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
-import ch.sebastienzurfluh.client.model.structure.ResourceData;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
-import ch.sebastienzurfluh.client.view.tilemenu.Tile;
+import ch.sebastienzurfluh.client.view.supportwidgets.TextLink;
 
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -52,9 +52,17 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 	private NavigationSlider bookletSlider;
 	private NavigationSlider chapterSlider;
 	private NavigationSlider pageSlider;
+	
+	private SimplePanel bookletLink;
+	private SimplePanel chapterLink;
+	
+	private EventBus pageRequestEventBus;
+	
+	private final static String STYLE_NAME = "navigationWidget"; 
 
 	public NavigationWidget(EventBus pageChangeEventBus, PageRequestHandler pageRequestHandler, Model model) {
 		this.model = model;
+		this.pageRequestEventBus = pageChangeEventBus;
 
 		initialise(pageRequestHandler);
 
@@ -66,15 +74,23 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 	private void initialise(PageRequestHandler pageRequestHandler) {
 		bookletSlider = new NavigationSlider("Booklets", pageRequestHandler);
 		add(bookletSlider);
+		bookletLink = new SimplePanel();
+		bookletLink.setStyleName(STYLE_NAME + "-bookletLink");
+		add(bookletLink);
 		chapterSlider = new NavigationSlider("Chapters", pageRequestHandler);
 		add(chapterSlider);
+		chapterLink = new SimplePanel();
+		chapterLink.setStyleName(STYLE_NAME + "-chapterLink");
+		add(chapterLink);
 		pageSlider = new NavigationSlider("Pages", pageRequestHandler);
 		add(pageSlider);
 	}
 
 	private void setDefaults() {
 		bookletSlider.setVisible(false);
+		bookletLink.setVisible(false);
 		chapterSlider.setVisible(false);
+		chapterLink.setVisible(false);
 		pageSlider.setVisible(false);
 	}
 
@@ -100,13 +116,25 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 				}, DataType.BOOKLET);
 				break;
 			case BOOKLET:
+				// Create the booklet link for later
+				bookletLink.setWidget(
+						new TextLink(
+								pageRequestEventBus,
+								data.getReference(),
+								"Parcours: " + data.getMenuTitle()));
 				// list the booklet's chapters
-				reloadTilesWithParentFirst(chapterSlider, data.getReference());
+				reloadTilesWithParentFirstNextLast(chapterSlider, data.getReference());
 				bookletSlider.setFocus(data.getReference());
 				break;
 			case CHAPTER:
+				// Create the chapter link for later
+				chapterLink.setWidget(
+						new TextLink(
+								pageRequestEventBus,
+								data.getReference(),
+								"Chapitre: " + data.getMenuTitle()));
 				// list the chapter's pages
-				reloadTilesWithParentFirst(pageSlider, data.getReference());
+				reloadTilesWithParentFirstNextLast(pageSlider, data.getReference());
 				chapterSlider.setFocus(data.getReference());
 				break;
 			default:
@@ -119,23 +147,31 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 			switch (pageChangeEvent.getPageType()) {
 			case PAGE:
 				pageSlider.setVisible(true);
-				chapterSlider.setVisible(true);
-				bookletSlider.setVisible(true);
+				chapterSlider.setVisible(false);
+				chapterLink.setVisible(true);
+				bookletSlider.setVisible(false);
+				bookletLink.setVisible(true);
 				break;
 			case CHAPTER:
 				pageSlider.setVisible(false);
 				chapterSlider.setVisible(true);
-				bookletSlider.setVisible(true);
+				chapterLink.setVisible(false);
+				bookletSlider.setVisible(false);
+				bookletLink.setVisible(true);
 				break;
 			case BOOKLET:
 				pageSlider.setVisible(false);
 				chapterSlider.setVisible(false);
+				chapterLink.setVisible(false);
 				bookletSlider.setVisible(true);
+				bookletLink.setVisible(false);
 				break;
 			case SUPER:
 				pageSlider.setVisible(false);
 				chapterSlider.setVisible(false);
+				chapterLink.setVisible(false);
 				bookletSlider.setVisible(false);
+				bookletLink.setVisible(false);
 				break;
 			default:
 				break;
@@ -150,7 +186,7 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 		}
 	}
 
-	private void reloadTilesWithParentFirst(final NavigationSlider menu, DataReference parentReference) {
+	private void reloadTilesWithParentFirstNextLast(final NavigationSlider menu, DataReference parentReference) {
 		menu.clearTiles();
 
 		model.getAssociatedData(new ModelAsyncPlug<Data>() {
@@ -167,7 +203,14 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 					menu.addTile(menuData);
 				}
 			}
-		}, parentReference.getType(), parentReference);
+		}, parentReference);
+		
+		model.getNextMenu(new ModelAsyncPlug<MenuData>() {
+			@Override
+			public void update(MenuData menuData) {
+				menu.addLastTile(menuData);
+			}
+		}, parentReference);
 	}
 }
 

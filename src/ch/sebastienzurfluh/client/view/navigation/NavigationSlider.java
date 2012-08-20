@@ -90,13 +90,19 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	}
 	
 	//TODO find another way to do that.
-	private final static Integer FIRST_TILE_PRIORITY_NUMBER = -1; 
+	private final static Integer FIRST_TILE_PRIORITY_NUMBER = Integer.MIN_VALUE; 
+	private final static Integer LAST_TILE_PRIORITY_NUMBER = Integer.MAX_VALUE; 
+	
 	public void addFirstTile(MenuData menuData) {
 		addTileOnPriority(menuData, FIRST_TILE_PRIORITY_NUMBER);
 	}
 	
 	public void addTile(MenuData menuData) {
 		addTileOnPriority(menuData, menuData.getPriorityNumber());			
+	}
+	
+	public void addLastTile(MenuData menuData) {
+		addTileOnPriority(menuData, LAST_TILE_PRIORITY_NUMBER);
 	}
 	
 	private void addTileOnPriority(MenuData menuData, Integer priority) {
@@ -139,8 +145,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 				break;
 			}
 			menuRank++;
-		}
-		
+		}	
 	}
 	
 	/**
@@ -149,7 +154,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	 * @return the {@code number}th widget or null if there's none at this position.
 	 */
 	public NavigationItem getWidget(int number) {
-		int i = 1;
+		int i = 0;
 		for (Iterator<NavigationItem> iterator = tileOrderList.iterator(); iterator.hasNext(); i++) {
 			if (i == number)
 				return  iterator.next();

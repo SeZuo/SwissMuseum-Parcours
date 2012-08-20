@@ -33,6 +33,14 @@ public class MenuData {
 	private String title, description;
 	private String squareImgURL, rectangleImgURL;
 	
+	public final static MenuData SUPER = new MenuData(
+			new DataReference(DataType.SUPER, 0),
+			Integer.MAX_VALUE,
+			"Menu principal",
+			"Retournez au menu principal",
+			"resources/images/generic_tiles/super.jpg",
+			"resources/images/generic_tiles/super_square.jpg"); 
+	
 	/**
 	 * @param linkReference reference of the page the menu is linking to
 	 * @param priorityNumber
