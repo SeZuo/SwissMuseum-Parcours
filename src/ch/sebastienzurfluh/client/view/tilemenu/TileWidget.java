@@ -119,8 +119,8 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 			switch (pageChangeEvent.getPageType()) {
 			case SUPER:
 				model.getMenus(new ModelAsyncPlug<Collection<MenuData>>() {
-					public void update(Collection<MenuData> data) {
-						reloadTiles(bookletMenu, data);
+					public void update(Collection<MenuData> menus) {
+						reloadTiles(bookletMenu, menus);
 					};
 				}, DataType.BOOKLET);
 				break;
@@ -143,9 +143,14 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 		model.getSubMenus(new ModelAsyncPlug<Collection<MenuData>>() {
 			@Override
 			public void update(Collection<MenuData> data) {
+				if (data.isEmpty()) {
+					menu.setVisible(false);
+					return;
+				}	
 				for (MenuData menuData : data) {
 					menu.addTile(menuData);
 				}
+				
 			}
 		}, parentReference);
 	}
