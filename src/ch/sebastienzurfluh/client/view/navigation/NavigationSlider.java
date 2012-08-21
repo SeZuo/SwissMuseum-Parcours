@@ -35,6 +35,8 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -184,9 +186,10 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 					) {
 				event.getNativeEvent().preventDefault(); 
 			}
-		}		
+		}
 	};
 	
+	private boolean defaultsPrevented = false;
 	/**
 	 * The browser steals the mouse events from GWT. It tries to select text
 	 * or copy/paste by drag and drop.
@@ -195,14 +198,28 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	private void preventBrowserInterference() {
 		addDomHandler(new MouseOverHandler() {
 			public void onMouseOver(MouseOverEvent event) {
-				handlerRegistration = Event.addNativePreviewHandler(preventDefaultMouseEvents);
+				if (!defaultsPrevented) {
+					handlerRegistration = Event.addNativePreviewHandler(preventDefaultMouseEvents);
+					defaultsPrevented = true;
+				}
 			}
 		}, MouseOverEvent.getType());
+		
+		addDomHandler(new TouchStartHandler() {
+			@Override
+			public void onTouchStart(TouchStartEvent event) {
+				if (!defaultsPrevented) {
+					handlerRegistration = Event.addNativePreviewHandler(preventDefaultMouseEvents);
+					defaultsPrevented = true;
+				}
+			}
+		}, TouchStartEvent.getType());
 
 		addDomHandler(new MouseOutHandler() {
 			public void onMouseOut(MouseOutEvent event) {
 				if (handlerRegistration != null) {
 					handlerRegistration.removeHandler();
+					defaultsPrevented = false;
 				}
 			}
 		}, MouseOutEvent.getType());

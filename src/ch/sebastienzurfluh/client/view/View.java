@@ -30,8 +30,6 @@ import ch.sebastienzurfluh.client.view.pagewidget.PageWidget;
 import ch.sebastienzurfluh.client.view.pagewidget.TextParser;
 import ch.sebastienzurfluh.client.view.tilemenu.TileWidget;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 

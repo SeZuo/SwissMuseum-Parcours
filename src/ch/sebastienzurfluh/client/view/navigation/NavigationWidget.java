@@ -205,12 +205,12 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 			}
 		}, parentReference);
 		
-		model.getNextMenu(new ModelAsyncPlug<MenuData>() {
-			@Override
-			public void update(MenuData menuData) {
-				menu.addLastTile(menuData);
-			}
-		}, parentReference);
+//		model.getNextMenu(new ModelAsyncPlug<MenuData>() {
+//			@Override
+//			public void update(MenuData menuData) {
+//				menu.addLastTile(menuData);
+//			}
+//		}, parentReference);
 	}
 }
 
