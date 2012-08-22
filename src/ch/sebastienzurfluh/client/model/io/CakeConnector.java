@@ -379,24 +379,24 @@ public class CakeConnector implements IOConnector {
 	public void getParentOf(ModelAsyncPlug<Data> asyncPlug,
 			DataReference childReference) {
 		DataType parentType = null;
-		String parentTypeString = null;
+		String typeString = null;
 		switch(childReference.getType()) {
 		case RESOURCE:
 			parentType = DataType.PAGE;
-			parentTypeString = "resource";
+			typeString = "resource";
 			break;
 		case PAGE:
 			parentType = DataType.CHAPTER;
-			parentTypeString = "page";
+			typeString = "page";
 			break;
 		case CHAPTER:
 			parentType = DataType.BOOKLET;
-			parentTypeString = "chapter";
+			typeString = "chapter";
 			break;
 		case BOOKLET:
 			parentType = DataType.SUPER;
 			// booklets has no parents
-			parentTypeString = null;
+			typeString = null;
 			break;
 		case SUPER:
 			break;
@@ -410,7 +410,7 @@ public class CakeConnector implements IOConnector {
 					childReference.getReferenceId(),
 					parentType,
 					null,
-					parentTypeString,
+					typeString,
 					asyncPlug,
 					referencedDataCache);
 		}
