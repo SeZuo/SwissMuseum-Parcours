@@ -75,25 +75,28 @@ public class CakeConnector implements IOConnector {
 		}
 		requestsQueue.get(request).get(referenceId).add(asyncPlug);
 		
-		if (requestsQueue.get(request).get(referenceId).size() > 1) {
+		if (requestsQueue.get(request).get(referenceId).size() > 1 &&
+				!request.equals(Requests.GETPARENTOF)) {
 			/* There is already a request processing.
 			 this is valid only because the request will always be the same
-			 and because javascript is single threaded. */
+			 and because javascript is single threaded.
+			 We give the permission to run several instances of GETPARENTOF
+			 in parallel. */
 		} else {
-			String url = CAKE_PATH + request.getURL();
+			StringBuilder url = new StringBuilder(CAKE_PATH + request.getURL());
 			
 			if (referenceId != -1) {
 				if(args != null && !args.isEmpty()) {
-					url += args + CAKE_ARGS_SEPARATOR + referenceId;
+					url.append(args).append(CAKE_ARGS_SEPARATOR).append(referenceId);
 				} else {
-					url += referenceId;
+					url.append(referenceId);
 				}
 			}
-			url += CAKE_SUFFIX;
+			url.append(CAKE_SUFFIX);
 			
 			System.out.println("Making async request on "+url);
 			
-			RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
+			RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
 
 			try {
 				builder.sendRequest(null, new RequestCallback() {
@@ -390,6 +393,7 @@ public class CakeConnector implements IOConnector {
 			break;
 		case BOOKLET:
 			parentType = DataType.SUPER;
+			parentTypeString = "super";
 			break;
 		case SUPER:
 			break;

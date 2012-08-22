@@ -189,6 +189,9 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		}
 	};
 	
+	/**
+	 * Variable to avoid the use of multiple preventDefault handlers when both mouse and touch are used.
+	 */
 	private boolean defaultsPrevented = false;
 	/**
 	 * The browser steals the mouse events from GWT. It tries to select text
