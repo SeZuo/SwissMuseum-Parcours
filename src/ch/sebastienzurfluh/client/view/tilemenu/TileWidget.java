@@ -146,11 +146,10 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 				if (data.isEmpty()) {
 					menu.setVisible(false);
 					return;
-				}	
+				}
 				for (MenuData menuData : data) {
 					menu.addTile(menuData);
 				}
-				
 			}
 		}, parentReference);
 	}

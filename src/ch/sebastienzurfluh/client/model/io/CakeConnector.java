@@ -85,13 +85,15 @@ public class CakeConnector implements IOConnector {
 		} else {
 			StringBuilder url = new StringBuilder(CAKE_PATH + request.getURL());
 			
-			if (referenceId != -1) {
-				if(args != null && !args.isEmpty()) {
-					url.append(args).append(CAKE_ARGS_SEPARATOR).append(referenceId);
-				} else {
-					url.append(referenceId);
-				}
-			}
+			if (request.equals(Requests.GETPARENTOF))
+				if (args == null)
+					return;
+				else
+					url.append(args).append(CAKE_ARGS_SEPARATOR);
+			
+			if (referenceId != -1)
+				url.append(referenceId);
+
 			url.append(CAKE_SUFFIX);
 			
 			System.out.println("Making async request on "+url);
@@ -381,19 +383,20 @@ public class CakeConnector implements IOConnector {
 		switch(childReference.getType()) {
 		case RESOURCE:
 			parentType = DataType.PAGE;
-			parentTypeString = "pages";
+			parentTypeString = "resource";
 			break;
 		case PAGE:
 			parentType = DataType.CHAPTER;
-			parentTypeString = "chapters";
+			parentTypeString = "page";
 			break;
 		case CHAPTER:
 			parentType = DataType.BOOKLET;
-			parentTypeString = "booklets";
+			parentTypeString = "chapter";
 			break;
 		case BOOKLET:
 			parentType = DataType.SUPER;
-			parentTypeString = "super";
+			// booklets has no parents
+			parentTypeString = null;
 			break;
 		case SUPER:
 			break;
