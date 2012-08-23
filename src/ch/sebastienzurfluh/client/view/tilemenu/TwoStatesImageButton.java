@@ -37,12 +37,11 @@ public class TwoStatesImageButton extends FocusPanel implements MouseUpHandler {
 		switch(state) {
 		case ONE:
 			setWidget(stateOneButton);
-			currentState = State.ONE;
 			break;
 		case TWO:
 			setWidget(stateTwoButton);
-			currentState = State.TWO;
 			break;
 		}
+		currentState = state;
 	}
 }
