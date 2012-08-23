@@ -64,7 +64,7 @@ public class StaticFlipper extends Animation  implements NavigationAnimator {
 				// move to the right place
 				setFocusWidget(slider.getCurrentItemNumber()-1);
 
-				slider.getWidget(slider.getCurrentItemNumber()).ignite();
+				slider.getItem(slider.getCurrentItemNumber()).ignite();
 			}
 		});
 		animatedPanel.add(outerPrevious, 35, 35);
@@ -91,7 +91,7 @@ public class StaticFlipper extends Animation  implements NavigationAnimator {
 				// move to the right place
 				setFocusWidget(slider.getCurrentItemNumber()+1);
 				
-				slider.getWidget(slider.getCurrentItemNumber()).ignite();
+				slider.getItem(slider.getCurrentItemNumber()).ignite();
 			}
 		});
 		animatedPanel.add(outerNext, 535, 35);
@@ -107,7 +107,7 @@ public class StaticFlipper extends Animation  implements NavigationAnimator {
 	 */
 	public void update() {
 		itemCount = slider.getItemCount();
-		itemWidth = slider.getWidget(0).getOffsetWidth();
+		itemWidth = slider.getItem(0).getOffsetWidth();
 		widgetWidth = slider.getOffsetWidth();
 		
 		updated = true;
@@ -134,14 +134,14 @@ public class StaticFlipper extends Animation  implements NavigationAnimator {
 		if(!updated)
 			update();
 
-		slider.getWidget(slider.getCurrentItemNumber()).setFocus(false);
+		slider.getItem(slider.getCurrentItemNumber()).setFocus(false);
 
 		slider.setCurrentItem(number);
 
 		int itemPosition = number * itemWidth;
 		scrollTo(itemPosition, SLOW);
 		
-		slider.getWidget(number).setFocus(true);
+		slider.getItem(number).setFocus(true);
 	}
 
 	int positionBeforeAnimation, delta;

@@ -33,7 +33,9 @@ public abstract class Event {
 		// Fired when a new page is requested.
 		PAGE_CHANGE_REQUEST,
 		// Fired when a page change is approved.
-		PAGE_CHANGE_EVENT;
+		PAGE_CHANGE_EVENT,
+		// Fired when a widget finished loading.
+		WIDGET_LOADED_EVENT;
 	}
 
 	/**

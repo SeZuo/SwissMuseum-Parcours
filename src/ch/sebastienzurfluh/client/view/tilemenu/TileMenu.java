@@ -20,12 +20,14 @@
 package ch.sebastienzurfluh.client.view.tilemenu;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
+import ch.sebastienzurfluh.client.view.navigation.NavigationItem;
 import ch.sebastienzurfluh.client.view.tilemenu.Tile.TileMode;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -106,8 +108,38 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		}
 	}
 
-	@Override
-	public void setFocus(DataReference menuData) {
+	// we only initialise to avoid "if(!null)" on the first run.
+	private Tile focusedItem = new Tile(MenuData.SUPER);
+	public void setFocus(DataReference menuReference) {
+		System.out.println("TileMenu: Focus: DataReference: " + menuReference.toString());
 		
+		focusedItem.setMenuFocus(false);
+		// retrieve the menu in the list.
+		int menuRank = 0;
+		for (Tile menu : tileOrderList) {
+			if (menu.getReference().equals(menuReference.getReferenceId())) {
+				
+				focusedItem = getTile(menuRank);
+				
+				System.out.println("TileMenu: Focus: Found the referenced tile " + focusedItem.getReference().toString());
+				
+				focusedItem.setMenuFocus(true);
+				return;
+			}
+			menuRank++;
+		}
+	}
+	
+	/**
+	 * @param number the rank of the widget to retrieve
+	 * @return the {@code number}th widget or null if there's none at this position.
+	 */
+	public Tile getTile(int number) {
+		int i = 0;
+		for (Iterator<Tile> iterator = tileOrderList.iterator(); iterator.hasNext(); i++) {
+			if (i == number)
+				return  iterator.next();
+		}
+		return null;
 	}
 }

@@ -111,7 +111,7 @@ public class CakeConnector implements IOConnector {
 						if (200 == response.getStatusCode()) {
 							System.out.println("Got answer from async request.");
 
-							try {
+//							try {
 								JsArray<Entry> entries = evalJson(response.getText().trim());
 
 
@@ -159,12 +159,12 @@ public class CakeConnector implements IOConnector {
 								default:
 									throw new Error("Yo, the request is wrong.");
 								}
-							} catch (Exception e) {
-								System.out.println("JSON eval exception.");
-								
-								System.out.println("URL: " + url.toString());
-								System.out.println("RESPONSE: " + response.getText());
-							}
+//							} catch (RequestException e) {
+//								System.out.println("JSON eval exception.");
+//								
+//								System.out.println("URL: " + url.toString());
+//								System.out.println("RESPONSE: " + response.getText());
+//							}
 						} else {
 							System.out.println("JSON request failure. Status " + response.getStatusCode() + ".");
 						}

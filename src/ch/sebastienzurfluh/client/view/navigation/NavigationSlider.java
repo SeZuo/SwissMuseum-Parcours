@@ -138,6 +138,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	public int getCurrentItemNumber() {
 		return currentItemNumber;
 	}
+	
 	public void setFocus(DataReference menuReference) {
 		// retrieve the menu in the list.
 		int menuRank = 0;
@@ -155,7 +156,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	 * @param number the rank of the widget to retrieve
 	 * @return the {@code number}th widget or null if there's none at this position.
 	 */
-	public NavigationItem getWidget(int number) {
+	public NavigationItem getItem(int number) {
 		int i = 0;
 		for (Iterator<NavigationItem> iterator = tileOrderList.iterator(); iterator.hasNext(); i++) {
 			if (i == number)

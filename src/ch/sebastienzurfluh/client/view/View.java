@@ -23,6 +23,7 @@ import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.view.eventbushooks.FocusWidgetsOnEvent;
 import ch.sebastienzurfluh.client.view.eventbushooks.ScrollToPanelOnEvent;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.navigation.NavigationWidget;
@@ -76,11 +77,13 @@ public class View extends SimplePanel {
 		mainPanel.add(hierarchy);
 		PageWidget page = new PageWidget(eventBus, new TextParser(model));
 		mainPanel.add(page);
-		// Add some functionalities
-		ScrollToPanelOnEvent.addRule(eventBus, page, EventType.PAGE_CHANGE_EVENT);
 		TileWidget tileMenu = new TileWidget(eventBus, pageRequestHandler, model);
 		mainPanel.add(tileMenu);
 		FooterWidget footer = new FooterWidget();
 		mainPanel.add(footer);
+
+		// Add some global functionalities
+		ScrollToPanelOnEvent.addRule(eventBus, page, EventType.PAGE_CHANGE_EVENT);
+		FocusWidgetsOnEvent.addRule(eventBus, EventType.WIDGET_LOADED_EVENT);
 	}
 }

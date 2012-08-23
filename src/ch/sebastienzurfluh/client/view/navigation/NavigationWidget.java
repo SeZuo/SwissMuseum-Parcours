@@ -25,13 +25,14 @@ import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
-import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
+import ch.sebastienzurfluh.client.control.eventbus.events.WidgetLoadedEvent;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.view.menuinterface.MenuWidget;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.supportwidgets.TextLink;
 
@@ -44,9 +45,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * It listens to PageChangeEvent to choose wich slider should be displayed. 
  * 
  * @author Sebastien Zurfluh
- *
  */
-public class NavigationWidget extends VerticalPanel implements EventBusListener {
+public class NavigationWidget extends VerticalPanel implements MenuWidget {
 	private Model model;
 
 	private NavigationSlider bookletSlider;
@@ -184,6 +184,7 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 		for (MenuData menuData : menus) {
 			menu.addTile(menuData);
 		}
+		notifyFinished();
 	}
 
 	private void reloadTilesWithParentFirstNextLast(final NavigationSlider menu, DataReference parentReference) {
@@ -201,6 +202,8 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 			public void update(Collection<MenuData> dataList) {
 				for (MenuData menuData : dataList) {
 					menu.addTile(menuData);
+					
+					notifyFinished();
 				}
 			}
 		}, parentReference);
@@ -211,6 +214,30 @@ public class NavigationWidget extends VerticalPanel implements EventBusListener 
 				menu.addLastTile(menuData);
 			}
 		}, parentReference);
+	}
+	
+	
+	public void setFocus(DataReference menuReference) {
+		switch(menuReference.getType()) {
+		case SUPER:
+			// remove focus we don't care for this widget
+			return;
+		case BOOKLET:
+			bookletSlider.setFocus(menuReference);
+			break;
+		case CHAPTER:
+			chapterSlider.setFocus(menuReference);
+			break;
+		case PAGE:
+			pageSlider.setFocus(menuReference);
+			break;
+		default:
+		}
+	}
+	
+	private void notifyFinished() {
+		// notify the menu finished loading
+		pageRequestEventBus.fireEvent(new WidgetLoadedEvent(this));
 	}
 }
 

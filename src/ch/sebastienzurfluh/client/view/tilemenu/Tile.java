@@ -118,4 +118,12 @@ public class Tile extends FocusPanel implements MenuButton {
 	public int getPriority() {
 		return 0; //TODO
 	}
+
+	public void setMenuFocus(boolean b) {
+		if (b) {
+			setStyleName(getStyleName() + "-focus");
+		} else {
+			setStyleName(getStyleName().replace("-focus", ""));
+		}
+	}
 }

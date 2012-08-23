@@ -83,4 +83,10 @@ public class DataReference {
 	public int hashCode() {
 		return this.getReferenceId() + 32 * this.getType().hashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return "[" + getReferenceId() + ", "
+				+ getType().toString() + "]";
+	}
 }

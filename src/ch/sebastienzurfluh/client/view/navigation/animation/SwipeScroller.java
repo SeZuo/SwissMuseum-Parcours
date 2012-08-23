@@ -51,7 +51,7 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	 */
 	public void update() {
 		itemCount = slider.getItemCount();
-		itemWidth = slider.getWidget(0).getOffsetWidth();
+		itemWidth = slider.getItem(0).getOffsetWidth();
 		widgetWidth = slider.getOffsetWidth();
 		
 		updated = true;
@@ -72,13 +72,13 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	 * @param number -th widget
 	 */
 	public void setFocusWidget(int number) {
-		slider.getWidget(slider.getCurrentItemNumber()).setFocus(false);
+		slider.getItem(slider.getCurrentItemNumber()).setFocus(false);
 
 		slider.setCurrentItem(number);
 		int itemPosition = number * itemWidth;
 		scrollTo(itemPosition, SLOW);
 		
-		slider.getWidget(number).setFocus(true);
+		slider.getItem(number).setFocus(true);
 	}
 
 	int positionBeforeAnimation, delta;
@@ -172,7 +172,7 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 		setFocusWidget(slider.getCurrentItemNumber());
 		
 		if (previousItem != slider.getCurrentItemNumber())
-    		slider.getWidget(slider.getCurrentItemNumber()).ignite();
+    		slider.getItem(slider.getCurrentItemNumber()).ignite();
 	}
 
 	@Override

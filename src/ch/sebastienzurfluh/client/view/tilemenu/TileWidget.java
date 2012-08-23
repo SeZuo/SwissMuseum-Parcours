@@ -26,6 +26,7 @@ import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
+import ch.sebastienzurfluh.client.control.eventbus.events.WidgetLoadedEvent;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
@@ -49,9 +50,11 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 	private TileMenu chapterMenu;
 	private TileMenu pageMenu;
 	private Model model;
+	private EventBus pageChangeEventBus;
 	
 	public TileWidget(EventBus pageChangeEventBus, PageRequestHandler pageRequestHandler, Model model) {
 		this.model = model;
+		this.pageChangeEventBus = pageChangeEventBus;
 		
 		setStyleName(stylePrimaryName);
 		
@@ -150,6 +153,7 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 				for (MenuData menuData : data) {
 					menu.addTile(menuData);
 				}
+				notifyFinished();
 			}
 		}, parentReference);
 	}
@@ -159,5 +163,30 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 		for (MenuData menuData : menus) {
 			menu.addTile(menuData);
 		}
+		notifyFinished();
+	}
+	
+	public void setFocus(DataReference menuReference) {
+		switch(menuReference.getType()) {
+		case SUPER:
+			// remove focus we don't care for this widget
+			return;
+		case BOOKLET:
+			bookletMenu.setFocus(menuReference);
+			break;
+		case CHAPTER:
+			chapterMenu.setFocus(menuReference);
+			break;
+		case PAGE:
+			pageMenu.setFocus(menuReference);
+			break;
+		default:
+		}
+	}
+
+	
+	private void notifyFinished() {
+		// notify the menu finished loading
+		pageChangeEventBus.fireEvent(new WidgetLoadedEvent(this));
 	}
 }
