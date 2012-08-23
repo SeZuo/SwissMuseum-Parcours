@@ -7,8 +7,8 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 
 public class ModeSwapButton extends TwoStatesImageButton {
 	public ModeSwapButton(String stylePrimaryName, final TileMenu tileMenu) {
-		super(new ImageButton("resources/images/to_icon_mode.gif"),
-				new ImageButton("resources/images/to_detail_mode.gif"));
+		super(new ImageButton("resources/images/icons/to_icon_mode.gif"),
+				new ImageButton("resources/images/icons/to_detail_mode.gif"));
 
 		stateOneButton.addMouseUpHandler(new MouseUpHandler() {
 			@Override
