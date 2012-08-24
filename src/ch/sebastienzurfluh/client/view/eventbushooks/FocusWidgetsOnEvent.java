@@ -29,10 +29,14 @@ import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 
 /**
- * This class listens to the page changes in order to scroll
- * automatically to the right position on load.
- *
- *
+ * This class listens to the given event and sets focus of the
+ * given widgets.
+ * 
+ * Note that this is not fully implemented yet as it is intended to be more generic.
+ * For now it only works with menu widgets. TODO In the near future, the FocusWidgetsOnEvent has 
+ * to be rewritten or replaced by a local to the menu mechanism. 
+ * 
+ * 
  * @author Sebastien Zurfluh
  *
  */
@@ -40,6 +44,20 @@ public class FocusWidgetsOnEvent implements EventBusListener {
 	private DataReference dataReference;
 	private EventType eventType;
 
+	/**
+	 * Create this object if you want to call the "focus" method of a specific widget on a specific event.
+	 * 
+	 * This widget should be created before the menus.
+	 * 
+	 * The reason is the following:
+	 * If we create this after the menus. The eventBus will give priority on them.
+	 * Therefore they will be notified of a new page before this object, and if there is no delay,
+	 * create a menu loaded event that will also notify this event before it has been notified by
+	 * the first event. Bug.
+	 *
+	 * @param eventBus
+	 * @param eventType
+	 */
 	private FocusWidgetsOnEvent(EventBus eventBus, EventType eventType) {
 		this.eventType = eventType;
 		this.dataReference = MenuData.SUPER.getReference();

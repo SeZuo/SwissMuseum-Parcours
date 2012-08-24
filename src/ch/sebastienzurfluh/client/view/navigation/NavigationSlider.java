@@ -21,6 +21,7 @@ package ch.sebastienzurfluh.client.view.navigation;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.TreeSet;
 
 import ch.sebastienzurfluh.client.model.structure.DataReference;
@@ -51,7 +52,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 public class NavigationSlider extends FocusPanel implements MenuList {
 	private AbsolutePanel animationPanel;
 	private HorizontalPanel tilePanel;
-	private TreeSet<NavigationItem> tileOrderList;
+	private LinkedList<NavigationItem> tileOrderList;
 	
 	private PageRequestHandler pageRequestHandler;
 	private NavigationAnimator animatedScroller;
@@ -62,12 +63,14 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		setStyleName("navigationSlider");
 		
 		tilePanel = new HorizontalPanel();
-		tileOrderList = new TreeSet<NavigationItem>(new Comparator<NavigationItem>() {
-			@Override
-			public int compare(NavigationItem o1, NavigationItem o2) {
-				return ((Integer) o1.getPriority()).compareTo(o2.getPriority());
-			}
-		});
+		tileOrderList = new LinkedList<NavigationItem>();
+		// This is not working under 
+//		new TreeSet<NavigationItem>(new Comparator<NavigationItem>() {
+//			@Override
+//			public int compare(NavigationItem o1, NavigationItem o2) {
+//				return ((Integer) o1.getPriority()).compareTo(o2.getPriority());
+//			}
+//		});
 		
 		animationPanel = new AbsolutePanel();
 		animationPanel.add(tilePanel);

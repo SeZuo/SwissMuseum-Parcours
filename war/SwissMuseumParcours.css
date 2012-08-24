@@ -154,6 +154,14 @@ table {
 	border: 0em;
 	background-color: grey;
 }
+.tile-tileImage-focus {
+	width: 4em;
+	height: 4em;
+	margin: 1em 0em 0em 1em;
+	padding: 0em;
+	border: 0.1em solid red;
+	background-color: grey;
+}
 .tile-tileDetails {
 	margin: 1em;
 	padding: 0em;

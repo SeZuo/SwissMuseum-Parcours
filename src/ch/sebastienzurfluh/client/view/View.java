@@ -71,6 +71,9 @@ public class View extends SimplePanel {
 	 * Call init() after the panel has been attached.
 	 */
 	public void init() {
+		// Add some global functionalities with high priority
+		FocusWidgetsOnEvent.addRule(eventBus, EventType.WIDGET_LOADED_EVENT);
+		
 		NavigationWidget navigation = new NavigationWidget(eventBus, pageRequestHandler, model);
 		mainPanel.add(navigation);
 		HierarchyWidget hierarchy = new HierarchyWidget(eventBus, model);
@@ -82,8 +85,8 @@ public class View extends SimplePanel {
 		FooterWidget footer = new FooterWidget();
 		mainPanel.add(footer);
 
-		// Add some global functionalities
+		// Add some global functionalities with low priority
 		ScrollToPanelOnEvent.addRule(eventBus, page, EventType.PAGE_CHANGE_EVENT);
-		FocusWidgetsOnEvent.addRule(eventBus, EventType.WIDGET_LOADED_EVENT);
+		
 	}
 }

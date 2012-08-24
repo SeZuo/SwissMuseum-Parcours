@@ -21,6 +21,7 @@ package ch.sebastienzurfluh.client.view.tilemenu;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.TreeSet;
 
 import ch.sebastienzurfluh.client.model.structure.DataReference;
@@ -44,7 +45,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class TileMenu extends VerticalPanel implements MenuList {
 	private String stylePrimaryName = "tileMenu";
 	private FlowPanel tilePanel;
-	private TreeSet<Tile> tileOrderList;
+	private LinkedList<Tile> tileOrderList;
 	private ModeSwapButton button;
 	private PageRequestHandler pageRequestHandler;
 	
@@ -65,12 +66,14 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		add(firstLine);
 		
 		tilePanel = new FlowPanel();
-		tileOrderList = new TreeSet<Tile>(new Comparator<Tile>() {
-			@Override
-			public int compare(Tile o1, Tile o2) {
-				return ((Integer) o1.getPriority()).compareTo(o2.getPriority());
-			}
-		});
+		tileOrderList = new LinkedList();
+		// This is not working. It seems the treeset with comparator is not well supported by GWT.
+//				new TreeSet<Tile>(new Comparator<Tile>() {
+//			@Override
+//			public int compare(Tile o1, Tile o2) {
+//				return ((Integer) o1.getPriority()).compareTo(o2.getPriority());
+//			}
+//		});
 		
 		tilePanel.setStyleName(stylePrimaryName + "-" + "tileList");
 		add(tilePanel);
@@ -80,7 +83,11 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		Tile tile = new Tile(menuData);
 		tile.addClickHandler(pageRequestHandler);
 		tile.setMode(currentMode);
+		System.out.println("TileMenu: addTile: adding tile with title: "+tile.getTitle());
 		tileOrderList.add(tile);
+		System.out.println("TileMenu: addTile: retrieving tile in list:"+tileOrderList.get(tileOrderList.size()-1));
+		System.out.println("TileMenu: addTile: Size after add is "+tileOrderList.size());
+		
 		// TODO order the tiles in the menu according to their priority number
 		tilePanel.add(tile);
 	}
@@ -108,38 +115,26 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		}
 	}
 
-	// we only initialise to avoid "if(!null)" on the first run.
+	// initialised to avoid checking for null on the first run.
 	private Tile focusedItem = new Tile(MenuData.SUPER);
 	public void setFocus(DataReference menuReference) {
 		System.out.println("TileMenu: Focus: DataReference: " + menuReference.toString());
 		
 		focusedItem.setMenuFocus(false);
 		// retrieve the menu in the list.
-		int menuRank = 0;
+		System.out.println("TileMenu: Focus: tileOrderList:");
 		for (Tile menu : tileOrderList) {
-			if (menu.getReference().equals(menuReference.getReferenceId())) {
+			System.out.println("TileMenu: Focus: tileOrderList:"+menu.getPriority()+";");
+			
+			if (menu.getReference().equals(menuReference)) {
 				
-				focusedItem = getTile(menuRank);
+				focusedItem = menu;
 				
 				System.out.println("TileMenu: Focus: Found the referenced tile " + focusedItem.getReference().toString());
 				
 				focusedItem.setMenuFocus(true);
 				return;
 			}
-			menuRank++;
 		}
-	}
-	
-	/**
-	 * @param number the rank of the widget to retrieve
-	 * @return the {@code number}th widget or null if there's none at this position.
-	 */
-	public Tile getTile(int number) {
-		int i = 0;
-		for (Iterator<Tile> iterator = tileOrderList.iterator(); iterator.hasNext(); i++) {
-			if (i == number)
-				return  iterator.next();
-		}
-		return null;
 	}
 }

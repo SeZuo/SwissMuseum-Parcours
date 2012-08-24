@@ -44,9 +44,11 @@ public class Tile extends FocusPanel implements MenuButton {
 	
 	private HorizontalPanel tilePanel = new HorizontalPanel();
 	private DataReference menuReference;
+	private int priority;
 	
 	public Tile(MenuData menuData) {
 		this.menuReference = menuData.getReference();
+		this.priority = menuData.getPriorityNumber();
 
 		tileImage = new Image(menuData.getSquareImgURL());
 		tileImage.setStyleName(stylePrimaryName + "-" + "tileImage");
@@ -116,14 +118,19 @@ public class Tile extends FocusPanel implements MenuButton {
 	}
 	
 	public int getPriority() {
-		return 0; //TODO
+		return this.priority;
 	}
 
 	public void setMenuFocus(boolean b) {
 		if (b) {
-			setStyleName(getStyleName() + "-focus");
+			tileImage.setStyleName(tileImage.getStyleName() + "-focus");
 		} else {
-			setStyleName(getStyleName().replace("-focus", ""));
+			tileImage.setStyleName(tileImage.getStyleName().replace("-focus", ""));
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "{Tile: "+menuReference.toString()+"}";
 	}
 }
