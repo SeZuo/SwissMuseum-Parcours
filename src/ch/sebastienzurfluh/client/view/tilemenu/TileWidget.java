@@ -19,10 +19,9 @@
 
 package ch.sebastienzurfluh.client.view.tilemenu;
 
-import java.util.Collection;
-
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuWidget;
@@ -47,9 +46,7 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 		
 		initialise(pageRequestHandler);
 		
-		tileMenu.setVisible(false);
-		
-		model.allPagesMenusInCurrentGroupObservable.subscribeObserver(this);
+		model.allGroupsMenusChangesObservable.subscribeObserver(this);
 	}
 	
 	private void initialise(PageRequestHandler pageRequestHandler) {
@@ -63,8 +60,13 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 
 	@Override
 	public void notifyObserver() {
+		if(model.getCurrentPageData().equals(Data.NONE))
+			setVisible(true);
+		else
+			setVisible(false);
+		
 		tileMenu.clearTiles();
-		for (MenuData menuData : model.getAllPageMenusInCurrentGroup()) {
+		for (MenuData menuData : model.getAllGroupMenus()) {
 			tileMenu.addTile(menuData);
 		}
 	}

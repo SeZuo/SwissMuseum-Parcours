@@ -61,6 +61,7 @@ public class PageRequestEventHandler implements EventBusListener {
 			// Abort in case the page is already loaded.
 			if (pageChangeRequest.getPageReference().equals(cachedReference))
 				return;
+			cachedReference = pageChangeRequest.getPageReference();
 			
 			if(pageChangeRequest.isForeignPageChangeRequest())
 				model.loadForeign(pageChangeRequest.getPageReference());

@@ -19,16 +19,11 @@
 
 package ch.sebastienzurfluh.client.view.tilemenu;
 
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.TreeSet;
-
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
-import ch.sebastienzurfluh.client.view.navigation.NavigationItem;
 import ch.sebastienzurfluh.client.view.tilemenu.Tile.TileMode;
 
 import com.google.gwt.user.client.ui.FlowPanel;

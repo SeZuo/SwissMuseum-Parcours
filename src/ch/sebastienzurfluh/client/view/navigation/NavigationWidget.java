@@ -52,6 +52,8 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 		initialise(pageRequestHandler);
 
 		pageSlider.setVisible(false);
+		
+		model.allPagesMenusInCurrentGroupObservable.subscribeObserver(this);
 	}
 
 	private void initialise(PageRequestHandler pageRequestHandler) {
