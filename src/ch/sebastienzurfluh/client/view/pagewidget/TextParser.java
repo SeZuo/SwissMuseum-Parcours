@@ -1,18 +1,19 @@
 package ch.sebastienzurfluh.client.view.pagewidget;
 
-import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
+import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
-import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 public class TextParser {
 	private static final String IMG_BALISE_START = "[img]";
 	private static final String IMG_BALISE_END = "[/img]";
-	Model model;
+	private Model model;
+	private EventBus pageChangeEventBus;
 	
-	public TextParser(Model model) {
+	public TextParser(EventBus pageChangeEventBus, Model model) {
 		this.model = model;
+		this.pageChangeEventBus = pageChangeEventBus;
 	}
 	
 	public String parse(String text) {
@@ -64,21 +65,22 @@ public class TextParser {
 	private String imageExtension = "-image";
 	
 	private void asyncInsertImageHTML(DataReference reference, final StringBuilder text, final int position) {
-		model.getResourceData(new ModelAsyncPlug<ResourceData>() {
-			@Override
-			public void update(ResourceData resource) {
-				text.insert(position, 
-						"<div class=\"" + primaryStyle+containerExtension + "\"> " +
-							"<img class=\"" + primaryStyle+imageExtension + "\"src=\"" + 
-							resource.getURL() + "\" alt=\"" + resource.getTitle() + "\"></img>" +
-							"<div class=\"" + primaryStyle+titleExtension + "\">" +
-								resource.getTitle() +
-							"</div>" +
-							"<div class=\"" + primaryStyle+detailsExtension + "\">" +
-								resource.getDetails() +
-							"</div>" +
-						"</div>");
-			}
-		}, reference);
+		//TODO add resource support
+//		model.getResourceData(new ModelAsyncPlug<ResourceData>() {
+//			@Override
+//			public void update(ResourceData resource) {
+//				text.insert(position, 
+//						"<div class=\"" + primaryStyle+containerExtension + "\"> " +
+//							"<img class=\"" + primaryStyle+imageExtension + "\"src=\"" + 
+//							resource.getURL() + "\" alt=\"" + resource.getTitle() + "\"></img>" +
+//							"<div class=\"" + primaryStyle+titleExtension + "\">" +
+//								resource.getTitle() +
+//							"</div>" +
+//							"<div class=\"" + primaryStyle+detailsExtension + "\">" +
+//								resource.getDetails() +
+//							"</div>" +
+//						"</div>");
+//			}
+//		}, reference);
 	}
 }

@@ -19,10 +19,9 @@
 
 package ch.sebastienzurfluh.client.view.pagewidget;
 
-import ch.sebastienzurfluh.client.control.eventbus.Event;
-import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
-import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
+import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.structure.PageData;
 import ch.sebastienzurfluh.client.patterns.Observer;
 
 import com.google.gwt.user.client.ui.HTML;
@@ -38,17 +37,19 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Sebastien Zurfluh
  *
  */
-public class PageWidget extends VerticalPanel implements Observer, EventBusListener {
+public class PageWidget extends VerticalPanel implements Observer {
 	private HTML title;
 	private Label header;
 	private HTML content;
 	private TextParser parser;
+	private Model model;
 
 	private static String primaryStyleName =  "pageWidget";
 	public PageWidget(EventBus pageChangeEventBus,
-			TextParser parser) {
-		this.parser = parser;
-		pageChangeEventBus.addListener(this);
+			Model model) {
+		this.model = model;
+		
+		parser = new TextParser(pageChangeEventBus, model);
 		
 		title = new HTML("");
 		title.setStyleName(primaryStyleName + "-title");
@@ -65,36 +66,17 @@ public class PageWidget extends VerticalPanel implements Observer, EventBusListe
 	}
 
 	@Override
-	public EventType getEventType() {
-		return EventType.PAGE_CHANGE_EVENT;
-	}
-
-	@Override
-	public void notify(Event e) {
-		if (e instanceof PageChangeEvent) {
-			PageChangeEvent pageChangeEvent = (PageChangeEvent) e;
-			switch(pageChangeEvent.getPageType()) {
-			case RESOURCE:
-			case PAGE:
-			case CHAPTER:
-			case BOOKLET:
-				this.setVisible(true);
-				this.title.setHTML(
-						"<span class='" + primaryStyleName + "-spanTitle'>"
-						+ pageChangeEvent.getData().getPageTitle()
-						+ "</span>");
-				this.header.setText(pageChangeEvent.getData().getPageContentHeader());
-				this.content.setHTML(parser.parse(pageChangeEvent.getData().getPageContentBody()));
-				break;
-			case GROUP:
-			default:
-				this.setVisible(false);
-				break;
-			}
-		}
-	}
-
-	@Override
 	public void notifyObserver() {
+		if(model.getCurrentPageData().equals(PageData.NONE)) {
+			setVisible(false);
+		} else {
+			setVisible(true);
+			this.title.setHTML(
+					"<span class='" + primaryStyleName + "-spanTitle'>"
+					+ model.getCurrentPageData().getPageTitle()
+					+ "</span>");
+			this.header.setText(model.getCurrentPageData().getPageContentHeader());
+			this.content.setHTML(parser.parse(model.getCurrentPageData().getPageContentBody()));
+		}
 	}
 }

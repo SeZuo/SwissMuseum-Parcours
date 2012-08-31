@@ -23,7 +23,6 @@ import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.view.eventbushooks.FocusWidgetsOnEvent;
 import ch.sebastienzurfluh.client.view.eventbushooks.ScrollToPanelOnEvent;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.navigation.NavigationWidget;
@@ -71,12 +70,9 @@ public class View extends SimplePanel {
 	 * Call init() after the panel has been attached.
 	 */
 	public void init() {
-		// Add some global functionalities with high priority
-		FocusWidgetsOnEvent.addRule(eventBus, EventType.WIDGET_LOADED_EVENT);
-		
 		NavigationWidget navigation = new NavigationWidget(eventBus, pageRequestHandler, model);
 		mainPanel.add(navigation);
-		PageWidget page = new PageWidget(eventBus, new TextParser(model));
+		PageWidget page = new PageWidget(eventBus, model);
 		mainPanel.add(page);
 		TileWidget tileMenu = new TileWidget(eventBus, pageRequestHandler, model);
 		mainPanel.add(tileMenu);
