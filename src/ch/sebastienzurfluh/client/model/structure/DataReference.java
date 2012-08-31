@@ -36,6 +36,12 @@ public class DataReference {
 	public static DataReference NONE = new DataReference(DataType.NONE, -1); 
 	
 	/**
+	 * This reference points to the home menu
+	 */
+	public static final DataReference SUPER = new DataReference(DataType.SUPER, 0);
+	
+	
+	/**
 	 * Creates an unique reference to the data (page or resource).
 	 * 
 	 * @param type the type of the data to reference

@@ -51,6 +51,13 @@ public class PageData {
 	private String title, contentHeader, contentBody;
 	private DataType pageType;
 	
+	/**
+	 * Use this when nothing is referenced.
+	 */
+	public final static PageData NONE = new PageData(DataReference.NONE, "", "", "") {
+		private final DataType pageType = DataType.NONE;
+	};
+	
 	public PageData(DataReference reference,
 			String title,
 			String contentHeader,

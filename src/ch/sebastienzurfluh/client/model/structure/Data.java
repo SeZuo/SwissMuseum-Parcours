@@ -28,13 +28,16 @@ import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
  *
  */
 public class Data {
-	private MenuData menuData;
-	private PageData pageData;
+	private final MenuData menuData;
+	private final PageData pageData;
 	
 	/**
 	 * Use this when nothing is referenced.
 	 */
-	public final static Data NONE = new Data(DataReference.NONE, 0, "", "", "", "", "", "", "");
+	public final static Data NONE = new Data(DataReference.NONE, 0, "", "", "", "", "", "", "") {
+		private final MenuData menuData = MenuData.NONE;
+		private final PageData pageData = PageData.NONE;
+	};
 	
 	
 	public Data(DataReference reference,

@@ -1,9 +1,9 @@
 package ch.sebastienzurfluh.client.view.menuinterface;
 
-import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
+import ch.sebastienzurfluh.client.patterns.Observer;
 
-public interface MenuWidget extends EventBusListener {
+public interface MenuWidget extends Observer {
 	/**
 	 * Sets a visual distinction on the selected menu.
 	 * 

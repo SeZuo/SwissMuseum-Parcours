@@ -42,7 +42,7 @@ public class MenuData {
 	 * This menu points to the home menu
 	 */
 	public final static MenuData SUPER = new MenuData(
-			new DataReference(DataType.GROUP, 0),
+			DataReference.SUPER,
 			Integer.MAX_VALUE,
 			"Menu principal",
 			"Retournez au menu principal",

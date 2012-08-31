@@ -22,7 +22,6 @@ package ch.sebastienzurfluh.client.model;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Observable;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -32,6 +31,7 @@ import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.model.structure.ResourceData;
+import ch.sebastienzurfluh.client.patterns.Observable;
 
 
 /**
@@ -82,8 +82,8 @@ public class Model extends Observable {
 	 * @param observable
 	 */
 	private void notifyAllObservers(Observable observable) {
-		observable.notifyAll();
-		this.notifyAll();
+		observable.notifyObservers();
+		this.notifyObservers();
 	}
 	
 	/**

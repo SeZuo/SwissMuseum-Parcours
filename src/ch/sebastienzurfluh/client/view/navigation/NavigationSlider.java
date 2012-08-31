@@ -19,11 +19,13 @@
 	
 package ch.sebastienzurfluh.client.view.navigation;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
+import ch.sebastienzurfluh.client.control.eventbus.events.WidgetLoadedEvent;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
@@ -121,6 +123,13 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	public void clearTiles() {
 		tilePanel.clear();
 		tileOrderList.clear();
+	}
+	
+	public void reloadTiles(Collection<MenuData> menus) {
+		clearTiles();
+		for (MenuData menuData : menus) {
+			addTile(menuData);
+		}
 	}
 
 	/*******************************************************************************/	
