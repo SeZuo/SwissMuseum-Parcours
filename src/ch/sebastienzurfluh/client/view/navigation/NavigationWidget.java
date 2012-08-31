@@ -19,23 +19,12 @@
 
 package ch.sebastienzurfluh.client.view.navigation;
 
-import java.util.Collection;
-import java.util.Observable;
-
-import ch.sebastienzurfluh.client.control.eventbus.Event;
-import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
-import ch.sebastienzurfluh.client.control.eventbus.events.WidgetLoadedEvent;
 import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
-import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuWidget;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
-import ch.sebastienzurfluh.client.view.supportwidgets.TextLink;
-
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -50,10 +39,6 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 
 	private NavigationSlider pageSlider;
 	
-	private SimplePanel bookletLink;
-	
-	private EventBus pageRequestEventBus;
-	
 	private final static String STYLE_NAME = "navigationWidget"; 
 
 	public NavigationWidget(
@@ -61,57 +46,21 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 			PageRequestHandler pageRequestHandler,
 			Model model) {
 		this.model = model;
-		this.pageRequestEventBus = pageChangeEventBus;
 
+		setStyleName(STYLE_NAME);
+		
 		initialise(pageRequestHandler);
 
-		setDefaults();
+		pageSlider.setVisible(false);
 	}
 
 	private void initialise(PageRequestHandler pageRequestHandler) {
-		bookletLink = new SimplePanel();
-		bookletLink.setStyleName(STYLE_NAME + "-bookletLink");
-		add(bookletLink);
-		
 		// needs to update when the group changes
-		model.currentGroupMenuObservable.addObserver(this);
+		model.allPagesMenusInCurrentGroupObservable.subscribeObserver(this);
 		
 		pageSlider = new NavigationSlider("Pages", pageRequestHandler);
 		add(pageSlider);
 	}
-
-	private void setDefaults() {
-		bookletLink.setVisible(false);
-		pageSlider.setVisible(false);
-	}
-
-	
-		
-				break;
-			default:
-				pageSlider.setFocus(data.getReference());
-				break;
-			}
-
-
-			// Change layout according to the new page type.
-			switch (pageChangeEvent.getPageType()) {
-			case PAGE:
-				pageSlider.setVisible(true);
-				bookletLink.setVisible(true);
-				break;
-			case GROUP:
-				pageSlider.setVisible(false);
-				bookletLink.setVisible(false);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-	
-	
 	
 	public void setFocus(DataReference menuReference) {
 		assert menuReference.getType() == DataType.PAGE;
@@ -120,13 +69,8 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1) {
-		// Create the booklet link for later
-		bookletLink.setWidget(
-				new TextLink(
-						pageRequestEventBus,
-						data.getReference(),
-						"Parcours: " + data.getMenuTitle()));
-		bookletSlider.setFocus(data.getReference());
+	public void notifyObserver() {
+		pageSlider.reloadTiles(model.getAllPageMenusInCurrentGroup());
+		pageSlider.setFocus(model.getCurrentPageData().getReference());
 	}
 }

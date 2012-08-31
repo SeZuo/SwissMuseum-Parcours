@@ -54,7 +54,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 public class NavigationSlider extends FocusPanel implements MenuList {
 	private AbsolutePanel animationPanel;
 	private HorizontalPanel tilePanel;
-	private LinkedList<NavigationItem> tileOrderList;
+	private LinkedList<NavigationItem> tileList;
 	
 	private PageRequestHandler pageRequestHandler;
 	private NavigationAnimator animatedScroller;
@@ -65,7 +65,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		setStyleName("navigationSlider");
 		
 		tilePanel = new HorizontalPanel();
-		tileOrderList = new LinkedList<NavigationItem>();
+		tileList = new LinkedList<NavigationItem>();
 		// This is not working under 
 //		new TreeSet<NavigationItem>(new Comparator<NavigationItem>() {
 //			@Override
@@ -95,34 +95,17 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		
 		preventBrowserInterference();
 	}
-	
-	//TODO find another way to do that.
-	private final static Integer FIRST_TILE_PRIORITY_NUMBER = Integer.MIN_VALUE; 
-	private final static Integer LAST_TILE_PRIORITY_NUMBER = Integer.MAX_VALUE; 
-	
-	public void addFirstTile(MenuData menuData) {
-		addTileOnPriority(menuData, FIRST_TILE_PRIORITY_NUMBER);
-	}
-	
-	public void addTile(MenuData menuData) {
-		addTileOnPriority(menuData, menuData.getPriorityNumber());			
-	}
-	
-	public void addLastTile(MenuData menuData) {
-		addTileOnPriority(menuData, LAST_TILE_PRIORITY_NUMBER);
-	}
-	
-	private void addTileOnPriority(MenuData menuData, Integer priority) {
+
+	private void addTile(MenuData menuData) {
 		NavigationItem tile = new NavigationItem(menuData);
 		tile.addClickHandler(pageRequestHandler);
-		tileOrderList.add(tile);
-		// TODO order the tiles in the menu according to their priority number
+		tileList.add(tile);
 		tilePanel.add(tile);
 	}
 	
-	public void clearTiles() {
+	private void clearTiles() {
 		tilePanel.clear();
-		tileOrderList.clear();
+		tileList.clear();
 	}
 	
 	public void reloadTiles(Collection<MenuData> menus) {
@@ -141,7 +124,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	 * @return the number of menu items in the widget
 	 */
 	public int getItemCount() {
-		return tileOrderList.size();
+		return tileList.size();
 	}
 	
 	public void setCurrentItem(int number) {
@@ -154,7 +137,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	public void setFocus(DataReference menuReference) {
 		// retrieve the menu in the list.
 		int menuRank = 0;
-		for (NavigationItem menu : tileOrderList) {
+		for (NavigationItem menu : tileList) {
 			if (menu.getReference().equals(menuReference.getReferenceId())) {
 				animatedScroller.setFocusWidget(menuRank);
 				break;
@@ -170,7 +153,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	 */
 	public NavigationItem getItem(int number) {
 		int i = 0;
-		for (Iterator<NavigationItem> iterator = tileOrderList.iterator(); iterator.hasNext(); i++) {
+		for (Iterator<NavigationItem> iterator = tileList.iterator(); iterator.hasNext(); i++) {
 			if (i == number)
 				return  iterator.next();
 		}
