@@ -19,7 +19,6 @@
 
 package ch.sebastienzurfluh.client.control.eventbus;
 
-import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;

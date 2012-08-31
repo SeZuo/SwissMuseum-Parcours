@@ -20,7 +20,6 @@
 package ch.sebastienzurfluh.client.model.io;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -28,14 +27,11 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.control.eventbus.events.ResourceType;
-import ch.sebastienzurfluh.client.model.cache.Cache;
-import ch.sebastienzurfluh.client.model.cache.SimpleCache;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
@@ -53,126 +49,82 @@ public class CakeConnector implements IOConnector {
 
 	public CakeConnector() {
 	}
-	/**
-	 * The queue will prevent multiple identical requests to be sent.
-	 * The request will be processed once, then update all the sources.
-	 */
-	HashMap<Requests, HashMap<Integer, LinkedList<ModelAsyncPlug<?>>>> requestsQueue
-	= new HashMap<Requests, HashMap<Integer, LinkedList<ModelAsyncPlug<?>>>>();
-	private void asyncRequest(
+//	/**
+//	 * The queue will prevent multiple identical requests to be sent.
+//	 * The request will be processed once, then update all the sources.
+//	 */
+//	HashMap<Requests, HashMap<Integer, Requests>> requestsQueue
+//	= new HashMap<Requests, HashMap<Integer, Requests>>(Requests.values().length);
+	private <T> void asyncRequest (
 			final Requests request,
-			final int referenceId,
-			final DataType expectedReturnDataType, 
-			final ResourceType expectedReturnResourceType,
+			final int referenceId, 
 			String args,
-			final ModelAsyncPlug<?> asyncPlug,
-			final Cache<?, ?> cache) {
-		if (requestsQueue.get(request) == null) {
-			requestsQueue.put(request, new HashMap<Integer, LinkedList<ModelAsyncPlug<?>>>());
-		}
-		if (requestsQueue.get(request).get(referenceId) == null) {
-			requestsQueue.get(request).put(referenceId, new LinkedList<ModelAsyncPlug<?>>());
-		}
-		requestsQueue.get(request).get(referenceId).add(asyncPlug);
+			final AsyncCallback<T> callback) {
 
-		if (requestsQueue.get(request).get(referenceId).size() > 1 &&
-				!request.equals(Requests.GETPARENTOF)) {
-			/* There is already a request processing.
-			 this is valid only because the request will always be the same
-			 and because javascript is single threaded.
-			 We give the permission to run several instances of GETPARENTOF
-			 in parallel. */
-		} else {
-			final StringBuilder url = new StringBuilder(CAKE_PATH + request.getURL());
+		final StringBuilder url = new StringBuilder(CAKE_PATH + request.getURL());
 
-			if (request.equals(Requests.GETPARENTOF))
-				if (args == null)
-					return;
-				else
-					url.append(args).append(CAKE_ARGS_SEPARATOR);
+		url.append(CAKE_ARGS_SEPARATOR).append(args);
+		url.append(CAKE_ARGS_SEPARATOR).append(referenceId);
 
-			if (referenceId != -1)
-				url.append(referenceId);
+		url.append(CAKE_SUFFIX);
 
-			url.append(CAKE_SUFFIX);
+		System.out.println("Making async request on "+url);
 
-			System.out.println("Making async request on "+url);
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
 
-			RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
+		try {
+			builder.sendRequest(null, new RequestCallback() {
+				public void onError(Request httpRequest, Throwable exception) {
+					System.out.println("JSON request failure. " + exception.getLocalizedMessage());
+					// we do nothing else than log
+					callback.onFailure(exception);
+				}
 
-			try {
-				builder.sendRequest(null, new RequestCallback() {
-					public void onError(Request httpRequest, Throwable exception) {
-						System.out.println("JSON request failure. " + exception.getLocalizedMessage());
-					}
+				@SuppressWarnings("unchecked")
+				public void onResponseReceived(Request httpRequest, Response response) {
+					if (200 == response.getStatusCode()) {
+						System.out.println("Got answer from async request.");
 
-					@SuppressWarnings("unchecked")
-					public void onResponseReceived(Request httpRequest, Response response) {
-						if (200 == response.getStatusCode()) {
-							System.out.println("Got answer from async request.");
+						JsArray<Entry> entries = evalJson(response.getText().trim());
 
-//							try {
-								JsArray<Entry> entries = evalJson(response.getText().trim());
-
-
-
-								switch(request) {
-								case GETBOOKLETDATAOF:
-								case GETCHAPTERDATAOF:
-								case GETPAGEDATAOF:
-								case GETPARENTOF:
-									Data parsedData1 = parseData(entries.get(0), referenceId, expectedReturnDataType);
-									((Cache<Integer, Data>)cache).put(referenceId,
-											parsedData1);
-									/*
-									 * This request cannot be queued with the current system as there is one queue per
-									 * request type and there may be several different requests of the GETPARENTOF type. 
-									 */
-									((ModelAsyncPlug<Data>)asyncPlug).update(
-											parsedData1);
-									break;
-								case GETRESOURCEDATAOF:
-									ResourceData parsedData2 =
-									parseResourceData(entries.get(0), referenceId, expectedReturnResourceType);
-									((Cache<Integer, ResourceData>)cache).put(referenceId,
-											parsedData2);
-									for (ModelAsyncPlug<?> plug : requestsQueue.get(request).get(referenceId)) {
-										((ModelAsyncPlug<ResourceData>)plug).update(
-												parsedData2);
-									}
-									break;
-								case GETALLBOOKLETMENUS:
-								case GETSUBMENUOFBOOKLET:
-								case GETSUBMENUOFCHAPTER:
-								case GETSUBMENUOFPAGE:
-									LinkedList<MenuData> dataList = new LinkedList<MenuData>();
-									for (int i = 0; i < entries.length(); i++) {
-										Entry entry = entries.get(i);
-										dataList.add(parseMenuData(entry, referenceId, expectedReturnDataType));
-									}
-									((Cache<Integer, Collection<MenuData>>)cache).put(referenceId,
-											dataList);
-									for (ModelAsyncPlug<?> plug : requestsQueue.get(request).get(referenceId)) {
-										((ModelAsyncPlug<Collection<MenuData>>)plug).update(dataList);
-									}
-									break;
-								default:
-									throw new Error("Yo, the request is wrong.");
-								}
-//							} catch (RequestException e) {
-//								System.out.println("JSON eval exception.");
-//								
-//								System.out.println("URL: " + url.toString());
-//								System.out.println("RESPONSE: " + response.getText());
-//							}
-						} else {
-							System.out.println("JSON request failure. Status " + response.getStatusCode() + ".");
+						// BLACKBOX!!!
+						DataType dataType = DataType.PAGE;
+						
+						switch(request) {
+						case GETALLGROUPMENUS:
+							dataType = DataType.GROUP;
+						case GETALLPAGEMENUSFROMGROUP:
+							// menu collection
+							LinkedList<MenuData> dataList = new LinkedList<MenuData>();
+							for (int i = 0; i < entries.length(); i++) {
+								Entry entry = entries.get(i);
+								dataList.add(parseMenuData(entry, referenceId, dataType));
+							}
+							// give callback
+							callback.onSuccess((T) dataList);
+							break;
+						case GETDATA:
+						case GETFIRSTDATAOFGROUP:
+							// single data
+							Data parsedData = parseData(entries.get(0), referenceId, DataType.PAGE);
+							callback.onSuccess((T) parsedData);
+							break;
 						}
+						
+						//TODO resource fetching should go there
+//						ResourceData parsedData2 =
+//								parseResourceData(entries.get(0), referenceId, expectedReturnResourceType);
+//						((Cache<Integer, ResourceData>)cache).put(referenceId,
+//								parsedData2);
+//						for (ModelAsyncPlug<?> plug : requestsQueue.get(request).get(referenceId)) {
+//							((ModelAsyncPlug<ResourceData>)plug).update(
+//									parsedData2);
+//						}
 					}
-				});
-			} catch (RequestException e) {
-				System.out.println("JSON request failure. Request exception.");
-			}
+				}
+			});
+		} catch (Exception e) {
+			callback.onFailure(e);
 		}
 	}
 
@@ -221,244 +173,114 @@ public class CakeConnector implements IOConnector {
 
 	private DataReference getDataReference(DataType type, Entry entry) {
 		switch(type) {
-		case BOOKLET:
-			return new DataReference(type, Integer.parseInt(entry.getBookletReference()));
-		case CHAPTER:
-			return new DataReference(type, Integer.parseInt(entry.getChapterReference()));
+		case GROUP:
+			return new DataReference(type, Integer.parseInt(entry.getGroupReference()));
 		case PAGE:
 			return new DataReference(type, Integer.parseInt(entry.getPageReference()));
+		case RESOURCE:
+			return new DataReference(type, Integer.parseInt(entry.getResourceReference()));
 		default:
-			return null;
+			return DataReference.NONE;
 		}
 	}
 
+//	/**
+//	 * Caches
+//	 */
+//	private Cache<Integer, Collection<MenuData>> menuDataCache =
+//			new SimpleCache<Integer, Collection<MenuData>>();
+//
+//	private Cache<Integer, Data> dataCache =
+//			new SimpleCache<Integer, Data>();
+//
+//	private Cache<DataReference, Data> referencedDataCache =
+//			new SimpleCache<DataReference, Data>();
+//
+//	private Cache<Integer, ResourceData> resourceDataCache =
+//			new SimpleCache<Integer, ResourceData>();
+
+
 	/**
-	 * Caches
+	 *  list all possible requests and their command (url) in cake
 	 */
-	 private Cache<Integer, Collection<MenuData>> menuDataCache =
-			 new SimpleCache<Integer, Collection<MenuData>>();
+	private enum Requests {
+		GETALLGROUPMENUS("menus/listAllGroupMenus"),
+		GETALLPAGEMENUSFROMGROUP("menus/listAllPageMenusFromGroup"),
+		GETFIRSTDATAOFGROUP("page_elements/getFirstPageDataFromGroup"),
+		GETDATA("page_elements/getData");
 
-	 private Cache<Integer, Data> dataCache =
-			 new SimpleCache<Integer, Data>();
+		String request;
+		Requests(String request) {
+			this.request = request;
+		}
 
-	 private Cache<DataReference, Data> referencedDataCache =
-			 new SimpleCache<DataReference, Data>();
+		public String getURL() {
+			return request;
+		}
+	}
 
-	 private Cache<Integer, ResourceData> resourceDataCache =
-			 new SimpleCache<Integer, ResourceData>();
+	@Override
+	public void asyncRequestAllGroupMenus(
+			AsyncCallback<Collection<MenuData>> asyncCallBack) {
+		asyncRequest(Requests.GETALLGROUPMENUS, 0, "", asyncCallBack);
+	}
 
+	@Override
+	public void asyncRequestGetFirstDataOfGroup(int referenceId,
+			AsyncCallback<Data> asyncCallBack) {
+		asyncRequest(Requests.GETFIRSTDATAOFGROUP, referenceId, "", asyncCallBack);
+	}
 
-	 /**
-	  *  list all possible requests and their command (url) in cake
-	  */
-	 private enum Requests {
-		 GETALLBOOKLETMENUS("booklets/listMenus"),
-		 GETBOOKLETDATAOF("booklets/getData/"),
-		 GETCHAPTERDATAOF("chapters/getData/"),
-		 GETPAGEDATAOF("page_elements/getData/"),
-		 GETRESOURCEDATAOF("resources/getData/"),
-		 GETSUBMENUOFBOOKLET("chapters/listAttachedToBooklet/"),
-		 GETSUBMENUOFCHAPTER("page_elements/listAttachedToChapter/"),
-		 GETSUBMENUOFPAGE("resources/listAttachedToPage/"),
-		 GETPARENTOF("page_datas/getParentOf/");
+	@Override
+	public void asyncRequestGetData(int referenceId,
+			AsyncCallback<Data> asyncCallBack) {
+		asyncRequest(Requests.GETDATA, referenceId, "", asyncCallBack);
+	}
 
-
-		 String request;
-		 Requests(String request) {
-			 this.request = request;
-		 }
-
-		 public String getURL() {
-			 return request;
-		 }
-	 }
-
-
-	 @Override
-	 public void getAllBookletMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug) {
-		 System.out.println("Async request made: getAllBookletMenus.");
-		 asyncRequest(
-				 Requests.GETALLBOOKLETMENUS,
-				 -1,
-				 DataType.BOOKLET,
-				 null,
-				 "",
-				 asyncPlug,
-				 menuDataCache);
-	 }
-
-	 @Override
-	 public void getBookletDataOf(ModelAsyncPlug<Data> asyncPlug, int referenceId) {
-		 asyncRequest(
-				 Requests.GETBOOKLETDATAOF,
-				 referenceId,
-				 DataType.BOOKLET,
-				 null, 
-				 "",
-				 asyncPlug,
-				 dataCache);
-	 }
-
-	 @Override
-	 public void getChapterDataOf(ModelAsyncPlug<Data> asyncPlug, int referenceId) {
-		 asyncRequest(
-				 Requests.GETCHAPTERDATAOF,
-				 referenceId,
-				 DataType.CHAPTER,
-				 null, 
-				 "",
-				 asyncPlug,
-				 dataCache);
-	 }
-
-	 @Override
-	 public void getPageDataOf(ModelAsyncPlug<Data> asyncPlug, int referenceId) {
-		 asyncRequest(
-				 Requests.GETPAGEDATAOF,
-				 referenceId,
-				 DataType.PAGE,
-				 null, 
-				 "",
-				 asyncPlug,
-				 dataCache);
-	 }
-
-	 @Override
-	 public void getRessourceDataOf(ModelAsyncPlug<ResourceData> asyncPlug, int referenceId) {
-		 asyncRequest(
-				 Requests.GETRESOURCEDATAOF,
-				 referenceId,
-				 DataType.RESOURCE,
-				 ResourceType.UNDEFINED, 
-				 "",
-				 asyncPlug,
-				 resourceDataCache);
-	 }
-
-	 @Override
-	 public void getSubMenusOfBooklet(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId) {
-		 Collection<MenuData> cached = menuDataCache.get(referenceId);
-		 if (cached != null) {
-			 asyncPlug.update(cached);
-		 } else {
-			 asyncRequest(
-					 Requests.GETSUBMENUOFBOOKLET,
-					 referenceId,
-					 DataType.CHAPTER,
-					 null, 
-					 "",
-					 asyncPlug,
-					 menuDataCache);
-		 }
-	 }
-
-	 @Override
-	 public void getSubMenusOfChapter(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId) {
-		 Collection<MenuData> cached = menuDataCache.get(referenceId);
-		 if (cached != null) {
-			 asyncPlug.update(cached);
-		 } else {
-			 asyncRequest(
-					 Requests.GETSUBMENUOFCHAPTER,
-					 referenceId,
-					 DataType.PAGE,
-					 null, 
-					 "",
-					 asyncPlug,
-					 menuDataCache);
-		 }
-	 }
-
-
-	 @Override
-	 public void getSubMenusOfPage(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId) {
-		 Collection<MenuData> cached = menuDataCache.get(referenceId);
-		 if (cached != null) {
-			 asyncPlug.update(cached);
-		 } else {
-			 asyncRequest(
-					 Requests.GETSUBMENUOFPAGE,
-					 referenceId,
-					 DataType.RESOURCE,
-					 null,
-					 "",
-					 asyncPlug,
-					 menuDataCache);
-		 }
-	 }
-
-	 @Override
-	 public void getParentOf(ModelAsyncPlug<Data> asyncPlug,
-			 DataReference childReference) {
-		 DataType parentType = null;
-		 String typeString = null;
-		 switch(childReference.getType()) {
-		 case RESOURCE:
-			 parentType = DataType.PAGE;
-			 typeString = "resource";
-			 break;
-		 case PAGE:
-			 parentType = DataType.CHAPTER;
-			 typeString = "page";
-			 break;
-		 case CHAPTER:
-			 parentType = DataType.BOOKLET;
-			 typeString = "chapter";
-			 break;
-		 case BOOKLET:
-			 parentType = DataType.SUPER;
-			 // booklets has no parents
-			 typeString = null;
-			 break;
-		 case SUPER:
-			 break;
-		 }
-		 Data cached = referencedDataCache.get(childReference);
-		 if (cached != null) {
-			 asyncPlug.update(cached);
-		 } else {
-			 asyncRequest(
-					 Requests.GETPARENTOF,
-					 childReference.getReferenceId(),
-					 parentType,
-					 null,
-					 typeString,
-					 asyncPlug,
-					 referencedDataCache);
-		 }
-	 }
+	@Override
+	public void asyncRequestGetAllPageMenusFromGroup(int referenceId,
+			AsyncCallback<Collection<MenuData>> asyncCallBack) {
+		asyncRequest(Requests.GETALLPAGEMENUSFROMGROUP, referenceId, "", asyncCallBack);
+	}
 }
 
 class Entry extends JavaScriptObject {
 	protected Entry() {}
 
-	// Reference ids
-	public final native String getBookletReference() /*-{
-		return this.booklets.id;
-	}-*/;
 
-	public final native String getChapterReference() /*-{
-		return this.chapters.id;
+
+	// Reference ids
+	public final native String getGroupReference() /*-{
+		return this.groups.id;
 	}-*/;
 
 	public final native String getPageReference() /*-{
 		return this.pages.id;
 	}-*/;
 
+	public final native String getResourceReference() /*-{
+		return this.resources.id;
+	}-*/;
+
 	// Page
 	public final native String getPageTitle() /*-{
-		return this.page_datas.title;
+		return this.pages.title;
 	}-*/;
 
 	public final native String getPageContentHeader() /*-{
-		return this.page_datas.subtitle;
+		return this.pages.subtitle;
 	}-*/;
 
 	public final native String getPageContentBody() /*-{
-		return this.page_datas.content;
+		return this.pages.content;
 	}-*/;
 
 	// Menu
+
+	public final native String getMenuPriorityNumber() /*-{
+		return this.affiliation.order;
+	}-*/;
+
 	public final native String getMenuTitle() /*-{
 		return this.menus.title;
 	}-*/;
@@ -467,16 +289,12 @@ class Entry extends JavaScriptObject {
 		return this.menus.description;
 	}-*/;
 
-	public final native String getMenuPriorityNumber() /*-{
-		return this.menus.priority_number;
-	}-*/;
-
 	public final native String getMenuTileImgURL() /*-{
-		return this.menus.tile_url_img;
+		return this.menus.thumb_img_url;
 	}-*/;
 
 	public final native String getMenuSliderImgURL() /*-{
-		return this.menus.slider_url_img;
+		return this.menus.img_url;
 	}-*/;
 
 	// Resource

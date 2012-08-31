@@ -31,6 +31,11 @@ public class DataReference {
 	private int referenceId;
 	
 	/**
+	 * Use this when nothing is referenced.
+	 */
+	public static DataReference NONE = new DataReference(DataType.NONE, -1); 
+	
+	/**
 	 * Creates an unique reference to the data (page or resource).
 	 * 
 	 * @param type the type of the data to reference

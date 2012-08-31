@@ -21,11 +21,10 @@ package ch.sebastienzurfluh.client.model.io;
 
 import java.util.Collection;
 
-import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import ch.sebastienzurfluh.client.model.structure.Data;
-import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
-import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 /**
  * Handles communication with the ADBMS.
@@ -33,38 +32,31 @@ import ch.sebastienzurfluh.client.model.structure.ResourceData;
  *
  */
 public interface IOConnector {
-	void getAllBookletMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug);
-
-	void getBookletDataOf(ModelAsyncPlug<Data> asyncPlug, int referenceId);
-
-	void getChapterDataOf(ModelAsyncPlug<Data> asyncPlug, int referenceId);
-
-	void getPageDataOf(ModelAsyncPlug<Data> asyncPlug, int referenceId);
-
-	void getRessourceDataOf(ModelAsyncPlug<ResourceData> asyncPlug, int referenceId);
+	/**
+	 * Get all the group menus.
+	 * @param asyncCallBack says what to do with the result 
+	 */
+	void asyncRequestAllGroupMenus(AsyncCallback<Collection<MenuData>> asyncCallBack);
 
 	/**
-	 * @param referenceId of the booklet.
-	 * @return menus of the booklet's chapters, an empty one if there were none.
+	 * Request for the first element in an ordered group
+	 * @param referenceId of the group 
+	 * @param asyncCallBack says what to do with the result 
 	 */
-	void getSubMenusOfBooklet(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId);
+	void asyncRequestGetFirstDataOfGroup(int referenceId, AsyncCallback<Data> asyncCallBack);
 
 	/**
-	 * @param referenceId of the chapter.
-	 * @return menus of the chapter's pages, an empty one if there were none.
+	 * Request for the data of the given page
+	 * @param referenceId of the page 
+	 * @param asyncCallBack says what to do with the result
 	 */
-	void getSubMenusOfChapter(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId);
+	void asyncRequestGetData(int referenceId, AsyncCallback<Data> asyncCallBack);
 
 	/**
-	 * @param referenceId of the page.
-	 * @return menus of the page's resources, an empty one if there were none.
+	 * Request for the menu data of all the elements in the given ordered group
+	 * @param referenceId of the group 
+	 * @param asyncCallBack says what to do with the result
 	 */
-	void getSubMenusOfPage(ModelAsyncPlug<Collection<MenuData>> asyncPlug, int referenceId);
-
-	/**
-	 * @param childReference of the parent
-	 * @return the parent, null if there were none.
-	 */
-	void getParentOf(ModelAsyncPlug<Data> asyncPlug, DataReference childReference);
-	
+	void asyncRequestGetAllPageMenusFromGroup(int referenceId,
+			AsyncCallback<Collection<MenuData>> asyncCallBack);
 }

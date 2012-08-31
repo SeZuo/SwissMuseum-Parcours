@@ -48,8 +48,7 @@ public class AppPresenter {
 	public void start() {
 		eventBus = new EventBus();
 
-//		model = ModelFactory.createModel(ModelFactory.Connector.TEST);
-		model = ModelFactory.createModel(ModelFactory.Connector.CAKE);
+		model = ModelFactory.createModel();
 
 		
 		PageRequestEventHandler pageRequestHandler = new PageRequestEventHandler(eventBus, model);
@@ -61,7 +60,7 @@ public class AppPresenter {
 		view.init();
 
 		// Start the app
-		eventBus.fireEvent(new PageChangeEvent(DataType.SUPER, null));
+		eventBus.fireEvent(new PageChangeEvent(DataType.GROUP, null));
 //		eventBus.fireEvent(new PageChangeRequest(new DataReference(DataType.PAGE, 1)));
 	}
 }

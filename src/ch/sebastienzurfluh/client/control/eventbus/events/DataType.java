@@ -25,9 +25,9 @@ package ch.sebastienzurfluh.client.control.eventbus.events;
  *
  */
 public enum DataType {
+	NONE,
 	RESOURCE,
 	PAGE,
-	CHAPTER,
-	BOOKLET,
+	GROUP,
 	SUPER;
 }

@@ -21,7 +21,6 @@ package ch.sebastienzurfluh.client.control;
 
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.io.CakeConnector;
-import ch.sebastienzurfluh.client.model.io.TestConnector;
 
 /**
  * Create test data with this factory.
@@ -33,10 +32,16 @@ public class ModelFactory {
 		TEST, CAKE;
 	}
 	
-	public static Model createModel(Connector connector) {
+	/*
+	 * Create the right model depending of the environment. See the Config class for more details.
+	 */
+	public static Model createModel() {
+		return Config.TEST_MODE ? createModel(Connector.TEST) : createModel(Connector.CAKE);
+	}
+	
+	private static Model createModel(Connector connector) {
 		switch (connector) {
 			case TEST:
-				return new Model(new TestConnector());
 			case CAKE:
 				return new Model(new CakeConnector());
 			default:

@@ -33,8 +33,16 @@ public class MenuData {
 	private String title, description;
 	private String squareImgURL, rectangleImgURL;
 	
+	/**
+	 * Use this when nothing is referenced.
+	 */
+	public final static MenuData NONE = new MenuData(DataReference.NONE, 0, "", "", "", "");
+	
+	/**
+	 * This menu points to the home menu
+	 */
 	public final static MenuData SUPER = new MenuData(
-			new DataReference(DataType.SUPER, 0),
+			new DataReference(DataType.GROUP, 0),
 			Integer.MAX_VALUE,
 			"Menu principal",
 			"Retournez au menu principal",

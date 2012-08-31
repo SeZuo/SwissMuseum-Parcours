@@ -108,7 +108,7 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 				chapterMenu.setVisible(true);
 				bookletMenu.setMode(TileMode.ICON_ONLY);
 				break;
-			case SUPER:
+			case GROUP:
 				pageMenu.setVisible(false);
 				chapterMenu.setVisible(false);
 				bookletMenu.setMode(TileMode.DETAILED);
@@ -120,7 +120,7 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 			// Reload the tiles as necessary
 			Data data = pageChangeEvent.getData();
 			switch (pageChangeEvent.getPageType()) {
-			case SUPER:
+			case GROUP:
 				model.getMenus(new ModelAsyncPlug<Collection<MenuData>>() {
 					public void update(Collection<MenuData> menus) {
 						reloadTiles(bookletMenu, menus);
@@ -168,7 +168,7 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 	
 	public void setFocus(DataReference menuReference) {
 		switch(menuReference.getType()) {
-		case SUPER:
+		case GROUP:
 			// remove focus we don't care for this widget
 			return;
 		case BOOKLET:

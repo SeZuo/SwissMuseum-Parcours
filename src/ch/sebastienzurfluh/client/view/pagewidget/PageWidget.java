@@ -86,7 +86,7 @@ public class PageWidget extends VerticalPanel implements EventBusListener {
 				this.header.setText(pageChangeEvent.getData().getPageContentHeader());
 				this.content.setHTML(parser.parse(pageChangeEvent.getData().getPageContentBody()));
 				break;
-			case SUPER:
+			case GROUP:
 			default:
 				this.setVisible(false);
 				break;

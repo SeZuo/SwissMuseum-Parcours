@@ -20,8 +20,12 @@
 package ch.sebastienzurfluh.client.model;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Observable;
 
-import ch.sebastienzurfluh.client.control.ModelAsyncPlug;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.io.IOConnector;
 import ch.sebastienzurfluh.client.model.structure.Data;
@@ -32,134 +36,329 @@ import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 /**
  * Facade for the model package.
+ * 
+ * The model is observable but you may also observe a single object.
+ * 
+ * Model data gives priority to the locally stored data in order to
+ * minimise the use of a remote ADBMS. This ADBMS is fetched through
+ * IOConnector.
  *
  * @author Sebastien Zurfluh
  */
-public class Model {
+public class Model extends Observable {
 	IOConnector connector;
 	
 	public Model(IOConnector connector) {
 		this.connector = connector;
 	}
-
+	
+	// What the view needs.
+	
 	/**
-	 * List all the menus of the given type.
+	 * We need this information application wise. If for performance reasons we
+	 * judge that it should be discarded, don't forget to check the references.
 	 */
-	public void getMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug, DataType type) {
-		switch(type) {
-		case BOOKLET:
-			connector.getAllBookletMenus(asyncPlug);
-			break;
-		case CHAPTER:
-		case PAGE:
-		case RESOURCE:
-			break;
-		default:
-			throw new Error("Impossible switch case in getMenus");
-		}
-	}
+	private Collection<MenuData> allGroupMenus;
+	public Observable allGroupsMenusChangesObservable = new Observable();
 	
-    /**
-	  * Asynchronously returns data associated with the given reference of a booklet,
-	  * chapter, page or resource.
-	  */
-	public void getAssociatedData(ModelAsyncPlug<Data> asyncPlug, DataReference reference) {
-		switch(reference.getType()) {
-		case BOOKLET:
-			connector.getBookletDataOf(asyncPlug, reference.getReferenceId());
-			break;
-		case CHAPTER:
-			connector.getChapterDataOf(asyncPlug, reference.getReferenceId());
-			break;
-		case PAGE:
-			connector.getPageDataOf(asyncPlug, reference.getReferenceId());
-			break;
-		case RESOURCE:
-			break;
-		default:
-			throw new Error("Impossible default switch case.");
-		}
-	}
+	private MenuData currentGroupMenu;
+	public Observable currentGroupMenuObservable = new Observable();
+	private Data currentData;
+	public Observable currentPageDataObservable = new Observable();
 	
-	public void getResourceData(ModelAsyncPlug<ResourceData> asyncPlug, DataReference reference) {
-		connector.getRessourceDataOf(asyncPlug, reference.getReferenceId());
-	}
+	private MenuData previousPageMenu;
+	public Observable previousPageMenuObservable = new Observable();
+	private MenuData nextPageMenu;
+	public Observable nextPageMenuObservable = new Observable();
+	
+	private Collection<MenuData> allPagesMenusInCurrentGroup;
+	public Observable allPagesMenusInCurrentGroupObservable = new Observable();
+	
+	private Collection<ResourceData> allNeededResources;
+	public Observable allNeededResourcesObservable = new Observable();
 	
 	/**
-	 * List all the sub-menus associated with a given referenced data object.
+	 * Notify all observers of the model and of the selected observable.
+	 * @param observable
 	 */
-	public void getSubMenus(ModelAsyncPlug<Collection<MenuData>> asyncPlug, DataReference reference) {
-		switch(reference.getType()) {
-		case BOOKLET:
-			connector.getSubMenusOfBooklet(asyncPlug, reference.getReferenceId());
-			break;
-		case CHAPTER:
-			connector.getSubMenusOfChapter(asyncPlug, reference.getReferenceId());
-			break;
-		case PAGE:
-			connector.getSubMenusOfPage(asyncPlug, reference.getReferenceId());
-			break;
-		case RESOURCE:
-		default:
-			throw new Error("Impossible switch case in getSubMenus");
-		}
+	private void notifyAllObservers(Observable observable) {
+		observable.notifyAll();
+		this.notifyAll();
 	}
 	
 	/**
-	 * Asynchronously returns the parent reference
+	 * This function will modify the Model (synching automatically with the base)
+	 * depending on the given reference.
 	 * 
-	 * @param reference is the child's reference
+	 * @param currentReference is the reference of the data to load
 	 */
-	public void getParentOf(ModelAsyncPlug<Data> asyncPlug, DataReference reference) {
-		connector.getParentOf(asyncPlug, reference);
+	public void load(final DataReference currentReference) {
+		switch(currentReference.getType()) {
+		case SUPER:
+			// group view: only the tile menu will be visible
+			if (allGroupMenus == null) {
+				connector.asyncRequestAllGroupMenus(new AsyncCallback<Collection<MenuData>>() {
+					@Override
+					public void onSuccess(Collection<MenuData> allGroupMenus) {
+						Model.this.setAllGroupMenus(allGroupMenus);
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println("Model:load Cannot get data from the connector");
+						Model.this.load(currentReference);
+					};
+				});
+			}
+			setCurrentGroupMenu(MenuData.NONE);
+			setCurrentData(Data.NONE);
+			setPreviousPageMenu(MenuData.NONE);
+			setNextPageMenu(MenuData.NONE);
+			setAllPageMenusInCurrentGroup(new LinkedList<MenuData>());
+			// resources == null
+			break;
+		case GROUP:
+			// page view: the navigation and the page content will be visible
+			setCurrentGroupMenu(currentReference);
+			setAllPageMenusInCurrentGroup(currentReference);
+			
+			// a group has been opened we need to load the first page
+			// NO break;
+		case PAGE:
+			setCurrentPageData(currentReference);
+			setPreviousPageMenu(currentReference);
+			setNextPageMenu(currentReference);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * This function will modify the Model (synching automatically with the base)
+	 * depending on the given reference.
+	 * 
+	 * This will load the new page instead of the current one, and set the next and previous
+	 * pages to the last visible one.
+	 * This way, the user will go back to the previous page by going next or previous.
+	 * Note we are not changing group this way.
+	 * 
+	 * @param currentReference is the reference of the data to load
+	 */
+	public void loadForeign(DataReference currentReference) {
+		setPreviousPageMenu(currentData.getMenu());
+		setNextPageMenu(currentData.getMenu());
+		setCurrentPageData(currentReference);
+	}
+	
+	
+	/**
+	 * @param allGroupsMenus
+	 */
+	private void setAllGroupMenus(Collection<MenuData> allGroupMenus) {
+		this.allGroupMenus = allGroupMenus;
+		notifyAllObservers(allGroupsMenusChangesObservable);
+	}
+	
+	/**
+	 * @param currentGroupMenu the current group menu data
+	 */
+	private void setCurrentGroupMenu(MenuData currentGroupMenu) {
+		this.currentGroupMenu = currentGroupMenu;
+		notifyAllObservers(currentGroupMenuObservable);
+	}
+	
+	/**
+	 * Loads the data from the connector.
+	 * @param currentGroupReference
+	 */
+	private void setCurrentGroupMenu(DataReference currentGroupReference) {
+		// we already have all the groups loaded. no need to check the ADBMS
+		for (MenuData group : allGroupMenus) {
+			if (group.getReference().equals(currentGroupReference)) {
+				setCurrentGroupMenu(group);
+			}
+		}
+	}
+	
+	/**
+	 * @param currentData the current page and menu
+	 */
+	private void setCurrentData(Data currentData) {
+		this.currentData = currentData;
+		notifyAllObservers(currentPageDataObservable);
 	}
 
 	/**
-	 * Get the next menu after this given one.
-	 * @param nextMenuAsyncPlug
-	 * @param reference
+	 * Loads the data from the connector.
+	 * @param currentReference
 	 */
-	public void getNextMenu(final ModelAsyncPlug<MenuData> nextMenuAsyncPlug,
-			final DataReference reference) {
-		getAssociatedData(new ModelAsyncPlug<Data>() {
-			
-			@Override
-			public void update(final Data associatedData) {
-				
+	private void setCurrentPageData(final DataReference currentReference) {
+		if (currentReference.getType().equals(DataType.GROUP)) {
+			// if a group is referenced, use the first page of the group
+			connector.asyncRequestGetFirstDataOfGroup(
+					currentReference.getReferenceId(),
+					new AsyncCallback<Data>() {
+						@Override
+						public void onSuccess(Data data) {
+							Model.this.setCurrentData(data);
+						};
 
-				
-				getParentOf(new ModelAsyncPlug<Data>() {
-					@Override
-					public void update(Data parentData) {
-						
+						@Override
+						public void onFailure(Throwable caught) {
+							System.out.println("Model:load Cannot get data from the connector");
+						};
+					});
+		} else {
+			// else use the given page reference
+			connector.asyncRequestGetData(
+					currentReference.getReferenceId(),
+					new AsyncCallback<Data>() {
+						@Override
+						public void onSuccess(Data data) {
+							Model.this.setCurrentData(data);
+						}
 
-						
-						getSubMenus(new ModelAsyncPlug<Collection<MenuData>>() {
-							@Override
-							public void update(Collection<MenuData> data) {
-								
-								
-								MenuData nextMenu = new MenuData(null, Integer.MIN_VALUE, "", "", "", "");
-								for (MenuData menuData : data) {
-									if (menuData.getPriorityNumber() > associatedData.getPriorityNumber()) {
-										nextMenu = nextMenu.getPriorityNumber() > menuData.getPriorityNumber() ?
-												menuData : nextMenu;
-									}
-								}
-
-								if (nextMenu.getReference() == null) {
-									// if there is no next to the element return to main screen.
-									nextMenuAsyncPlug.update(MenuData.SUPER);
-								} else {
-									nextMenuAsyncPlug.update(nextMenu);
-								}
-								
-							}
-						}, parentData.getReference());
-					}
-					
-				}, reference);
+						@Override
+						public void onFailure(Throwable caught) {
+							System.out.println("Model:load Cannot get data from the connector");
+						};
+					});
+		}
+	}
+	
+	/**
+	 * @param previousPageMenu the menu of the previous page.
+	 */
+	private void setPreviousPageMenu(MenuData previousPageMenu) {
+		this.previousPageMenu = previousPageMenu;
+		notifyAllObservers(previousPageMenuObservable);
+	}
+	
+	/**
+	 * Loads the data from the connector.
+	 * @param currentPageReference of the visible page and not the reference of the next page
+	 */
+	private void setPreviousPageMenu(DataReference currentPageReference) {
+		// that menu has good chance to be in the list
+		if(currentPageReference.getType().equals(DataType.GROUP) ||
+				currentPageReference.equals(
+						allPagesMenusInCurrentGroup.iterator().next().getReference())) {
+			// the previous page was the super menu
+			setPreviousPageMenu(MenuData.SUPER);
+		} else {
+			MenuData previous = MenuData.NONE;
+			int count = 0;
+			for (MenuData menuData : allPagesMenusInCurrentGroup) {
+				if(menuData.getReference().equals(currentPageReference))
+					break;
+				previous = menuData;
+				count++;
 			}
-		}, reference);
+			// if the item is not in the list, the last menu is selected
+			// this should not happen.
+			if(count == allPagesMenusInCurrentGroup.size())
+				return;
+			
+			setPreviousPageMenu(previous);
+		}
+	}
+	
+	/**
+	 * @param nextPageMenu the menu of the next page.
+	 */
+	private void setNextPageMenu(MenuData nextPageMenu) {
+		this.nextPageMenu = nextPageMenu;
+		notifyAllObservers(nextPageMenuObservable);
+	}
+	
+	/**
+	 * Find the next page data from the current group's MenuData list.
+	 * @param currentPageReference of the visible page and not the reference of the next page
+	 */
+	private void setNextPageMenu(DataReference currentPageReference) {
+		for (Iterator<MenuData> iterator = allPagesMenusInCurrentGroup.iterator();
+				iterator.hasNext();) {
+			MenuData menuData = iterator.next();
+			if(menuData.getReference().equals(currentPageReference))
+				if(iterator.hasNext())
+					setNextPageMenu(iterator.next());
+				else
+					setNextPageMenu(MenuData.SUPER);
+		}
+	}
+
+	
+	
+	/**
+	 * @param allPagesMenusInCurrentGroup all the pages of the current group menus.
+	 */
+	public void setAllPageMenusInCurrentGroup(Collection<MenuData> allPagesMenusInCurrentGroup) {
+		this.allPagesMenusInCurrentGroup = allPagesMenusInCurrentGroup;
+		notifyAllObservers(allPagesMenusInCurrentGroupObservable);
+	}
+	
+
+	/**
+	 * Loads the data from the connector.
+	 * @param currentGroupReference of the visible page and not the reference of the next page
+	 */
+	private void setAllPageMenusInCurrentGroup(final DataReference currentGroupReference) {
+		connector.asyncRequestGetAllPageMenusFromGroup(
+				currentGroupReference.getReferenceId(),
+				new AsyncCallback<Collection<MenuData>>() {
+					@Override
+					public void onSuccess(Collection<MenuData> menuDataList) {
+						Model.this.setAllPageMenusInCurrentGroup(menuDataList);
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println("Model:setAllPageMenusInCurrentGroup" +
+								" Cannot get data from the connector");
+					};
+				});
+	}
+	
+	/**
+	 * @return all the menus of groups.
+	 */
+	public Collection<MenuData> getAllGroupMenus() {
+		return allGroupMenus;
+	}
+	
+	/**
+	 * @return the current group menu data
+	 */
+	public MenuData getCurrentGroupMenu() {
+		return currentGroupMenu;
+	}
+	
+	/**
+	 * @return the current page and menu
+	 */
+	public Data getCurrentPageData() {
+		return currentData;
+	}
+	
+	/**
+	 * @return the menu of the previous page.
+	 */
+	public MenuData getPreviousPageMenu() {
+		return previousPageMenu;
+	}
+	
+	/**
+	 * @return the menu of the next page.
+	 */
+	public MenuData getNextPageMenu() {
+		return nextPageMenu;
+	}
+	
+	/**
+	 * @return all the pages of the current group menus.
+	 */
+	public Collection<MenuData> getAllPageMenusInCurrentGroup() {
+		return allPagesMenusInCurrentGroup;
 	}
 }

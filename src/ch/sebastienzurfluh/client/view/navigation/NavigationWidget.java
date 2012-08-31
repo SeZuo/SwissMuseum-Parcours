@@ -107,7 +107,7 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 			// Reload the tiles as necessary
 			Data data = pageChangeEvent.getData();
 			switch (pageChangeEvent.getPageType()) {
-			case SUPER:
+			case GROUP:
 				model.getMenus(new ModelAsyncPlug<Collection<MenuData>>() {
 					@Override
 					public void update(Collection<MenuData> dataList) {
@@ -166,7 +166,7 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 				bookletSlider.setVisible(true);
 				bookletLink.setVisible(false);
 				break;
-			case SUPER:
+			case GROUP:
 				pageSlider.setVisible(false);
 				chapterSlider.setVisible(false);
 				chapterLink.setVisible(false);
@@ -219,7 +219,7 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 	
 	public void setFocus(DataReference menuReference) {
 		switch(menuReference.getType()) {
-		case SUPER:
+		case GROUP:
 			// remove focus we don't care for this widget
 			return;
 		case BOOKLET:

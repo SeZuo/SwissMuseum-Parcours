@@ -31,6 +31,12 @@ public class Data {
 	private MenuData menuData;
 	private PageData pageData;
 	
+	/**
+	 * Use this when nothing is referenced.
+	 */
+	public final static Data NONE = new Data(DataReference.NONE, 0, "", "", "", "", "", "", "");
+	
+	
 	public Data(DataReference reference,
 			int priorityNumber,
 			String pageTitle,

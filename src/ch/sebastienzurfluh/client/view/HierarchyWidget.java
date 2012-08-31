@@ -70,7 +70,7 @@ public class HierarchyWidget extends SimplePanel implements EventBusListener {
 		if(e instanceof PageChangeEvent) {
 			PageChangeEvent pageChangeEvent = (PageChangeEvent) e;
 			
-			if(pageChangeEvent.getPageType() == DataType.SUPER) {
+			if(pageChangeEvent.getPageType() == DataType.GROUP) {
 				this.setVisible(false);
 			} else {
 				this.setVisible(true);
@@ -88,7 +88,7 @@ public class HierarchyWidget extends SimplePanel implements EventBusListener {
 				depth++;
 			case BOOKLET:
 				depth++;
-			case SUPER:
+			case GROUP:
 			default:
 			}
 			
