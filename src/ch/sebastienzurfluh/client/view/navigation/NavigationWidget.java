@@ -50,11 +50,9 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 	private Model model;
 
 	private NavigationSlider bookletSlider;
-	private NavigationSlider chapterSlider;
 	private NavigationSlider pageSlider;
 	
 	private SimplePanel bookletLink;
-	private SimplePanel chapterLink;
 	
 	private EventBus pageRequestEventBus;
 	
@@ -77,11 +75,6 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 		bookletLink = new SimplePanel();
 		bookletLink.setStyleName(STYLE_NAME + "-bookletLink");
 		add(bookletLink);
-		chapterSlider = new NavigationSlider("Chapters", pageRequestHandler);
-		add(chapterSlider);
-		chapterLink = new SimplePanel();
-		chapterLink.setStyleName(STYLE_NAME + "-chapterLink");
-		add(chapterLink);
 		pageSlider = new NavigationSlider("Pages", pageRequestHandler);
 		add(pageSlider);
 	}
@@ -89,8 +82,6 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 	private void setDefaults() {
 		bookletSlider.setVisible(false);
 		bookletLink.setVisible(false);
-		chapterSlider.setVisible(false);
-		chapterLink.setVisible(false);
 		pageSlider.setVisible(false);
 	}
 
@@ -122,20 +113,7 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 								pageRequestEventBus,
 								data.getReference(),
 								"Parcours: " + data.getMenuTitle()));
-				// list the booklet's chapters
-				reloadTilesWithParentFirstNextLast(chapterSlider, data.getReference());
 				bookletSlider.setFocus(data.getReference());
-				break;
-			case CHAPTER:
-				// Create the chapter link for later
-				chapterLink.setWidget(
-						new TextLink(
-								pageRequestEventBus,
-								data.getReference(),
-								"Chapitre: " + data.getMenuTitle()));
-				// list the chapter's pages
-				reloadTilesWithParentFirstNextLast(pageSlider, data.getReference());
-				chapterSlider.setFocus(data.getReference());
 				break;
 			default:
 				pageSlider.setFocus(data.getReference());
@@ -147,29 +125,11 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 			switch (pageChangeEvent.getPageType()) {
 			case PAGE:
 				pageSlider.setVisible(true);
-				chapterSlider.setVisible(false);
-				chapterLink.setVisible(true);
 				bookletSlider.setVisible(false);
 				bookletLink.setVisible(true);
-				break;
-			case CHAPTER:
-				pageSlider.setVisible(false);
-				chapterSlider.setVisible(true);
-				chapterLink.setVisible(false);
-				bookletSlider.setVisible(false);
-				bookletLink.setVisible(true);
-				break;
-			case BOOKLET:
-				pageSlider.setVisible(false);
-				chapterSlider.setVisible(false);
-				chapterLink.setVisible(false);
-				bookletSlider.setVisible(true);
-				bookletLink.setVisible(false);
 				break;
 			case GROUP:
 				pageSlider.setVisible(false);
-				chapterSlider.setVisible(false);
-				chapterLink.setVisible(false);
 				bookletSlider.setVisible(false);
 				bookletLink.setVisible(false);
 				break;
@@ -218,21 +178,9 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 	
 	
 	public void setFocus(DataReference menuReference) {
-		switch(menuReference.getType()) {
-		case GROUP:
-			// remove focus we don't care for this widget
-			return;
-		case BOOKLET:
-			bookletSlider.setFocus(menuReference);
-			break;
-		case CHAPTER:
-			chapterSlider.setFocus(menuReference);
-			break;
-		case PAGE:
-			pageSlider.setFocus(menuReference);
-			break;
-		default:
-		}
+		assert menuReference.getType() == DataType.PAGE;
+		
+		pageSlider.setFocus(menuReference);
 	}
 	
 	private void notifyFinished() {
@@ -240,22 +188,3 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 		pageRequestEventBus.fireEvent(new WidgetLoadedEvent(this));
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

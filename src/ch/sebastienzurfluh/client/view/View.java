@@ -76,8 +76,6 @@ public class View extends SimplePanel {
 		
 		NavigationWidget navigation = new NavigationWidget(eventBus, pageRequestHandler, model);
 		mainPanel.add(navigation);
-		HierarchyWidget hierarchy = new HierarchyWidget(eventBus, model);
-		mainPanel.add(hierarchy);
 		PageWidget page = new PageWidget(eventBus, new TextParser(model));
 		mainPanel.add(page);
 		TileWidget tileMenu = new TileWidget(eventBus, pageRequestHandler, model);
