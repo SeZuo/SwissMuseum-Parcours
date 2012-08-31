@@ -23,7 +23,7 @@ import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.EventBusListener;
-import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
+import ch.sebastienzurfluh.client.patterns.Observer;
 
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Sebastien Zurfluh
  *
  */
-public class PageWidget extends VerticalPanel implements EventBusListener {
+public class PageWidget extends VerticalPanel implements Observer, EventBusListener {
 	private HTML title;
 	private Label header;
 	private HTML content;
@@ -92,5 +92,9 @@ public class PageWidget extends VerticalPanel implements EventBusListener {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public void notifyObserver() {
 	}
 }
