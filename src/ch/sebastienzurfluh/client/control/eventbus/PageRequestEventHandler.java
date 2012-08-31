@@ -20,10 +20,8 @@
 package ch.sebastienzurfluh.client.control.eventbus;
 
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
-import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeEvent;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 
 /**
@@ -64,14 +62,10 @@ public class PageRequestEventHandler implements EventBusListener {
 			if (pageChangeRequest.getPageReference().equals(cachedReference))
 				return;
 			
-			// Collect the necessary data and fire an event.
-			model.getAssociatedData(new ModelAsyncPlug<Data>() {
-				public void update(Data data) {
-					eventBus.fireEvent(new PageChangeEvent(data.getPageType(), data));
-					// Cache the loaded page.
-					cachedReference = pageChangeRequest.getPageReference();
-				};
-			}, pageChangeRequest.getPageReference());
+			if(pageChangeRequest.isForeignPageChangeRequest())
+				model.loadForeign(pageChangeRequest.getPageReference());
+			else
+				model.load(pageChangeRequest.getPageReference());
 		}
 	}
 
