@@ -54,7 +54,7 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		titleLabel.setStyleName(stylePrimaryName + "-" + "title");
 		firstLine.add(titleLabel);
 		
-		button = new ModeSwapButton(stylePrimaryName, this);
+		button = new ModeSwapButton(this);
 		button.setStyleName(stylePrimaryName + "-" + "detailButton");
 		
 		firstLine.add(button);
@@ -101,9 +101,9 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		currentMode = mode;
 		System.out.println("TileMenu: current mode: "+mode);
 		if (mode.equals(TileMode.DETAILED)) {
-			button.setState(TwoStatesImageButton.State.ONE);
+			button.setState(ModeSwapButton.State.DETAILED);
 		} else {
-			button.setState(TwoStatesImageButton.State.TWO);
+			button.setState(ModeSwapButton.State.ICON_ONLY);
 		}
 		for (Tile tile : tileOrderList) {
 			tile.setMode(mode);
