@@ -23,6 +23,7 @@ import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
+import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuWidget;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -67,7 +68,7 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 	}
 
 	@Override
-	public void notifyObserver() {
+	public void notifyObserver(Observable source) {
 		if(model.getAllPageMenusInCurrentGroup().isEmpty()) {
 			setVisible(false);
 			System.out.println("NavigationWidget told to hide and do nothing.");

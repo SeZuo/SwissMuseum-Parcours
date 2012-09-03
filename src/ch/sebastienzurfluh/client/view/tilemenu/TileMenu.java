@@ -20,7 +20,6 @@
 package ch.sebastienzurfluh.client.view.tilemenu;
 
 import java.util.LinkedList;
-import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
@@ -34,6 +33,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * This widget uses several {@link Tile}s to create a menu.
+ * 
+ * It has a detailed and an icon-only modes. Default is detailed.
+ * 
  * @author Sebastien Zurfluh
  *
  */
@@ -88,7 +90,7 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		tileOrderList.clear();
 	}
 	
-	private TileMode currentMode = TileMode.ICON_ONLY;
+	private TileMode currentMode = TileMode.DETAILED;
 	public void setMode(TileMode mode) {
 		if (mode.equals(currentMode))
 			return;
@@ -102,29 +104,6 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		}
 		for (Tile tile : tileOrderList) {
 			tile.setMode(mode);
-		}
-	}
-
-	// initialised to avoid checking for null on the first run.
-	private Tile focusedItem = new Tile(MenuData.SUPER);
-	public void setFocus(DataReference menuReference) {
-		System.out.println("TileMenu: Focus: DataReference: " + menuReference.toString());
-		
-		focusedItem.setMenuFocus(false);
-		// retrieve the menu in the list.
-		System.out.println("TileMenu: Focus: tileOrderList:");
-		for (Tile menu : tileOrderList) {
-			System.out.println("TileMenu: Focus: tileOrderList:"+menu.getPriority()+";");
-			
-			if (menu.getReference().equals(menuReference)) {
-				
-				focusedItem = menu;
-				
-				System.out.println("TileMenu: Focus: Found the referenced tile " + focusedItem.getReference().toString());
-				
-				focusedItem.setMenuFocus(true);
-				return;
-			}
 		}
 	}
 }

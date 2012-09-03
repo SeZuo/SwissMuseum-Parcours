@@ -22,6 +22,7 @@ package ch.sebastienzurfluh.client.view.pagewidget;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.PageData;
+import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
 
 import com.google.gwt.user.client.ui.HTML;
@@ -68,7 +69,7 @@ public class PageWidget extends VerticalPanel implements Observer {
 	}
 
 	@Override
-	public void notifyObserver() {
+	public void notifyObserver(Observable source) {
 		if(model.getCurrentPageData().equals(PageData.NONE)) {
 			setVisible(false);
 		} else {

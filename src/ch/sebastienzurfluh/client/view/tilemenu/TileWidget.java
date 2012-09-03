@@ -22,15 +22,15 @@ package ch.sebastienzurfluh.client.view.tilemenu;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.Data;
-import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuWidget;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 /**
- * This widget uses several {@link TileMenu}s to create a menu.
+ * This widget uses {@link TileMenu}s to create a menu.
  * @author Sebastien Zurfluh
  *
  */
@@ -47,27 +47,27 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 		initialise(pageRequestHandler);
 		
 		model.allGroupsMenusChangesObservable.subscribeObserver(this);
+		model.currentPageDataObservable.subscribeObserver(this);
 	}
 	
 	private void initialise(PageRequestHandler pageRequestHandler) {
-		tileMenu = new TileMenu("Pages", pageRequestHandler);
+		tileMenu = new TileMenu("Choisissez votre parcours", pageRequestHandler);
 		add(tileMenu);
-	}
-	
-	public void setFocus(DataReference menuReference) {
-		setFocus(menuReference);
 	}
 
 	@Override
-	public void notifyObserver() {
-		if(model.getCurrentPageData().equals(Data.NONE))
-			setVisible(true);
-		else
-			setVisible(false);
-		
-		tileMenu.clearTiles();
-		for (MenuData menuData : model.getAllGroupMenus()) {
-			tileMenu.addTile(menuData);
+	public void notifyObserver(Observable source) {
+		if (source.equals(model.currentPageDataObservable)) {
+			if(model.getCurrentPageData().equals(Data.NONE)) {
+				setVisible(true);
+			} else {
+				setVisible(false);
+			}
+		} else if (source.equals(model.allGroupsMenusChangesObservable)) {
+			tileMenu.clearTiles();
+			for (MenuData menuData : model.getAllGroupMenus()) {
+				tileMenu.addTile(menuData);
+			}
 		}
 	}
 }

@@ -21,6 +21,7 @@ package ch.sebastienzurfluh.client.view;
 
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
 
 import com.google.gwt.user.client.ui.Label;
@@ -43,7 +44,7 @@ public class GroupLabelWidget extends Label implements Observer {
 	}
 
 	@Override
-	public void notifyObserver() {
+	public void notifyObserver(Observable source) {
 		if(model.getCurrentGroupMenu().equals(MenuData.NONE)) {
 			setVisible(false);
 		} else {

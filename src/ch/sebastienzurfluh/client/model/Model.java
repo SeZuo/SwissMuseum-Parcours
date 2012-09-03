@@ -61,14 +61,14 @@ public class Model extends Observable {
 	private Collection<MenuData> allGroupMenus;
 	public Observable allGroupsMenusChangesObservable = new Observable();
 	
-	private MenuData currentGroupMenu;
+	private MenuData currentGroupMenu = MenuData.NONE;
 	public Observable currentGroupMenuObservable = new Observable();
-	private Data currentData;
+	private Data currentData = Data.NONE;
 	public Observable currentPageDataObservable = new Observable();
 	
-	private MenuData previousPageMenu;
+	private MenuData previousPageMenu = MenuData.NONE;
 	public Observable previousPageMenuObservable = new Observable();
-	private MenuData nextPageMenu;
+	private MenuData nextPageMenu = MenuData.NONE;
 	public Observable nextPageMenuObservable = new Observable();
 	
 	private Collection<MenuData> allPagesMenusInCurrentGroup;
@@ -111,7 +111,7 @@ public class Model extends Observable {
 				});
 			}
 			setCurrentGroupMenu(MenuData.NONE);
-			setCurrentData(Data.NONE);
+			setCurrentPageData(Data.NONE);
 			setPreviousPageMenu(MenuData.NONE);
 			setNextPageMenu(MenuData.NONE);
 			setAllPageMenusInCurrentGroup(new LinkedList<MenuData>());
@@ -185,7 +185,7 @@ public class Model extends Observable {
 	/**
 	 * @param currentData the current page and menu
 	 */
-	private void setCurrentData(Data currentData) {
+	private void setCurrentPageData(Data currentData) {
 		this.currentData = currentData;
 		notifyAllObservers(currentPageDataObservable);
 	}
@@ -202,7 +202,7 @@ public class Model extends Observable {
 					new AsyncCallback<Data>() {
 						@Override
 						public void onSuccess(Data data) {
-							Model.this.setCurrentData(data);
+							Model.this.setCurrentPageData(data);
 						};
 
 						@Override
@@ -217,7 +217,7 @@ public class Model extends Observable {
 					new AsyncCallback<Data>() {
 						@Override
 						public void onSuccess(Data data) {
-							Model.this.setCurrentData(data);
+							Model.this.setCurrentPageData(data);
 						}
 
 						@Override

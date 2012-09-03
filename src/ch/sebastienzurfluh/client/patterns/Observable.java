@@ -11,7 +11,7 @@ public class Observable {
     
     public void notifyObservers() {
     	for (Observer observer : observerList) {
-			observer.notifyObserver();
+			observer.notifyObserver(this);
 		}
     }
 }

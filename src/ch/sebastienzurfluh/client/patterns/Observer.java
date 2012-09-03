@@ -8,6 +8,8 @@ package ch.sebastienzurfluh.client.patterns;
 public interface Observer {
 	/**
 	 * Notify the observer something happened to what it was listening to.
+	 * 
+	 * @param source of the modification.
 	 */
-	public void notifyObserver();
+	public void notifyObserver(Observable source);
 }

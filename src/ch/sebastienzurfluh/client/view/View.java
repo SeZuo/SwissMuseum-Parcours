@@ -27,7 +27,6 @@ import ch.sebastienzurfluh.client.view.eventbushooks.ScrollToPanelOnEvent;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.navigation.NavigationWidget;
 import ch.sebastienzurfluh.client.view.pagewidget.PageWidget;
-import ch.sebastienzurfluh.client.view.pagewidget.TextParser;
 import ch.sebastienzurfluh.client.view.tilemenu.TileWidget;
 
 import com.google.gwt.user.client.ui.SimplePanel;

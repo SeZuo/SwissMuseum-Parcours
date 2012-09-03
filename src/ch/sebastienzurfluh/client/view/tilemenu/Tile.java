@@ -75,14 +75,14 @@ public class Tile extends FocusPanel implements MenuButton {
 	private static String detailedStyleDependentName = TileMode.DETAILED.toString();
 
 	private void setIconOnlyMode() {
-		System.out.println("Tile: set icon mode");
+		System.out.println("Tile: " + this.toString() + " set icon mode");
 		setStyleName(stylePrimaryName + "-" + iconOnlyStyleDependentName);
 		
 		details.setVisible(false);
 	}
 	
 	private void setDetailedMode() {
-		System.out.println("Tile: set detailed mode");
+		System.out.println("Tile: " + this.toString() + " set detailed mode");
 		setStyleName(stylePrimaryName + "-" + detailedStyleDependentName);
 		
 		details.setVisible(true);
