@@ -39,6 +39,7 @@ public class StaticFlipper extends Animation  implements NavigationAnimator {
 	 * @param animatedPanel parent of the moving widget
 	 * @param movingWidget itself
 	 */
+	@Deprecated
 	public StaticFlipper(AbsolutePanel animatedPanel, Widget movingWidget, final NavigationSlider slider) {
 		this.animatedPanel = animatedPanel;
 		this.movingWidget = movingWidget;
@@ -58,13 +59,13 @@ public class StaticFlipper extends Animation  implements NavigationAnimator {
 		outerPrevious.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (slider.getCurrentItemNumber() == 0)
+				if (slider.getCurrentItemRank() == 0)
 					return;
 				
 				// move to the right place
-				setFocusWidget(slider.getCurrentItemNumber()-1);
+				setFocusWidget(slider.getCurrentItemRank()-1);
 
-				slider.getItem(slider.getCurrentItemNumber()).ignite();
+//				slider.getItem(slider.getCurrentItemRank()).ignite();
 			}
 		});
 		animatedPanel.add(outerPrevious, 35, 35);
@@ -85,13 +86,13 @@ public class StaticFlipper extends Animation  implements NavigationAnimator {
 		outerNext.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (slider.getCurrentItemNumber() == slider.getItemCount()-1)
+				if (slider.getCurrentItemRank() == slider.getItemCount()-1)
 					return;
 				
 				// move to the right place
-				setFocusWidget(slider.getCurrentItemNumber()+1);
+				setFocusWidget(slider.getCurrentItemRank()+1);
 				
-				slider.getItem(slider.getCurrentItemNumber()).ignite();
+//				slider.getItem(slider.getCurrentItemRank()).ignite();
 			}
 		});
 		animatedPanel.add(outerNext, 535, 35);
@@ -134,7 +135,7 @@ public class StaticFlipper extends Animation  implements NavigationAnimator {
 		if(!updated)
 			update();
 
-		slider.getItem(slider.getCurrentItemNumber()).setFocus(false);
+		slider.getItem(slider.getCurrentItemRank()).setFocus(false);
 
 		slider.setCurrentItem(number);
 

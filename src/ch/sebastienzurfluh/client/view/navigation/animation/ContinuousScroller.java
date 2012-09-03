@@ -196,8 +196,4 @@ public class ContinuousScroller extends Animation  implements NavigationAnimator
 	@Override
 	public void setFocusWidget(int number) {
 	}
-
-	@Override
-	public void update() {
-	}
 }

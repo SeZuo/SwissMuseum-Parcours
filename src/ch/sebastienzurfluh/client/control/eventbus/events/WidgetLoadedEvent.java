@@ -20,7 +20,6 @@
 package ch.sebastienzurfluh.client.control.eventbus.events;
 
 import ch.sebastienzurfluh.client.control.eventbus.Event;
-import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuWidget;
 
 /**

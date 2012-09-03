@@ -23,10 +23,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
-import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.navigation.animation.AnimatorFactory;
 import ch.sebastienzurfluh.client.view.navigation.animation.AnimatorFactory.AnimatorType;
 import ch.sebastienzurfluh.client.view.navigation.animation.NavigationAnimator;
@@ -53,11 +53,9 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	private HorizontalPanel tilePanel;
 	private LinkedList<NavigationItem> tileList;
 	
-	private PageRequestHandler pageRequestHandler;
 	private NavigationAnimator animatedScroller;
 	
-	public NavigationSlider(String string, PageRequestHandler pageRequestHandler) {
-		this.pageRequestHandler = pageRequestHandler;
+	public NavigationSlider(String string, EventBus pageRequestBus) {
 		
 		setStyleName("navigationSlider");
 		
@@ -70,13 +68,13 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		add(animationPanel);
 		animationPanel.setSize("100%", "100%");
 		
-		animatedScroller = AnimatorFactory.createAnimator(
-				AnimatorType.STATIC,
-				animationPanel, tilePanel, this);
+//		animatedScroller = AnimatorFactory.createAnimator(
+//				AnimatorType.STATIC,
+//				animationPanel, tilePanel, this);
 		
 		animatedScroller = AnimatorFactory.createAnimator(
 				AnimatorType.SWIPE,
-				animationPanel, tilePanel, this);
+				animationPanel, tilePanel, this, pageRequestBus);
 		
 		addTouchStartHandler(animatedScroller);	
 		addTouchEndHandler(animatedScroller);
@@ -88,7 +86,6 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 
 	private void addTile(MenuData menuData) {
 		NavigationItem tile = new NavigationItem(menuData);
-		tile.addClickHandler(pageRequestHandler);
 		tileList.add(tile);
 		tilePanel.add(tile);
 	}
@@ -103,14 +100,13 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		for (MenuData menuData : menus) {
 			addTile(menuData);
 		}
-		animatedScroller.update();
 	}
 
 	/*******************************************************************************/	
 	/************* Centralised widget selection ************************************/
 	/*******************************************************************************/
 	
-	private int currentItemNumber = 0;
+	private int currentItemRank = 1;
 	/**
 	 * @return the number of menu items in the widget
 	 */
@@ -118,18 +114,22 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		return tileList.size();
 	}
 	
-	public void setCurrentItem(int number) {
-		currentItemNumber = number;
+	public void setCurrentItem(int rank) {
+		currentItemRank = rank;
 	}
-	public int getCurrentItemNumber() {
-		return currentItemNumber;
+	public int getCurrentItemRank() {
+		return currentItemRank;
 	}
 	
-	public void setFocus(DataReference menuReference) {
+	/**
+	 * Focus the navigation slider on the item with given reference. Provided it exists.
+	 * @param menuReference
+	 */
+	public void setFocusWidget(DataReference menuReference) {
 		// retrieve the menu in the list.
-		int menuRank = 0;
+		int menuRank = 1;
 		for (NavigationItem menu : tileList) {
-			if (menu.getReference().equals(menuReference.getReferenceId())) {
+			if (menu.getReference().equals(menuReference)) {
 				animatedScroller.setFocusWidget(menuRank);
 				break;
 			}
@@ -138,11 +138,11 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	}
 	
 	/**
-	 * @param number the rank of the widget to retrieve. 0 is the first element.
+	 * @param number the rank of the widget to retrieve. 1 is the first element.
 	 * @return the {@code number}th widget or null if there's none at this position.
 	 */
 	public NavigationItem getItem(int number) {
-		int i = 0;
+		int i = 1;
 		for (Iterator<NavigationItem> iterator = tileList.iterator(); iterator.hasNext(); i++) {
 			if (i == number)
 				return  iterator.next();

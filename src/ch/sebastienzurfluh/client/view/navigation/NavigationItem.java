@@ -19,15 +19,12 @@
 
 package ch.sebastienzurfluh.client.view.navigation;
 
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Image;
 
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuButton;
-import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 
 /**
  * This is an item of the {@link NavigationSlider}.
@@ -57,33 +54,5 @@ public class NavigationItem extends FocusPanel implements MenuButton {
 	
 	public int getPriority() {
 		return priority;
-	}
-	
-	private PageRequestHandler pageRequestHandler;
-	@Override
-	public HandlerRegistration addClickHandler(ClickHandler handler) {
-		assert handler instanceof PageRequestHandler;
-		
-		this.pageRequestHandler = (PageRequestHandler) handler;
-	    return super.addClickHandler(handler);
-	}
-	
-	/**
-	 * Make the button fire it's associated event.
-	 * 
-	 * Usually this is used by the scroller to simulate a mouse notify
-	 * the item it has been selected.
-	 */
-	public void ignite() {
-		pageRequestHandler.requestPage(getReference());
-	}
-	
-	/**
-	 * Makes the widget focused. (Like when you hover over a text link.
-	 * 
-	 * Default is disabled.
-	 */
-	public void setFocus(boolean enable) {
-		//TODO implement the setFocus method of the NavigationItem
 	}
 }

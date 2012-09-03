@@ -1,5 +1,7 @@
 package ch.sebastienzurfluh.client.view.navigation.animation;
 
+import ch.sebastienzurfluh.client.control.eventbus.EventBus;
+import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.view.navigation.NavigationSlider;
 
 import com.google.gwt.animation.client.Animation;
@@ -26,6 +28,7 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	private AbsolutePanel animatedPanel;
 	private Widget movingWidget;
 	private NavigationSlider slider;
+	private EventBus pageRequestBus;
 	
 	/**
 	 * You need a different object per animated panel.
@@ -35,47 +38,39 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	 * @param animatedPanel parent of the moving widget
 	 * @param movingWidget itself
 	 */
-	public SwipeScroller(AbsolutePanel animatedPanel, Widget movingWidget, NavigationSlider slider) {
+	public SwipeScroller(
+			AbsolutePanel animatedPanel, 
+			Widget movingWidget,
+			NavigationSlider slider,
+			EventBus pageRequestBus) {
 		this.animatedPanel = animatedPanel;
 		this.movingWidget = movingWidget;
 		this.slider = slider;
+		this.pageRequestBus = pageRequestBus;
     }
 	
 	/**
-	 * Updates settings that do not change often.
-	 * 
-	 * Use update in the following cases:
-	 * - screen width changed
-	 * - widget count changed
-	 * - widget size changed
+	 * @return Pixel size of a menu item.
 	 */
-	public void update() {
-		itemCount = slider.getItemCount();
-		itemWidth = slider.getItem(0).getOffsetWidth();
-		widgetWidth = slider.getOffsetWidth();
+	private int getItemWidth() {
+		return slider.getItem(0).getOffsetWidth();
 	}
+	
 	/**
-	 * The count of menu items.
+	 * @return Width in pixel of the complete widget
 	 */
-	private int itemCount = 0;
-	/**
-	 * Pixel size of a benu item.
-	 */
-	private int itemWidth = 0;
-	private int widgetWidth = 0;
+	private int getWidgetWidth() {
+		return slider.getOffsetWidth();
+	}
 	
 	/**
 	 * Move the scroller to the specified widget
-	 * @param number -th widget
+	 * @param rank -th widget starting at 1
 	 */
-	public void setFocusWidget(int number) {
-		slider.getItem(slider.getCurrentItemNumber()).setFocus(false);
-
-		slider.setCurrentItem(number);
-		int itemPosition = number * itemWidth;
+	public void setFocusWidget(int rank) {
+		slider.setCurrentItem(rank);
+		int itemPosition = (rank-1) * getItemWidth();
 		scrollTo(itemPosition, SLOW);
-		
-		slider.getItem(number).setFocus(true);
 	}
 
 	int positionBeforeAnimation, delta;
@@ -142,33 +137,34 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 		mouseMoveHandler.removeHandler();
 		touchMoveHandler.removeHandler();
 		
-		int previousItem = slider.getCurrentItemNumber();
+		int previousItem = slider.getCurrentItemRank();
+		
+		int nextItem;
 
 		// get the widget back into boundaries.
 		int leftDelta = animatedPanel.getAbsoluteLeft() - movingWidget.getAbsoluteLeft();
-    	if (leftDelta < 0) {
-    		scrollTo(0, SLOW);
-    		slider.setCurrentItem(0);
-    	} else if (leftDelta > widgetWidth) {
-    		slider.setCurrentItem(itemCount-1);
+    	if (leftDelta < 0 || leftDelta > getWidgetWidth()) {
+    		nextItem = previousItem;
     	} else {
     		int delta = newXPos - startPosition;
-    		// movement has to be more than a third of the screen
-    		if (delta > widgetWidth * 0.3) {
-    			slider.setCurrentItem(slider.getCurrentItemNumber()-1);
-    		} else if (delta < - widgetWidth * 0.3) {
-    			slider.setCurrentItem(slider.getCurrentItemNumber()+1);
+    		// movement has to be more than a third of the widget
+    		if (delta > getWidgetWidth() * 0.3) {
+    			nextItem = slider.getCurrentItemRank()-1;
+    		} else if (delta < - getWidgetWidth() * 0.3) {
+    			nextItem = slider.getCurrentItemRank()+1;
     		} else {
-    			// re-focus the same widget
+    			nextItem = previousItem;
     		}
     	}
     	
     	
 		// move to the right place
-		setFocusWidget(slider.getCurrentItemNumber());
+		setFocusWidget(nextItem);
 		
-		if (previousItem != slider.getCurrentItemNumber())
-    		slider.getItem(slider.getCurrentItemNumber()).ignite();
+		if (previousItem != nextItem)
+    		pageRequestBus.fireEvent(
+    				new PageChangeRequest(
+    						slider.getItem(slider.getCurrentItemRank()).getReference()));
 	}
 
 	@Override

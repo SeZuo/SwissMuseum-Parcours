@@ -22,6 +22,7 @@ package ch.sebastienzurfluh.client.view.navigation.animation;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.view.navigation.NavigationSlider;
 
 /**
@@ -35,12 +36,13 @@ public class AnimatorFactory {
 	}
 	
 	public static NavigationAnimator createAnimator(AnimatorType type,
-			AbsolutePanel animatedPanel, Widget movingWidget, NavigationSlider parentSlider) {
+			AbsolutePanel animatedPanel, Widget movingWidget, NavigationSlider parentSlider,
+			EventBus pageRequestBus) {
 		switch (type) {
 			case CONTINUOUS:
 				return new ContinuousScroller(animatedPanel, movingWidget, parentSlider);
 			case SWIPE:
-				return new SwipeScroller(animatedPanel, movingWidget, parentSlider);
+				return new SwipeScroller(animatedPanel, movingWidget, parentSlider, pageRequestBus);
 			case STATIC:
 				return new StaticFlipper(animatedPanel, movingWidget, parentSlider);
 			default:

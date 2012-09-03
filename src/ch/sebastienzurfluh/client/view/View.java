@@ -69,7 +69,7 @@ public class View extends SimplePanel {
 	 * Call init() after the panel has been attached.
 	 */
 	public void init() {
-		NavigationWidget navigation = new NavigationWidget(eventBus, pageRequestHandler, model);
+		NavigationWidget navigation = new NavigationWidget(eventBus, model);
 		mainPanel.add(navigation);
 		PageWidget page = new PageWidget(eventBus, model);
 		mainPanel.add(page);

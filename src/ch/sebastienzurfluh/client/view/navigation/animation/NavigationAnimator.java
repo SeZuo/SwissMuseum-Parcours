@@ -21,14 +21,4 @@ MouseDownHandler, MouseUpHandler, MouseMoveHandler {
 	 * @param number -th widget
 	 */
 	public void setFocusWidget(int number);
-	
-	/**
-	 * Updates settings that do not change often.
-	 * 
-	 * Use update in the following cases:
-	 * - screen width changed
-	 * - widget count changed
-	 * - widget size changed
-	 */
-	public void update();
 }

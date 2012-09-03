@@ -20,12 +20,9 @@
 package ch.sebastienzurfluh.client.view.navigation;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
-import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuWidget;
-import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -44,39 +41,26 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 
 	public NavigationWidget(
 			EventBus pageChangeEventBus,
-			PageRequestHandler pageRequestHandler,
 			Model model) {
 		this.model = model;
 
 		setStyleName(STYLE_NAME);
 		
-		initialise(pageRequestHandler);
-	}
-
-	private void initialise(PageRequestHandler pageRequestHandler) {
 		// needs to update when the group changes
 		model.allPagesMenusInCurrentGroupObservable.subscribeObserver(this);
 		
-		pageSlider = new NavigationSlider("Pages", pageRequestHandler);
+		pageSlider = new NavigationSlider("Pages", pageChangeEventBus);
 		add(pageSlider);
-	}
-	
-	public void setFocus(DataReference menuReference) {
-		assert menuReference.getType() == DataType.PAGE;
-		
-		pageSlider.setFocus(menuReference);
 	}
 
 	@Override
 	public void notifyObserver(Observable source) {
 		if(model.getAllPageMenusInCurrentGroup().isEmpty()) {
 			setVisible(false);
-			System.out.println("NavigationWidget told to hide and do nothing.");
 		} else {
-			System.out.println("NavigationWidget told to show up.");
 			setVisible(true);
 			pageSlider.reloadTiles(model.getAllPageMenusInCurrentGroup());
-			pageSlider.setFocus(model.getCurrentPageData().getReference());
+			pageSlider.setFocusWidget(model.getCurrentPageData().getReference());
 		}
 	}
 }
