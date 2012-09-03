@@ -63,13 +63,6 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		
 		tilePanel = new HorizontalPanel();
 		tileList = new LinkedList<NavigationItem>();
-		// This is not working under 
-//		new TreeSet<NavigationItem>(new Comparator<NavigationItem>() {
-//			@Override
-//			public int compare(NavigationItem o1, NavigationItem o2) {
-//				return ((Integer) o1.getPriority()).compareTo(o2.getPriority());
-//			}
-//		});
 		
 		animationPanel = new AbsolutePanel();
 		animationPanel.add(tilePanel);
@@ -110,6 +103,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		for (MenuData menuData : menus) {
 			addTile(menuData);
 		}
+		animatedScroller.update();
 	}
 
 	/*******************************************************************************/	
@@ -144,8 +138,7 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	}
 	
 	/**
-	 * 
-	 * @param number the rank of the widget to retrieve
+	 * @param number the rank of the widget to retrieve. 0 is the first element.
 	 * @return the {@code number}th widget or null if there's none at this position.
 	 */
 	public NavigationItem getItem(int number) {

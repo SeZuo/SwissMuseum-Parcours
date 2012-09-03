@@ -53,8 +53,6 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 		itemCount = slider.getItemCount();
 		itemWidth = slider.getItem(0).getOffsetWidth();
 		widgetWidth = slider.getOffsetWidth();
-		
-		updated = true;
 	}
 	/**
 	 * The count of menu items.
@@ -66,7 +64,6 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	private int itemWidth = 0;
 	private int widgetWidth = 0;
 	
-	private boolean updated = false;
 	/**
 	 * Move the scroller to the specified widget
 	 * @param number -th widget
@@ -125,9 +122,6 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 		mouseMoveHandler = slider.addMouseMoveHandler(this);
 		touchMoveHandler = slider.addTouchMoveHandler(this);
 		
-		if (!updated)
-			update();
-		
 		startPosition = xPosition;
 		movingRelativePosition = startPosition;
 	}
@@ -155,6 +149,8 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
     	if (leftDelta < 0) {
     		scrollTo(0, SLOW);
     		slider.setCurrentItem(0);
+    	} else if (leftDelta > widgetWidth) {
+    		slider.setCurrentItem(itemCount-1);
     	} else {
     		int delta = newXPos - startPosition;
     		// movement has to be more than a third of the screen
