@@ -50,10 +50,6 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 		setStyleName(STYLE_NAME);
 		
 		initialise(pageRequestHandler);
-
-		pageSlider.setVisible(false);
-		
-		model.allPagesMenusInCurrentGroupObservable.subscribeObserver(this);
 	}
 
 	private void initialise(PageRequestHandler pageRequestHandler) {
@@ -72,7 +68,14 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 
 	@Override
 	public void notifyObserver() {
-		pageSlider.reloadTiles(model.getAllPageMenusInCurrentGroup());
-		pageSlider.setFocus(model.getCurrentPageData().getReference());
+		if(model.getAllPageMenusInCurrentGroup().isEmpty()) {
+			setVisible(false);
+			System.out.println("NavigationWidget told to hide and do nothing.");
+		} else {
+			System.out.println("NavigationWidget told to show up.");
+			setVisible(true);
+			pageSlider.reloadTiles(model.getAllPageMenusInCurrentGroup());
+			pageSlider.setFocus(model.getCurrentPageData().getReference());
+		}
 	}
 }

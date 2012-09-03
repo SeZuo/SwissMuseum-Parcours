@@ -44,12 +44,11 @@ public class GroupLabelWidget extends Label implements Observer {
 
 	@Override
 	public void notifyObserver() {
-		if(model.getCurrentGroupMenu().equals(MenuData.NONE) ||
-				model.getCurrentGroupMenu().equals(MenuData.SUPER)) {
+		if(model.getCurrentGroupMenu().equals(MenuData.NONE)) {
 			setVisible(false);
 		} else {
-			setText(model.getCurrentGroupMenu().getTitle());
 			setVisible(true);
+			setText(model.getCurrentGroupMenu().getTitle());
 		}
 		
 	}

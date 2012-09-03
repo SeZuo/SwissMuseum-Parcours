@@ -49,26 +49,22 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		
 		setStyleName(stylePrimaryName);
 		
+		
 		HorizontalPanel firstLine = new HorizontalPanel();
-		Label titleLabel = new Label(title);
-		titleLabel.setStyleName(stylePrimaryName + "-" + "title");
-		firstLine.add(titleLabel);
 		
 		button = new ModeSwapButton(this);
 		button.setStyleName(stylePrimaryName + "-" + "detailButton");
-		
 		firstLine.add(button);
+		
+		Label titleLabel = new Label(title);
+		titleLabel.setStyleName(stylePrimaryName + "-" + "title");
+		firstLine.add(titleLabel);
+				
 		add(firstLine);
 		
+		
 		tilePanel = new FlowPanel();
-		tileOrderList = new LinkedList();
-		// This is not working. It seems the treeset with comparator is not well supported by GWT.
-//				new TreeSet<Tile>(new Comparator<Tile>() {
-//			@Override
-//			public int compare(Tile o1, Tile o2) {
-//				return ((Integer) o1.getPriority()).compareTo(o2.getPriority());
-//			}
-//		});
+		tileOrderList = new LinkedList<Tile>();
 		
 		tilePanel.setStyleName(stylePrimaryName + "-" + "tileList");
 		add(tilePanel);
@@ -83,7 +79,6 @@ public class TileMenu extends VerticalPanel implements MenuList {
 		System.out.println("TileMenu: addTile: retrieving tile in list:"+tileOrderList.get(tileOrderList.size()-1));
 		System.out.println("TileMenu: addTile: Size after add is "+tileOrderList.size());
 		
-		// TODO order the tiles in the menu according to their priority number
 		tilePanel.add(tile);
 	}
 	

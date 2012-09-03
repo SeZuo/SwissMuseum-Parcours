@@ -177,6 +177,7 @@ public class Model extends Observable {
 		for (MenuData group : allGroupMenus) {
 			if (group.getReference().equals(currentGroupReference)) {
 				setCurrentGroupMenu(group);
+				return;
 			}
 		}
 	}

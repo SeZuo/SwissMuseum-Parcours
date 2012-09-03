@@ -49,6 +49,8 @@ public class PageWidget extends VerticalPanel implements Observer {
 			Model model) {
 		this.model = model;
 		
+		model.currentPageDataObservable.subscribeObserver(this);
+		
 		parser = new TextParser(pageChangeEventBus, model);
 		
 		title = new HTML("");

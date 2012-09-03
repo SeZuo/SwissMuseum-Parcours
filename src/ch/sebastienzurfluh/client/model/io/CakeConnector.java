@@ -43,7 +43,7 @@ import ch.sebastienzurfluh.client.model.structure.ResourceData;
  *
  */
 public class CakeConnector implements IOConnector {
-	private final static String CAKE_PATH = "http://www.sebastienzurfluh.ch/swissmuseumbooklets/cakePHP/index.php/";
+	private final static String CAKE_PATH = "http://www.sebastienzurfluh.ch/swissmuseumbooklets/cakePHPv2/index.php/";
 	private final static String CAKE_SUFFIX = ".json";
 	private final static String CAKE_ARGS_SEPARATOR = "/";
 
@@ -249,20 +249,24 @@ class Entry extends JavaScriptObject {
 
 
 
-	// Reference ids
+	// Groups
+	
 	public final native String getGroupReference() /*-{
 		return this.groups.id;
 	}-*/;
+	
+	public final native String getGroupName() /*-{
+		return this.groups.name;
+	}-*/;
 
+
+
+	// Page
+	
 	public final native String getPageReference() /*-{
 		return this.pages.id;
 	}-*/;
-
-	public final native String getResourceReference() /*-{
-		return this.resources.id;
-	}-*/;
-
-	// Page
+	
 	public final native String getPageTitle() /*-{
 		return this.pages.title;
 	}-*/;
@@ -278,7 +282,7 @@ class Entry extends JavaScriptObject {
 	// Menu
 
 	public final native String getMenuPriorityNumber() /*-{
-		return this.affiliation.order;
+		return this.affiliations == null ? "0" : this.affiliations.order;
 	}-*/;
 
 	public final native String getMenuTitle() /*-{
@@ -298,6 +302,11 @@ class Entry extends JavaScriptObject {
 	}-*/;
 
 	// Resource
+	
+	public final native String getResourceReference() /*-{
+		return this.resources.id;
+	}-*/;
+	
 	public final native String getResourceTitles() /*-{
     	return this.resources.title;
 	}-*/;
