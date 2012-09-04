@@ -17,33 +17,37 @@
  *  along with "Parcours".  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ch.sebastienzurfluh.client.control.eventbus;
+package ch.sebastienzurfluh.client.control.eventbus.events;
+
+import ch.sebastienzurfluh.client.control.eventbus.Event;
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 
 /**
- * This is the superclass for events using {@link EventBus}.
+ * This event is fired when a resource is required.
+ *
  * @author Sebastien Zurfluh
  *
  */
-public abstract class Event {
+public class ResourceRequest extends Event {
+	private DataReference requestReference;
 	
 	/**
-	 * This enum lists all possible UI (View) event types. 
+	 * Create an event to request a resource.
+	 * @param requestReference the unique reference to the wanted resource.
 	 */
-	public enum EventType {
-		// Fired when a new page is requested.
-		PAGE_CHANGE_REQUEST,
-		// Fired when a page change is approved.
-		PAGE_CHANGE_EVENT,
-		// Fired when a widget finished loading.
-		WIDGET_LOADED_EVENT,
-		// Fired when a resource is needed.
-		RESOURCE_REQUEST;
+	public ResourceRequest(DataReference requestReference) {
+		this.requestReference = requestReference;
 	}
 
 	/**
-	 * An event has one only event type which you can fetch with this method.
-	 * @return get the event's type
+	 * @return the resource's unique id.
 	 */
-	public abstract EventType getType();
+	public DataReference getResourceReference() {
+		return requestReference;
+	}
 
+	@Override
+	public EventType getType() {
+		return EventType.RESOURCE_REQUEST;
+	}
 }

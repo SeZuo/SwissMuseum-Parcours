@@ -109,17 +109,13 @@ public class CakeConnector implements IOConnector {
 							Data parsedData = parseData(entries.get(0), referenceId, DataType.PAGE);
 							callback.onSuccess((T) parsedData);
 							break;
+						case GETRESOURCE:
+							ResourceData parsedData2 =
+									parseResourceData(entries.get(0),
+											referenceId,
+											ResourceType.IMAGE);
+							callback.onSuccess((T) parsedData2);
 						}
-						
-						//TODO resource fetching should go there
-//						ResourceData parsedData2 =
-//								parseResourceData(entries.get(0), referenceId, expectedReturnResourceType);
-//						((Cache<Integer, ResourceData>)cache).put(referenceId,
-//								parsedData2);
-//						for (ModelAsyncPlug<?> plug : requestsQueue.get(request).get(referenceId)) {
-//							((ModelAsyncPlug<ResourceData>)plug).update(
-//									parsedData2);
-//						}
 					}
 				}
 			});
@@ -207,7 +203,8 @@ public class CakeConnector implements IOConnector {
 		GETALLGROUPMENUS("menus/listAllGroupMenus"),
 		GETALLPAGEMENUSFROMGROUP("menus/listAllPageMenusFromGroup"),
 		GETFIRSTDATAOFGROUP("page_elements/getFirstPageDataFromGroup"),
-		GETDATA("page_elements/getData");
+		GETDATA("page_elements/getData"),
+		GETRESOURCE("resources/get");
 
 		String request;
 		Requests(String request) {
@@ -221,26 +218,31 @@ public class CakeConnector implements IOConnector {
 
 	@Override
 	public void asyncRequestAllGroupMenus(
-			AsyncCallback<Collection<MenuData>> asyncCallBack) {
-		asyncRequest(Requests.GETALLGROUPMENUS, 0, "", asyncCallBack);
+			AsyncCallback<Collection<MenuData>> asyncCallback) {
+		asyncRequest(Requests.GETALLGROUPMENUS, 0, "", asyncCallback);
 	}
 
 	@Override
 	public void asyncRequestGetFirstDataOfGroup(int referenceId,
-			AsyncCallback<Data> asyncCallBack) {
-		asyncRequest(Requests.GETFIRSTDATAOFGROUP, referenceId, "", asyncCallBack);
+			AsyncCallback<Data> asyncCallback) {
+		asyncRequest(Requests.GETFIRSTDATAOFGROUP, referenceId, "", asyncCallback);
 	}
 
 	@Override
 	public void asyncRequestGetData(int referenceId,
-			AsyncCallback<Data> asyncCallBack) {
-		asyncRequest(Requests.GETDATA, referenceId, "", asyncCallBack);
+			AsyncCallback<Data> asyncCallback) {
+		asyncRequest(Requests.GETDATA, referenceId, "", asyncCallback);
 	}
 
 	@Override
 	public void asyncRequestGetAllPageMenusFromGroup(int referenceId,
-			AsyncCallback<Collection<MenuData>> asyncCallBack) {
-		asyncRequest(Requests.GETALLPAGEMENUSFROMGROUP, referenceId, "", asyncCallBack);
+			AsyncCallback<Collection<MenuData>> asyncCallback) {
+		asyncRequest(Requests.GETALLPAGEMENUSFROMGROUP, referenceId, "", asyncCallback);
+	}
+	@Override
+	public void asyncRequestResourceData(int referenceId,
+			AsyncCallback<ResourceData> asyncCallback) {
+		asyncRequest(Requests.GETRESOURCE, referenceId, "", asyncCallback);
 	}
 }
 

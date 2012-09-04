@@ -20,16 +20,16 @@
 package ch.sebastienzurfluh.client.control.eventbus;
 
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
-import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
+import ch.sebastienzurfluh.client.control.eventbus.events.ResourceRequest;
 import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.model.structure.DataReference;
 
 /**
- * This object will handle the page change requests.
+ * This object will handle the resource requests.
+ * 
  * @author Sebastien Zurfluh
  *
  */
-public class PageRequestEventHandler implements EventBusListener {
+public class ResourceRequestEventHandler implements EventBusListener {
 	EventBus eventBus;
 	Model model;
 	
@@ -37,7 +37,7 @@ public class PageRequestEventHandler implements EventBusListener {
 	 * Just create the object, it will attach itself to the given event bus.
 	 * @param eventBus
 	 */
-	public PageRequestEventHandler(EventBus eventBus, Model model) {
+	public ResourceRequestEventHandler(EventBus eventBus, Model model) {
 		this.eventBus = eventBus;
 		this.model = model;
 		
@@ -47,26 +47,15 @@ public class PageRequestEventHandler implements EventBusListener {
 
 	@Override
 	public EventType getEventType() {
-		return EventType.PAGE_CHANGE_REQUEST;
+		return EventType.RESOURCE_REQUEST;
 	}
 
-	private DataReference cachedReference = null;
 	@Override
 	public void notify(Event e) {
-		if(e instanceof PageChangeRequest) {
-			final PageChangeRequest pageChangeRequest = (PageChangeRequest) e;
+		if(e instanceof ResourceRequest) {
+			final ResourceRequest resourceRequest = (ResourceRequest) e;
 			
-			//TODO Check if the requested page is OK.
-			
-			// Abort in case the page is already loaded.
-			if (pageChangeRequest.getPageReference().equals(cachedReference))
-				return;
-			cachedReference = pageChangeRequest.getPageReference();
-			
-			if(pageChangeRequest.isForeignPageChangeRequest())
-				model.loadForeignPage(pageChangeRequest.getPageReference());
-			else
-				model.load(pageChangeRequest.getPageReference());
+			model.load(resourceRequest.getResourceReference());
 		}
 	}
 

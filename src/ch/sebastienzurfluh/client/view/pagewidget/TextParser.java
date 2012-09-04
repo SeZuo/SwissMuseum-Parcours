@@ -1,7 +1,12 @@
 package ch.sebastienzurfluh.client.view.pagewidget;
 
+import java.util.LinkedList;
+
+import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
+import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
+import ch.sebastienzurfluh.client.control.eventbus.events.ResourceRequest;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 
@@ -16,17 +21,12 @@ public class TextParser {
 		this.pageChangeEventBus = pageChangeEventBus;
 	}
 	
-	public String parse(String text) {
-		StringBuilder parsed = new StringBuilder(text);
-		
-		parsed = parseImages(parsed);
-		
-		
-		return parsed.toString();
+	public LinkedList<PageToken> parse(String text) {
+		return parseImages(text);
 	}
 	
-	private StringBuilder parseImages(StringBuilder textToParse) {
-		String parsing = textToParse.toString();
+	private LinkedList<PageToken> parseImages(String parsing) {
+		LinkedList<PageToken> tokenList = new LinkedList<PageToken>();
 		StringBuilder parsed = new StringBuilder();
 		
 		while (!parsing.isEmpty()) {
@@ -40,47 +40,32 @@ public class TextParser {
 			} else {
 				parsed.append(parsing.substring(0, imgDefBegin));
 				
+				PageToken textParsedSoFar = new PageToken(parsed.toString());
 				
-				int positionOfImageHTML = parsed.length();
-				asyncInsertImageHTML(
-						new DataReference(
-								DataType.RESOURCE,
-								Integer.parseInt(
-										parsing.substring(
-												imgDefBegin + IMG_BALISE_START.length(),
-												imgDefEnd))),
-						parsed,
-						positionOfImageHTML);
+				tokenList.add(textParsedSoFar);
+				parsed = new StringBuilder(); 
+				
+				DataReference neededResource = new DataReference(
+						DataType.RESOURCE,
+						Integer.parseInt(
+								parsing.substring(
+										imgDefBegin + IMG_BALISE_START.length(),
+										imgDefEnd)));
+				
+				tokenList.add(new PageToken(new ResourceWidget(
+						neededResource,
+						pageChangeEventBus,
+						model)));						
+
 				
 				parsing = parsing.substring(imgDefEnd + IMG_BALISE_END.length());
 			}
 		}
-		return parsed;
-	}
-	
-	private String primaryStyle = "pageWidget-image";
-	private String containerExtension = "-container";
-	private String titleExtension = "-title";
-	private String detailsExtension = "-details";
-	private String imageExtension = "-image";
-	
-	private void asyncInsertImageHTML(DataReference reference, final StringBuilder text, final int position) {
-		//TODO add resource support
-//		model.getResourceData(new ModelAsyncPlug<ResourceData>() {
-//			@Override
-//			public void update(ResourceData resource) {
-//				text.insert(position, 
-//						"<div class=\"" + primaryStyle+containerExtension + "\"> " +
-//							"<img class=\"" + primaryStyle+imageExtension + "\"src=\"" + 
-//							resource.getURL() + "\" alt=\"" + resource.getTitle() + "\"></img>" +
-//							"<div class=\"" + primaryStyle+titleExtension + "\">" +
-//								resource.getTitle() +
-//							"</div>" +
-//							"<div class=\"" + primaryStyle+detailsExtension + "\">" +
-//								resource.getDetails() +
-//							"</div>" +
-//						"</div>");
-//			}
-//		}, reference);
+		
+		// Finish to empty the string builder.
+		if (parsed.length() > 0)
+			tokenList.add(new PageToken(parsed.toString()));
+		
+		return tokenList;
 	}
 }

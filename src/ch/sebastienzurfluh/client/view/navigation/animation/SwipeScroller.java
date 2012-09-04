@@ -2,6 +2,7 @@ package ch.sebastienzurfluh.client.view.navigation.animation;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.view.navigation.NavigationSlider;
 
 import com.google.gwt.animation.client.Animation;
@@ -50,26 +51,12 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
     }
 	
 	/**
-	 * @return Pixel size of a menu item.
-	 */
-	private int getItemWidth() {
-		return slider.getItem(0).getOffsetWidth();
-	}
-	
-	/**
-	 * @return Width in pixel of the complete widget
-	 */
-	private int getWidgetWidth() {
-		return slider.getOffsetWidth();
-	}
-	
-	/**
 	 * Move the scroller to the specified widget
 	 * @param rank -th widget starting at 1
 	 */
 	public void setFocusWidget(int rank) {
 		slider.setCurrentItem(rank);
-		int itemPosition = (rank-1) * getItemWidth();
+		int itemPosition = (rank-1) * slider.getItemWidth();
 		scrollTo(itemPosition, SLOW);
 	}
 
@@ -140,31 +127,49 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 		int previousItem = slider.getCurrentItemRank();
 		
 		int nextItem;
+		boolean outOfBoundaries = false;
 
 		// get the widget back into boundaries.
 		int leftDelta = animatedPanel.getAbsoluteLeft() - movingWidget.getAbsoluteLeft();
-    	if (leftDelta < 0 || leftDelta > getWidgetWidth()) {
+    	if (leftDelta < 0 || leftDelta > slider.getWidgetWidth()) {
     		nextItem = previousItem;
+    		outOfBoundaries = true;
+    	}
+    	
+    	int delta = newXPos - startPosition;
+    	// movement has to be more than a third of the widget
+    	if (delta > slider.getWidgetWidth() * 0.3) {
+    		nextItem = outOfBoundaries ? -1 : slider.getCurrentItemRank()-1;
+    	} else if (delta < - slider.getWidgetWidth() * 0.3) {
+    		nextItem = outOfBoundaries ? -1 : slider.getCurrentItemRank()+1;
     	} else {
-    		int delta = newXPos - startPosition;
-    		// movement has to be more than a third of the widget
-    		if (delta > getWidgetWidth() * 0.3) {
-    			nextItem = slider.getCurrentItemRank()-1;
-    		} else if (delta < - getWidgetWidth() * 0.3) {
-    			nextItem = slider.getCurrentItemRank()+1;
-    		} else {
-    			nextItem = previousItem;
-    		}
+    		nextItem = previousItem;
     	}
     	
     	
-		// move to the right place
-		setFocusWidget(nextItem);
-		
-		if (previousItem != nextItem)
+    	
+    	if(nextItem == -1) {
     		pageRequestBus.fireEvent(
     				new PageChangeRequest(
-    						slider.getItem(slider.getCurrentItemRank()).getReference()));
+    						DataReference.SUPER));
+    	} else {
+    		// move to the right place
+    		setFocusWidget(nextItem);
+		
+    		try {
+    			if (previousItem != nextItem)
+    			pageRequestBus.fireEvent(
+    					new PageChangeRequest(
+    							slider.getItem(nextItem).getReference()));
+    		} catch (Exception e) {
+    			// if something goes wrong, load the super menu.
+    			pageRequestBus.fireEvent(
+    					new PageChangeRequest(
+    							DataReference.SUPER));
+    		}
+    		
+    	}
+		
 	}
 
 	@Override

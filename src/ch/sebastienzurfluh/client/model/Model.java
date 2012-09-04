@@ -129,11 +129,14 @@ public class Model extends Observable {
 			setPreviousPageMenu(currentReference);
 			setNextPageMenu(currentReference);
 			break;
+		case RESOURCE:
+			addResource(currentReference);
 		default:
 			break;
 		}
 	}
 	
+
 	/**
 	 * This function will modify the Model (synching automatically with the base)
 	 * depending on the given reference.
@@ -145,7 +148,7 @@ public class Model extends Observable {
 	 * 
 	 * @param currentReference is the reference of the data to load
 	 */
-	public void loadForeign(DataReference currentReference) {
+	public void loadForeignPage(DataReference currentReference) {
 		setPreviousPageMenu(currentData.getMenu());
 		setNextPageMenu(currentData.getMenu());
 		setCurrentPageData(currentReference);
@@ -322,6 +325,35 @@ public class Model extends Observable {
 	}
 	
 	/**
+	 * Adds the given resource from the connector.
+	 * @param resource data of the resource to load.
+	 */
+	private void addResource(ResourceData resource) {
+		this.allNeededResources.add(resource);
+	}
+	
+	/**
+	 * Loads the given resource from the connector.
+	 * @param resourceReference of the resource to load.
+	 */
+	private void addResource(DataReference resourceReference) {
+		connector.asyncRequestResourceData(
+				resourceReference.getReferenceId(),
+				new AsyncCallback<ResourceData>() {
+					@Override
+					public void onSuccess(ResourceData resourceData) {
+						Model.this.addResource(resourceData);
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println("Model:asyncRequestResourceData" +
+								" Cannot get data from the connector");
+					};
+				});
+	}
+	
+	/**
 	 * @return all the menus of groups.
 	 */
 	public Collection<MenuData> getAllGroupMenus() {
@@ -361,5 +393,12 @@ public class Model extends Observable {
 	 */
 	public Collection<MenuData> getAllPageMenusInCurrentGroup() {
 		return allPagesMenusInCurrentGroup;
+	}
+
+	/**
+	 * @return all the resources needed in the current view.
+	 */
+	public Collection<ResourceData> getAllNeededResources() {
+		return allNeededResources;
 	}
 }

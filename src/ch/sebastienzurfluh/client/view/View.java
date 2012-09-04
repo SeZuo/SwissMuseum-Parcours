@@ -22,6 +22,7 @@ package ch.sebastienzurfluh.client.view;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
+import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.view.eventbushooks.ScrollToPanelOnEvent;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
@@ -45,7 +46,7 @@ public class View extends SimplePanel {
 	private Model model;
 	
 
-	public View(final EventBus eventBus, PageRequestEventHandler pageRequestEventHandler, final Model model) {
+	public View(final EventBus eventBus, PageRequestEventHandler pageRequestEventHandler, ResourceRequestEventHandler resourceRequestHandler, final Model model) {
 		assert eventBus != null;
 		assert model != null;
 		assert pageRequestEventHandler != null;

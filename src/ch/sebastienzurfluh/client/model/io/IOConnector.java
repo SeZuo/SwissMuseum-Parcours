@@ -25,6 +25,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 /**
  * Handles communication with the ADBMS.
@@ -39,24 +40,32 @@ public interface IOConnector {
 	void asyncRequestAllGroupMenus(AsyncCallback<Collection<MenuData>> asyncCallBack);
 
 	/**
-	 * Request for the first element in an ordered group
+	 * Request for the first element in an ordered group.
 	 * @param referenceId of the group 
 	 * @param asyncCallBack says what to do with the result 
 	 */
 	void asyncRequestGetFirstDataOfGroup(int referenceId, AsyncCallback<Data> asyncCallBack);
 
 	/**
-	 * Request for the data of the given page
+	 * Request for the data of the given page.
 	 * @param referenceId of the page 
 	 * @param asyncCallBack says what to do with the result
 	 */
 	void asyncRequestGetData(int referenceId, AsyncCallback<Data> asyncCallBack);
 
 	/**
-	 * Request for the menu data of all the elements in the given ordered group
+	 * Request for the menu data of all the elements in the given ordered group.
 	 * @param referenceId of the group 
 	 * @param asyncCallBack says what to do with the result
 	 */
 	void asyncRequestGetAllPageMenusFromGroup(int referenceId,
 			AsyncCallback<Collection<MenuData>> asyncCallBack);
+
+	/**
+	 * Request the resource.
+	 * @param referenceId of the resource
+	 * @param asyncCallBack says what to do with the result
+	 */
+	void asyncRequestResourceData(int referenceId,
+			AsyncCallback<ResourceData> asyncCallback);
 }

@@ -8,6 +8,10 @@ public class Observable {
 	public void subscribeObserver(Observer observer) {
 		observerList.add(observer);
 	}
+	
+	public void unsubscribeObserver(Observer observer) {
+		observerList.remove(observer);
+	}
     
     public void notifyObservers() {
     	for (Observer observer : observerList) {

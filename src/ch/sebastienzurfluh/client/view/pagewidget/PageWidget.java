@@ -19,12 +19,15 @@
 
 package ch.sebastienzurfluh.client.view.pagewidget;
 
+import java.util.LinkedList;
+
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.PageData;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
 
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -41,7 +44,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class PageWidget extends VerticalPanel implements Observer {
 	private HTML title;
 	private Label header;
-	private HTML content;
+	private FlowPanel content;
 	private TextParser parser;
 	private Model model;
 
@@ -58,7 +61,7 @@ public class PageWidget extends VerticalPanel implements Observer {
 		title.setStyleName(primaryStyleName + "-title");
 		header = new Label("");
 		header.setStyleName(primaryStyleName + "-header");
-		content = new HTML("");
+		content = new FlowPanel();
 		content.setStyleName(primaryStyleName + "-content");
 		
 		this.add(title);
@@ -79,7 +82,16 @@ public class PageWidget extends VerticalPanel implements Observer {
 					+ model.getCurrentPageData().getPageTitle()
 					+ "</span>");
 			this.header.setText(model.getCurrentPageData().getPageContentHeader());
-			this.content.setHTML(parser.parse(model.getCurrentPageData().getPageContentBody()));
+			
+			LinkedList<PageToken> tokenisedContent = 
+					parser.parse(model.getCurrentPageData().getPageContentBody());
+			for (PageToken pageToken : tokenisedContent) {
+				if (pageToken.isImage()) {
+					this.content.add(pageToken.getImage());
+				} else if (pageToken.isText()) {
+					this.content.add(new HTML(pageToken.getText()));
+				}
+			}
 		}
 	}
 }

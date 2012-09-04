@@ -55,6 +55,15 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	
 	private NavigationAnimator animatedScroller;
 	
+	/**
+	 * The width of an item element. This should be set whenever the size of the element changes.
+	 */
+	private int itemWidth;
+	/**
+	 * The width of the widget. This should be set whenever the size of the element changes.
+	 */
+	private int widgetWidth;
+	
 	public NavigationSlider(String string, EventBus pageRequestBus) {
 		
 		setStyleName("navigationSlider");
@@ -95,11 +104,28 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		tileList.clear();
 	}
 	
+	/**
+	 * We never change the size of the items or this widget after it is loaded. Thus we may
+	 * compute it once on start then never again.
+	 */
+	private boolean updated = false;
 	public void reloadTiles(Collection<MenuData> menus) {
 		clearTiles();
 		for (MenuData menuData : menus) {
 			addTile(menuData);
 		}
+		if (!updated && !tileList.isEmpty())
+			update();
+	}
+
+	/**
+	 * Updates the never changing values of item and widget width.
+	 */
+	private void update() {
+		if(!tileList.isEmpty())
+			this.itemWidth = getItem(1).getOffsetWidth();
+		this.widgetWidth = getOffsetWidth();
+		this.updated = true;
 	}
 
 	/*******************************************************************************/	
@@ -122,6 +148,20 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	}
 	
 	/**
+	 * @return Pixel size of a menu item.
+	 */
+	public int getItemWidth() {
+		return itemWidth;
+	}
+	
+	/**
+	 * @return Width in pixel of the complete widget
+	 */
+	public int getWidgetWidth() {
+		return widgetWidth;
+	}
+	
+	/**
 	 * Focus the navigation slider on the item with given reference. Provided it exists.
 	 * @param menuReference
 	 */
@@ -130,21 +170,24 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		int menuRank = 1;
 		for (NavigationItem menu : tileList) {
 			if (menu.getReference().equals(menuReference)) {
+				setCurrentItem(menuRank);
 				animatedScroller.setFocusWidget(menuRank);
 				break;
 			}
 			menuRank++;
-		}	
+		}
 	}
 	
 	/**
-	 * @param number the rank of the widget to retrieve. 1 is the first element.
+	 * @param rank of the widget to retrieve. 1 is the first element.
 	 * @return the {@code number}th widget or null if there's none at this position.
 	 */
-	public NavigationItem getItem(int number) {
+	public NavigationItem getItem(int rank) {
 		int i = 1;
-		for (Iterator<NavigationItem> iterator = tileList.iterator(); iterator.hasNext(); i++) {
-			if (i == number)
+		for (Iterator<NavigationItem> iterator = tileList.iterator();
+				iterator.hasNext();
+				i++, iterator.next()) {
+			if (i == rank)
 				return  iterator.next();
 		}
 		return null;
