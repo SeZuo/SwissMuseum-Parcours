@@ -227,20 +227,24 @@ table {
 }
 
 .pageWidget-image-container {
+	float: right;
 	font-family: serif;
 	border: 1px solid black;
 	margin: 1em 0em 1em 5em;
-	text-align: left; 
+	text-align: left;
+	width: 10em;
 }
 .pageWidget-image-title {
 	padding: 0.1em;
+	width: 10em;
 }
 .pageWidget-image-details {
 	font-style: italic;
 	padding: 0.1em;
+	width: 10em;
 }
 .pageWidget-image-image {
 	text-align: right;
-	width: 150px;
-	height: 150px;
+	width: 10em;
+	height: 10em;
 }

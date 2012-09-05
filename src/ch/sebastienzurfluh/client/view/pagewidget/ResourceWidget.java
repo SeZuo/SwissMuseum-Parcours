@@ -1,8 +1,9 @@
 package ch.sebastienzurfluh.client.view.pagewidget;
 
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.events.ResourceRequest;
@@ -12,7 +13,7 @@ import ch.sebastienzurfluh.client.model.structure.ResourceData;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
 
-public class ResourceWidget extends VerticalPanel implements Observer {
+public class ResourceWidget extends SimplePanel implements Observer {
 	private Model model;
 	private DataReference reference;
 	private EventBus eventBus;
@@ -40,10 +41,13 @@ public class ResourceWidget extends VerticalPanel implements Observer {
 		title.setStyleName(primaryStyle+titleExtension);
 		details.setStyleName(primaryStyle+detailsExtension);
 		
-		this.add(image);
-		this.add(title);
-		this.add(details);
+		FlowPanel innerLayout = new FlowPanel();
 		
+		innerLayout.add(image);
+		innerLayout.add(title);
+		innerLayout.add(details);
+		
+		add(innerLayout);
 		
 		model.allNeededResourcesObservable.subscribeObserver(this);
 		

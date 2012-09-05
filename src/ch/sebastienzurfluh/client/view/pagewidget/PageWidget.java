@@ -86,8 +86,8 @@ public class PageWidget extends VerticalPanel implements Observer {
 			LinkedList<PageToken> tokenisedContent = 
 					parser.parse(model.getCurrentPageData().getPageContentBody());
 			for (PageToken pageToken : tokenisedContent) {
-				if (pageToken.isImage()) {
-					this.content.add(pageToken.getImage());
+				if (pageToken.isResource()) {
+					this.content.add(pageToken.getResourceWidget());
 				} else if (pageToken.isText()) {
 					this.content.add(new HTML(pageToken.getText()));
 				}

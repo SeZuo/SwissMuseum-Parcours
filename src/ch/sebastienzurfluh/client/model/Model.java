@@ -74,7 +74,7 @@ public class Model extends Observable {
 	private Collection<MenuData> allPagesMenusInCurrentGroup;
 	public Observable allPagesMenusInCurrentGroupObservable = new Observable();
 	
-	private Collection<ResourceData> allNeededResources;
+	private Collection<ResourceData> allNeededResources = new LinkedList<ResourceData>();
 	public Observable allNeededResourcesObservable = new Observable();
 	
 	/**
@@ -330,6 +330,8 @@ public class Model extends Observable {
 	 */
 	private void addResource(ResourceData resource) {
 		this.allNeededResources.add(resource);
+		
+		allNeededResourcesObservable.notifyObservers();
 	}
 	
 	/**

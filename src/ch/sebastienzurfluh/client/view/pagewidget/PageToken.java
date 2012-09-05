@@ -3,14 +3,21 @@ package ch.sebastienzurfluh.client.view.pagewidget;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Immutable token to store page elements.
+ *
+ *
+ * @author Sebastien Zurfluh
+ *
+ */
 public class PageToken {
 	private boolean isText = false;
-	private boolean isImage = false;
-	private Image image;
+	private boolean isResource = false;
+	private ResourceWidget resourceWidget;
 	private String text;
 
 	public PageToken(ResourceWidget resourceWidget) {
-		setImage(image);
+		setResourceWidget(resourceWidget);
 	}
 	
 	public PageToken(String text) {
@@ -21,22 +28,22 @@ public class PageToken {
 		return isText;
 	}
 	
-	public boolean isImage() {
-		return isImage;
+	public boolean isResource() {
+		return isResource;
 	}
 	
-	public void setImage(Image image) {
-		this.image = image;
-		this.isImage = true;
+	private void setResourceWidget(ResourceWidget resourceWidget) {
+		this.resourceWidget = resourceWidget;
+		this.isResource = true;
 	}
 	
-	public void setText(String text) {
+	private void setText(String text) {
 		this.text = text;
 		this.isText = true;
 	}
 
-	public Image getImage() {
-		return image;
+	public ResourceWidget getResourceWidget() {
+		return resourceWidget;
 	}
 	
 	public String getText() {

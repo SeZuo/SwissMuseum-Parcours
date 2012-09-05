@@ -25,10 +25,10 @@ public class TestConnector implements IOConnector {
 						"resources/images/pix/light_violet.gif"));
 		
 		pageDataList.add(new Data(new DataReference(DataType.PAGE, 1), 1, "Première page du groupe 1",
-				"Ceci est un sous-titre fort long car c'est au final un sous-titre.",
-				"Nous voila dans le contenu de la page et pour cela il faut beaucoup de texte." +
-				"Il est cependant essentiel de voir ce à quoi une page ressemble vraiment pour pouvoir" +
-				"travailler correctement. Ce pourquoi j'ajouterai une img ici. [img]1[/img]",
+				"Ceci est un sous-titre fort long car c'est au final un sous-titre. ",
+				"Nous voila dans le contenu de la page et pour cela il faut beaucoup de texte. " +
+				"Il est cependant essentiel de voir ce à quoi une page ressemble vraiment pour " +
+				"pouvoir travailler correctement. Ce pourquoi j'ajouterai une img ici. [img]1[/img]",
 				"Titre du menu de la page 1.", "Description du menu de la page 1.",
 				"resources/images/pix/light_green.gif",
 				"resources/images/pix/light_green.gif"));
@@ -74,8 +74,11 @@ public class TestConnector implements IOConnector {
 	@Override
 	public void asyncRequestResourceData(int referenceId,
 			AsyncCallback<ResourceData> asyncCallback) {
-		asyncCallback.onSuccess(new ResourceData(new DataReference(DataType.RESOURCE, 1), ResourceType.IMAGE,
-				"Title of the resource", "Description of the resource.",
-				"resources/images/pix/light_yellow.gif"));
+		asyncCallback.onSuccess(
+				new ResourceData(
+						new DataReference(DataType.RESOURCE, 1),
+						ResourceType.IMAGE,
+						"Title of the resource", "Description of the resource.",
+						"resources/images/pix/light_yellow.gif"));
 	}
 }
