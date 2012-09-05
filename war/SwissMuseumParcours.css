@@ -41,7 +41,11 @@ table {
 }
 
 .mainPanel {
-	border-spacing: 25em 0 25em 0;
+	width: 37.5em;
+	overflow: visible !important;
+}
+
+.animatedPanelView {
 	width: 37.5em;
 }
 

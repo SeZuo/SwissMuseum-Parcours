@@ -24,6 +24,9 @@ import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.Model.Layout;
+import ch.sebastienzurfluh.client.patterns.Observable;
+import ch.sebastienzurfluh.client.patterns.Observer;
 import ch.sebastienzurfluh.client.view.eventbushooks.ScrollToPanelOnEvent;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
 import ch.sebastienzurfluh.client.view.navigation.NavigationWidget;
@@ -41,46 +44,63 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class View extends SimplePanel {
 	// Shared handler for page requests
 	private PageRequestHandler pageRequestHandler;
-	private VerticalPanel mainPanel;
+	private AnimatedMainPanel mainPanel;
+	private VerticalPanel pagePanel;
+	private VerticalPanel groupPanel;
 	private EventBus eventBus;
 	private Model model;
+	private TileWidget tileMenu;
+	private PageWidget page;
+	private NavigationWidget navigation;
+	private FooterWidget footer;
+	
+	
 	
 
-	public View(final EventBus eventBus, PageRequestEventHandler pageRequestEventHandler, ResourceRequestEventHandler resourceRequestHandler, final Model model) {
+	public View(final EventBus eventBus,
+			PageRequestEventHandler pageRequestEventHandler,
+			ResourceRequestEventHandler resourceRequestHandler,
+			Model model) {
 		assert eventBus != null;
 		assert model != null;
 		assert pageRequestEventHandler != null;
 		
 		this.eventBus = eventBus;
 		this.model = model;
+		
+		pagePanel = new VerticalPanel();
+		groupPanel = new VerticalPanel();
 
 		// Setup main panel
-		mainPanel = new VerticalPanel();
+		mainPanel = new AnimatedMainPanel(model, groupPanel, pagePanel);
+		
 		mainPanel.setStyleName("mainPanel");
 
 		pageRequestHandler = new PageRequestHandler(eventBus);
 
 		// create mainPanel before filling it
 		setWidget(mainPanel);
+		
 	}
-
+	
 	/**
-	 * Fill main sections and add main sections to main panel.
+	 * Fill main sections and add main sections to main panel according to layout
 	 * 
-	 * Call init() after the panel has been attached.
+	 * Call this after the panel has been attached.
 	 */
 	public void init() {
-		NavigationWidget navigation = new NavigationWidget(eventBus, model);
-		mainPanel.add(navigation);
-		PageWidget page = new PageWidget(eventBus, model);
-		mainPanel.add(page);
-		TileWidget tileMenu = new TileWidget(eventBus, pageRequestHandler, model);
-		mainPanel.add(tileMenu);
-		FooterWidget footer = new FooterWidget();
-		mainPanel.add(footer);
+		navigation = navigation == null ? new NavigationWidget(eventBus, model) : navigation;
+		pagePanel.add(navigation);
+		page = page == null ? new PageWidget(eventBus, model) : page;
+		pagePanel.add(page);
+			
+		tileMenu = tileMenu == null ? new TileWidget(eventBus, pageRequestHandler, model) :
+			tileMenu;
+		groupPanel.add(tileMenu);
+		footer = footer == null ? new FooterWidget() : footer;
+		groupPanel.add(footer);
 
 		// Add some global functionalities with low priority
 		ScrollToPanelOnEvent.addRule(eventBus, page, EventType.PAGE_CHANGE_EVENT);
-		
 	}
 }

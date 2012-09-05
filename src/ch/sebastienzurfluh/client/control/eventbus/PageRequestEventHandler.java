@@ -63,6 +63,9 @@ public class PageRequestEventHandler implements EventBusListener {
 				return;
 			cachedReference = pageChangeRequest.getPageReference();
 			
+			// Change the layout accordingly to the type of the page requested.
+			model.setLayout(Model.Layout.PAGE);
+			
 			if(pageChangeRequest.isForeignPageChangeRequest())
 				model.loadForeignPage(pageChangeRequest.getPageReference());
 			else

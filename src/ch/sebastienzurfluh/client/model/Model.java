@@ -77,6 +77,9 @@ public class Model extends Observable {
 	private Collection<ResourceData> allNeededResources = new LinkedList<ResourceData>();
 	public Observable allNeededResourcesObservable = new Observable();
 	
+	private Layout layout = Layout.GROUP;
+	public Observable layoutObservable = new Observable();
+	
 	/**
 	 * Notify all observers of the model and of the selected observable.
 	 * @param observable
@@ -402,5 +405,28 @@ public class Model extends Observable {
 	 */
 	public Collection<ResourceData> getAllNeededResources() {
 		return allNeededResources;
+	}
+	
+	/**
+	 * Layout indicates the view how to display it's content
+	 */
+	public enum Layout {
+		PAGE, GROUP;
+	}
+	
+	/**
+	 * Sets the current layout
+	 */
+	public void setLayout(Layout layout) {
+		this.layout = layout;
+		
+		notifyAllObservers(layoutObservable);
+	}
+	
+	/**
+	 * Get the current layout
+	 */
+	public Layout getLayout() {
+		return layout;
 	}
 }

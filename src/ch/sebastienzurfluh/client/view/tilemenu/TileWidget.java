@@ -58,11 +58,11 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 	@Override
 	public void notifyObserver(Observable source) {
 		if (source.equals(model.currentPageDataObservable)) {
-			if(model.getCurrentPageData().equals(Data.NONE)) {
-				setVisible(true);
-			} else {
-				setVisible(false);
-			}
+//			if(model.getCurrentPageData().equals(Data.NONE)) {
+//				setVisible(true);
+//			} else {
+//				setVisible(false);
+//			}
 		} else if (source.equals(model.allGroupsMenusChangesObservable)) {
 			tileMenu.clearTiles();
 			for (MenuData menuData : model.getAllGroupMenus()) {
