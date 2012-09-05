@@ -83,6 +83,7 @@ public class PageWidget extends VerticalPanel implements Observer {
 					+ "</span>");
 			this.header.setText(model.getCurrentPageData().getPageContentHeader());
 			
+			this.content.clear();
 			LinkedList<PageToken> tokenisedContent = 
 					parser.parse(model.getCurrentPageData().getPageContentBody());
 			for (PageToken pageToken : tokenisedContent) {
