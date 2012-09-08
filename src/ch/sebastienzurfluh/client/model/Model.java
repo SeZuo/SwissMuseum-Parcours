@@ -77,7 +77,7 @@ public class Model extends Observable {
 	private Collection<ResourceData> allNeededResources = new LinkedList<ResourceData>();
 	public Observable allNeededResourcesObservable = new Observable();
 	
-	private Layout layout = Layout.GROUP;
+	private Layout layout = Layout.NONE;
 	public Observable layoutObservable = new Observable();
 	
 	/**
@@ -411,22 +411,29 @@ public class Model extends Observable {
 	 * Layout indicates the view how to display it's content
 	 */
 	public enum Layout {
-		PAGE, GROUP;
+		NONE, PAGE, GROUP, CMS;
 	}
 	
 	/**
 	 * Sets the current layout
+	 * 
 	 */
 	public void setLayout(Layout layout) {
+		System.out.println("Model: setLayout: " + layout + " (current: " + getCurrentLayout() + ")");
+
+		if (this.layout.equals(layout))
+			return;
+		
 		this.layout = layout;
+				
 		
 		notifyAllObservers(layoutObservable);
 	}
 	
 	/**
-	 * Get the current layout
+	 * @return Get the current layout.
 	 */
-	public Layout getLayout() {
+	public Layout getCurrentLayout() {
 		return layout;
 	}
 }

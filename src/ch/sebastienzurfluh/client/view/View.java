@@ -1,25 +1,5 @@
-/*
- * Copyright 2012 Sebastien Zurfluh
- * 
- * This file is part of "Parcours".
- * 
- * "Parcours" is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * "Parcours" is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with "Parcours".  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package ch.sebastienzurfluh.client.view;
 
-import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
@@ -27,37 +7,26 @@ import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.Model.Layout;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
-import ch.sebastienzurfluh.client.view.eventbushooks.ScrollToPanelOnEvent;
-import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
-import ch.sebastienzurfluh.client.view.navigation.NavigationWidget;
-import ch.sebastienzurfluh.client.view.pagewidget.PageWidget;
-import ch.sebastienzurfluh.client.view.tilemenu.TileWidget;
 
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * Facade for the view.
+ * Main View object.
+ * 
+ * Listens to model changes in order to adapt the view layout.
+ *
  *
  * @author Sebastien Zurfluh
+ *
  */
-public class View extends SimplePanel {
-	// Shared handler for page requests
-	private PageRequestHandler pageRequestHandler;
-	private AnimatedMainPanel mainPanel;
-	private VerticalPanel pagePanel;
-	private VerticalPanel groupPanel;
+public class View extends SimplePanel implements Observer {
+	private Layout currentLayout;
 	private EventBus eventBus;
+	private PageRequestEventHandler pageRequestHandler;
+	private ResourceRequestEventHandler resourceRequestHandler;
 	private Model model;
-	private TileWidget tileMenu;
-	private PageWidget page;
-	private NavigationWidget navigation;
-	private FooterWidget footer;
 	
-	
-	
-
-	public View(final EventBus eventBus,
+	public View(EventBus eventBus,
 			PageRequestEventHandler pageRequestEventHandler,
 			ResourceRequestEventHandler resourceRequestHandler,
 			Model model) {
@@ -67,40 +36,29 @@ public class View extends SimplePanel {
 		
 		this.eventBus = eventBus;
 		this.model = model;
-		
-		pagePanel = new VerticalPanel();
-		groupPanel = new VerticalPanel();
-
-		// Setup main panel
-		mainPanel = new AnimatedMainPanel(model, groupPanel, pagePanel);
-		
-		mainPanel.setStyleName("mainPanel");
-
-		pageRequestHandler = new PageRequestHandler(eventBus);
-
-		// create mainPanel before filling it
-		setWidget(mainPanel);
-		
+		this.pageRequestHandler = pageRequestEventHandler;
+		this.resourceRequestHandler = resourceRequestHandler;
 	}
 	
-	/**
-	 * Fill main sections and add main sections to main panel according to layout
-	 * 
-	 * Call this after the panel has been attached.
-	 */
-	public void init() {
-		navigation = navigation == null ? new NavigationWidget(eventBus, model) : navigation;
-		pagePanel.add(navigation);
-		page = page == null ? new PageWidget(eventBus, model) : page;
-		pagePanel.add(page);
-			
-		tileMenu = tileMenu == null ? new TileWidget(eventBus, pageRequestHandler, model) :
-			tileMenu;
-		groupPanel.add(tileMenu);
-		footer = footer == null ? new FooterWidget() : footer;
-		groupPanel.add(footer);
+	public void setLayout(Layout layout) {
+		switch(layout) {
+		case CMS:
+			currentLayout = layout;
+			break;
+		case GROUP:
+		case PAGE:
+			// GROUP and PAGE use the same layout.
+			BrowseView view = new BrowseView(eventBus, pageRequestHandler, resourceRequestHandler, model);
+			this.setWidget(view);
+			view.afterAttached();
+			currentLayout = layout;
+			break;
+		default:
+			break;
+		}
+	}
 
-		// Add some global functionalities with low priority
-		ScrollToPanelOnEvent.addRule(eventBus, page, EventType.PAGE_CHANGE_EVENT);
+	@Override
+	public void notifyObserver(Observable source) {
 	}
 }

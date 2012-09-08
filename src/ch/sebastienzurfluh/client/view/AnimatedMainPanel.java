@@ -3,13 +3,11 @@ package ch.sebastienzurfluh.client.view;
 import com.google.gwt.user.client.ui.Panel;
 
 import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.model.Model.Layout;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
 import ch.sebastienzurfluh.client.view.supportwidgets.SlidingPanel;
 
 public class AnimatedMainPanel extends SlidingPanel implements Observer {
-	private Layout currentLayout;
 	private Model model;
 
 	public AnimatedMainPanel(
@@ -18,7 +16,6 @@ public class AnimatedMainPanel extends SlidingPanel implements Observer {
 			Panel pagePanel) {
 		super(model);
 		
-		this.currentLayout = model.getLayout();
 		this.model = model;
 		
 		addPanel(groupPanel);
@@ -38,15 +35,16 @@ public class AnimatedMainPanel extends SlidingPanel implements Observer {
 
 	@Override
 	public void notifyObserver(Observable source) {
-		if(!currentLayout.equals(model.getLayout())) {
-			switch(model.getLayout()) {
-			case PAGE:
-				moveToNextPanel();
-				break;
-			case GROUP:
-				moveToPreviousPanel();
-				break;
-			}
+		System.out.println("AnimatedMainPanel: notified: Layout Change");
+		switch(model.getCurrentLayout()) {
+		case PAGE:
+			moveToNextPanel();
+			break;
+		case GROUP:
+			moveToPreviousPanel();
+			break;
+		default:
+			break;
 		}
 	}
 

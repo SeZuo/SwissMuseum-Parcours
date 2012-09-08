@@ -22,6 +22,7 @@ package ch.sebastienzurfluh.client.control.eventbus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.Model.Layout;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 
 /**
@@ -63,13 +64,26 @@ public class PageRequestEventHandler implements EventBusListener {
 				return;
 			cachedReference = pageChangeRequest.getPageReference();
 			
-			// Change the layout accordingly to the type of the page requested.
-			model.setLayout(Model.Layout.PAGE);
+			
 			
 			if(pageChangeRequest.isForeignPageChangeRequest())
 				model.loadForeignPage(pageChangeRequest.getPageReference());
 			else
 				model.load(pageChangeRequest.getPageReference());
+			
+			
+			// Change the layout accordingly to the type of the page requested.
+			switch(pageChangeRequest.getPageReference().getType()) {
+			case GROUP:
+			case PAGE:
+				model.setLayout(Layout.PAGE);
+				break;
+			case SUPER:
+				model.setLayout(Layout.GROUP);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 

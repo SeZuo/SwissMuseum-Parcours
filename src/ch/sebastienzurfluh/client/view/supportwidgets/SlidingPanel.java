@@ -1,9 +1,9 @@
 package ch.sebastienzurfluh.client.view.supportwidgets;
 
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.view.Config;
 
 import com.google.gwt.animation.client.Animation;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -14,10 +14,13 @@ public class SlidingPanel extends AbsolutePanel {
 	private HorizontalPanel movingPanel = new HorizontalPanel();
 	private SlideAnimator slideAnimator;
 	
-	private int panelWidth = Window.getClientWidth();
+	/**
+	 * We will move the length of the panel
+	 */
+	private int panelWidth = Config.WINDOW_WIDTH;
 	
 	public SlidingPanel(Model model) {
-		add(movingPanel, panelWidth, 0);
+		add(movingPanel, -panelWidth, 0);
 		
 		slideAnimator = new SlideAnimator(this, movingPanel);
 	}
@@ -40,7 +43,10 @@ public class SlidingPanel extends AbsolutePanel {
 	}
 
 	private void move(int delta) {
-		slideAnimator.setPositionBeforeAnimation(movingPanel.getAbsoluteLeft());
+		System.out.println("SlidingPanel: Move: [initial position: " +
+				movingPanel.getAbsoluteLeft() + ", delta" + delta + "]");
+		slideAnimator.setPositionBeforeAnimation(
+				movingPanel.getElement().getOffsetLeft());
 		slideAnimator.setLeftToRightDelta(delta);
 		slideAnimator.run(SLOW);
 	}
@@ -59,7 +65,13 @@ public class SlidingPanel extends AbsolutePanel {
 		@Override
 		protected void onUpdate(double progress) {
 			 int position = (int) (positionBeforeAnimation + (progress * delta));
-		      fixedPanel.setWidgetPosition(movingPanel, position, 0);
+		     fixedPanel.setWidgetPosition(movingPanel, position, 0);
+		}
+		
+		@Override
+		protected void onComplete() {
+			// finish animation
+			fixedPanel.setWidgetPosition(movingPanel, positionBeforeAnimation + delta, 0);
 		}
 
 		public void setPositionBeforeAnimation(int absoluteLeft) {

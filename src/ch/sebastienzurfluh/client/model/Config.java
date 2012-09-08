@@ -19,6 +19,8 @@
 
 package ch.sebastienzurfluh.client.model;
 
+import ch.sebastienzurfluh.client.model.Model.Layout;
+
 public class Config {
 
 	public static final String TILE_WIDTH = "50px";

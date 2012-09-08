@@ -152,25 +152,27 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
     		pageRequestBus.fireEvent(
     				new PageChangeRequest(
     						DataReference.SUPER));
-    	} else {
-    		// move to the right place
-    		setFocusWidget(nextItem);
-		
-    		try {
-    			if (previousItem != nextItem)
+    		// leaving for the super menu but we need to go back to the previous item if we go back.
+    		setFocusWidget(previousItem);
+    	}
+    	
+    	// move to the right place
+    	setFocusWidget(nextItem);
+
+    	try {
+    		if (previousItem != nextItem)
     			pageRequestBus.fireEvent(
     					new PageChangeRequest(
     							slider.getItem(nextItem).getReference()));
-    		} catch (Exception e) {
-    			// if something goes wrong, load the super menu.
-    			pageRequestBus.fireEvent(
-    					new PageChangeRequest(
-    							DataReference.SUPER));
-    		}
-    		
+    	} catch (Exception e) {
+    		// if something goes wrong, load the super menu.
+    		pageRequestBus.fireEvent(
+    				new PageChangeRequest(
+    						DataReference.SUPER));
     	}
-		
+
 	}
+	
 
 	@Override
 	public void onTouchStart(TouchStartEvent event) {

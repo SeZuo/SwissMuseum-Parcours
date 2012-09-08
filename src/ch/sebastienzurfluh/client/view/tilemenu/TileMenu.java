@@ -22,7 +22,7 @@ package ch.sebastienzurfluh.client.view.tilemenu;
 import java.util.LinkedList;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
-import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
+import ch.sebastienzurfluh.client.view.menuinterface.PageRequestClickHandler;
 import ch.sebastienzurfluh.client.view.tilemenu.Tile.TileMode;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -44,9 +44,9 @@ public class TileMenu extends VerticalPanel implements MenuList {
 	private FlowPanel tilePanel;
 	private LinkedList<Tile> tileOrderList;
 	private ModeSwapButton button;
-	private PageRequestHandler pageRequestHandler;
+	private PageRequestClickHandler pageRequestHandler;
 	
-	public TileMenu(String title, PageRequestHandler pageRequestHandler) {
+	public TileMenu(String title, PageRequestClickHandler pageRequestHandler) {
 		this.pageRequestHandler = pageRequestHandler;
 		
 		setStyleName(stylePrimaryName);

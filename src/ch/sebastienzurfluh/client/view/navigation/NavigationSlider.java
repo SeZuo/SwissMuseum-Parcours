@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
+import ch.sebastienzurfluh.client.view.Config;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.client.view.navigation.animation.AnimatorFactory;
 import ch.sebastienzurfluh.client.view.navigation.animation.AnimatorFactory.AnimatorType;

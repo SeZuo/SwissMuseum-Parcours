@@ -25,7 +25,7 @@ import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuWidget;
-import ch.sebastienzurfluh.client.view.menuinterface.PageRequestHandler;
+import ch.sebastienzurfluh.client.view.menuinterface.PageRequestClickHandler;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
@@ -39,7 +39,7 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 	private TileMenu tileMenu;
 	private Model model;
 	
-	public TileWidget(EventBus pageChangeEventBus, PageRequestHandler pageRequestHandler, Model model) {
+	public TileWidget(EventBus pageChangeEventBus, PageRequestClickHandler pageRequestHandler, Model model) {
 		this.model = model;
 		
 		setStyleName(stylePrimaryName);
@@ -50,7 +50,7 @@ public class TileWidget extends VerticalPanel implements MenuWidget {
 		model.currentPageDataObservable.subscribeObserver(this);
 	}
 	
-	private void initialise(PageRequestHandler pageRequestHandler) {
+	private void initialise(PageRequestClickHandler pageRequestHandler) {
 		tileMenu = new TileMenu("Choisissez votre parcours", pageRequestHandler);
 		add(tileMenu);
 	}

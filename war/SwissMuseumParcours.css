@@ -49,6 +49,14 @@ table {
 	width: 37.5em;
 }
 
+.header {
+	width: 37.5em;
+	-moz-box-shadow:    0px 3px 5px 0px #ccc;
+  	-webkit-box-shadow: 0px 3px 5px 0px #ccc;
+  	box-shadow:         0px 3px 5px 0px #ccc;
+  	margin-bottom: 1em;
+}
+
 /********************** MENUS **************************************************/
 
 				
