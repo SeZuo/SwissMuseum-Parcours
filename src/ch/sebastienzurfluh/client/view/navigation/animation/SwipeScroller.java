@@ -51,13 +51,26 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
     }
 	
 	/**
-	 * Move the scroller to the specified widget
+	 * Move the scroller to the specified widget with an animation.
 	 * @param rank -th widget starting at 1
 	 */
 	public void setFocusWidget(int rank) {
+		setFocusWidget(rank, true);
+	}
+	
+	/**
+	 * Move the scroller to the specified
+	 * @param rank -th widget starting at 1
+	 * @param animate is true, if you want an animation or not
+	 */
+	public void setFocusWidget(int rank, boolean animate) {
 		slider.setCurrentItem(rank);
 		int itemPosition = (rank-1) * slider.getItemWidth();
-		scrollTo(itemPosition, SLOW);
+		if(animate) {
+			scrollTo(itemPosition, SLOW);
+		} else {
+			scrollTo(itemPosition, 0);
+		}
 	}
 
 	int positionBeforeAnimation, delta;
@@ -87,6 +100,11 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
         int position = (int) (positionBeforeAnimation + (progress * delta));
         animatedPanel.setWidgetPosition(movingWidget, position, 0);
     }
+    
+    @Override
+    protected void onComplete() {
+    	animatedPanel.setWidgetPosition(movingWidget, positionBeforeAnimation + delta, 0);
+    };
     
     
 	private HandlerRegistration mouseMoveHandler;
@@ -125,52 +143,45 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 		touchMoveHandler.removeHandler();
 		
 		int previousItem = slider.getCurrentItemRank();
-		
 		int nextItem;
-		boolean outOfBoundaries = false;
-
-		// get the widget back into boundaries.
-		int leftDelta = animatedPanel.getAbsoluteLeft() - movingWidget.getAbsoluteLeft();
-    	if (leftDelta < 0 || leftDelta > slider.getWidgetWidth()) {
-    		nextItem = previousItem;
-    		outOfBoundaries = true;
-    	}
     	
-    	int delta = newXPos - startPosition;
+    	
     	// movement has to be more than a third of the widget
-    	if (delta > slider.getWidgetWidth() * 0.3) {
-    		nextItem = outOfBoundaries ? -1 : slider.getCurrentItemRank()-1;
-    	} else if (delta < - slider.getWidgetWidth() * 0.3) {
-    		nextItem = outOfBoundaries ? -1 : slider.getCurrentItemRank()+1;
+		int delta = newXPos - startPosition;
+    	if (delta > slider.getWidgetWidth() / 3) {
+    		nextItem = slider.getCurrentItemRank()-1;
+    	} else if (delta < - slider.getWidgetWidth() / 3) {
+    		nextItem = slider.getCurrentItemRank()+1;
     	} else {
     		nextItem = previousItem;
     	}
     	
-    	
-    	
-    	if(nextItem == -1) {
-    		pageRequestBus.fireEvent(
-    				new PageChangeRequest(
-    						DataReference.SUPER));
-    		// leaving for the super menu but we need to go back to the previous item if we go back.
-    		setFocusWidget(previousItem);
+    	// get the widget back into boundaries.
+    	boolean outOfBoundaries = false;
+		int leftDelta = animatedPanel.getAbsoluteLeft() - movingWidget.getAbsoluteLeft();
+    	if (leftDelta < 0 || leftDelta > slider.getWidgetWidth()) {
+    		outOfBoundaries = true;
     	}
     	
-    	// move to the right place
-    	setFocusWidget(nextItem);
-
-    	try {
-    		if (previousItem != nextItem)
-    			pageRequestBus.fireEvent(
-    					new PageChangeRequest(
-    							slider.getItem(nextItem).getReference()));
-    	} catch (Exception e) {
-    		// if something goes wrong, load the super menu.
-    		pageRequestBus.fireEvent(
-    				new PageChangeRequest(
-    						DataReference.SUPER));
+    	if (nextItem != previousItem) {
+    		if(outOfBoundaries) {
+    			// leaving for the super menu but we need to go back to the previous item if we go back.
+	    		setFocusWidget(previousItem);
+	    		
+	    		pageRequestBus.fireEvent(
+	    				new PageChangeRequest(
+	    						DataReference.SUPER));
+	    		
+	    	} else {
+	    		// move to the right place
+		    	setFocusWidget(nextItem);
+		
+	    		if (previousItem != nextItem)
+	    			pageRequestBus.fireEvent(
+	    					new PageChangeRequest(
+	    							slider.getItem(nextItem).getReference()));
+	    	}
     	}
-
 	}
 	
 
