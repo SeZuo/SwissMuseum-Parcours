@@ -77,8 +77,8 @@ public class Model extends Observable {
 	private Collection<ResourceData> allNeededResources = new LinkedList<ResourceData>();
 	public Observable allNeededResourcesObservable = new Observable();
 	
-	private Layout layout = Layout.NONE;
-	public Observable layoutObservable = new Observable();
+	private ViewMode viewMode = ViewMode.NONE;
+	public Observable viewModeObservable = new Observable();
 	
 	/**
 	 * Notify all observers of the model and of the selected observable.
@@ -87,6 +87,22 @@ public class Model extends Observable {
 	private void notifyAllObservers(Observable observable) {
 		observable.notifyObservers();
 		this.notifyObservers();
+	}
+	
+	/**
+	 * Notify general update of the model. This does not refresh the model, it only notifies
+	 * the view that the model has completely changed.
+	 * 
+	 * Note that the layout observers wont be notified.
+	 */
+	public void refresh() {
+		allGroupsMenusChangesObservable.notifyObservers();
+		currentGroupMenuObservable.notifyObservers();
+		currentPageDataObservable.notifyObservers();
+		previousPageMenuObservable.notifyObservers();
+		nextPageMenuObservable.notifyObservers();
+		allPagesMenusInCurrentGroupObservable.notifyObservers();
+		allNeededResourcesObservable.notifyObservers();
 	}
 	
 	/**
@@ -408,32 +424,33 @@ public class Model extends Observable {
 	}
 	
 	/**
-	 * Layout indicates the view how to display it's content
+	 * Layout indicates to the view how to display it's content
 	 */
-	public enum Layout {
-		NONE, PAGE, GROUP, CMS;
+	public enum ViewMode {
+		NONE, BROWSE, EDIT;
 	}
 	
 	/**
-	 * Sets the current layout
+	 * Sets the current view mode
 	 * 
 	 */
-	public void setLayout(Layout layout) {
-		System.out.println("Model: setLayout: " + layout + " (current: " + getCurrentLayout() + ")");
+	public void setViewMode(ViewMode viewMode) {
+		System.out.println("Model: setLayout: " +
+				viewMode + " (current: " + getCurrentViewMode() + ")");
 
-		if (this.layout.equals(layout))
+		if (this.viewMode.equals(viewMode))
 			return;
 		
-		this.layout = layout;
+		this.viewMode = viewMode;
 				
 		
-		notifyAllObservers(layoutObservable);
+		notifyAllObservers(viewModeObservable);
 	}
 	
 	/**
-	 * @return Get the current layout.
+	 * @return Get the current view mode.
 	 */
-	public Layout getCurrentLayout() {
-		return layout;
+	public ViewMode getCurrentViewMode() {
+		return viewMode;
 	}
 }

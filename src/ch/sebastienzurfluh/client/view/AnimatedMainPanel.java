@@ -2,7 +2,9 @@ package ch.sebastienzurfluh.client.view;
 
 import com.google.gwt.user.client.ui.Panel;
 
+import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
 import ch.sebastienzurfluh.client.view.supportwidgets.SlidingPanel;
@@ -21,7 +23,7 @@ public class AnimatedMainPanel extends SlidingPanel implements Observer {
 		addPanel(groupPanel);
 		addPanel(pagePanel);
 		
-		model.layoutObservable.subscribeObserver(this);
+		model.currentPageDataObservable.subscribeObserver(this);
 	}
 	
 	@Override
@@ -31,20 +33,23 @@ public class AnimatedMainPanel extends SlidingPanel implements Observer {
 		panel.setStyleName("animatedPanelView");
 	};
 	
-	
-
+	private DataType currentView = DataType.NONE;
 	@Override
 	public void notifyObserver(Observable source) {
-		System.out.println("AnimatedMainPanel: notified: Layout Change");
-		switch(model.getCurrentLayout()) {
-		case PAGE:
-			moveToNextPanel();
-			break;
-		case GROUP:
+		System.out.println("AnimatedMainPanel: notified of page change");
+		if (model.getCurrentPageData().equals(Data.NONE)) {
+			System.out.println("The new page is not null.");
+			// There is no page, we want the group menu.
+			if (model.getCurrentPageData().getReference().getType().equals(currentView))
+				return;
+			currentView = model.getCurrentPageData().getReference().getType();
 			moveToPreviousPanel();
-			break;
-		default:
-			break;
+		} else {
+			// A page exists! We want the page view.
+			if (model.getCurrentPageData().getReference().getType().equals(currentView))
+				return;
+			currentView = model.getCurrentPageData().getReference().getType();
+			moveToNextPanel();
 		}
 	}
 

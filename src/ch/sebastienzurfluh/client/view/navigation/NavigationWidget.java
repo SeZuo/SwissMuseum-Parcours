@@ -49,7 +49,7 @@ public class NavigationWidget extends VerticalPanel implements MenuWidget {
 		// needs to update when the group changes
 		model.allPagesMenusInCurrentGroupObservable.subscribeObserver(this);
 		
-		pageSlider = new NavigationSlider("Pages", pageChangeEventBus);
+		pageSlider = new NavigationSlider("Pages", pageChangeEventBus, model);
 		add(pageSlider);
 	}
 

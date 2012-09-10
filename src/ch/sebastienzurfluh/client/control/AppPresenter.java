@@ -26,7 +26,6 @@ import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.view.BrowseView;
-import ch.sebastienzurfluh.client.view.View;
 
 import com.google.gwt.user.client.ui.Panel;
 

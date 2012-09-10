@@ -24,9 +24,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
+import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
-import ch.sebastienzurfluh.client.view.Config;
+import ch.sebastienzurfluh.client.patterns.Observable;
+import ch.sebastienzurfluh.client.patterns.Observer;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.client.view.navigation.animation.AnimatorFactory;
 import ch.sebastienzurfluh.client.view.navigation.animation.AnimatorFactory.AnimatorType;
@@ -49,7 +51,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
  * This widget gives a way to navigate (next/previous) between pages. 
  * @author Sebastien Zurfluh
  */
-public class NavigationSlider extends FocusPanel implements MenuList {
+public class NavigationSlider extends FocusPanel implements MenuList, Observer {
+	private Model model;
 	private AbsolutePanel animationPanel;
 	private HorizontalPanel tilePanel;
 	private LinkedList<NavigationItem> tileList;
@@ -65,7 +68,10 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 	 */
 	private int widgetWidth;
 	
-	public NavigationSlider(String string, EventBus pageRequestBus) {
+	
+	
+	public NavigationSlider(String string, EventBus pageRequestBus, Model model) {
+		this.model = model;
 		
 		setStyleName("navigationSlider");
 		
@@ -92,6 +98,8 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 		addMouseUpHandler(animatedScroller);
 		
 		preventBrowserInterference();
+		
+		model.currentPageDataObservable.subscribeObserver(this);
 	}
 
 	private void addTile(MenuData menuData) {
@@ -177,6 +185,12 @@ public class NavigationSlider extends FocusPanel implements MenuList {
 			}
 			menuRank++;
 		}
+	}
+	
+
+	@Override
+	public void notifyObserver(Observable source) {
+		setFocusWidget(model.getCurrentPageData().getReference());
 	}
 	
 	/**

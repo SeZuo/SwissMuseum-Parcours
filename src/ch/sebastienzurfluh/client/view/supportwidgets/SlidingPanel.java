@@ -20,7 +20,7 @@ public class SlidingPanel extends AbsolutePanel {
 	private int panelWidth = Config.WINDOW_WIDTH;
 	
 	public SlidingPanel(Model model) {
-		add(movingPanel, -panelWidth, 0);
+		add(movingPanel, 0, 0);
 		
 		slideAnimator = new SlideAnimator(this, movingPanel);
 	}

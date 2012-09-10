@@ -4,7 +4,7 @@ import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.model.Model.Layout;
+import ch.sebastienzurfluh.client.model.Model.ViewMode;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
 
@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
  *
  */
 public class View extends SimplePanel implements Observer {
-	private Layout currentLayout;
 	private EventBus eventBus;
 	private PageRequestEventHandler pageRequestHandler;
 	private ResourceRequestEventHandler resourceRequestHandler;
@@ -40,18 +39,17 @@ public class View extends SimplePanel implements Observer {
 		this.resourceRequestHandler = resourceRequestHandler;
 	}
 	
-	public void setLayout(Layout layout) {
-		switch(layout) {
-		case CMS:
-			currentLayout = layout;
+	public void setViewMode(ViewMode viewMode) {
+		switch(viewMode) {
+		case EDIT:
+			CMSView cmsView = new CMSView(eventBus, pageRequestHandler, resourceRequestHandler, model);
+			this.setWidget(cmsView);
+			cmsView.afterAttached();
 			break;
-		case GROUP:
-		case PAGE:
-			// GROUP and PAGE use the same layout.
+		case BROWSE:
 			BrowseView view = new BrowseView(eventBus, pageRequestHandler, resourceRequestHandler, model);
 			this.setWidget(view);
 			view.afterAttached();
-			currentLayout = layout;
 			break;
 		default:
 			break;

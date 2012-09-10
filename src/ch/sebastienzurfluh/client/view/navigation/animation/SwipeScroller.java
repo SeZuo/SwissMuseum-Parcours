@@ -165,13 +165,9 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
     	
     	if (nextItem != previousItem) {
     		if(outOfBoundaries) {
-    			// leaving for the super menu but we need to go back to the previous item if we go back.
-	    		setFocusWidget(previousItem);
-	    		
 	    		pageRequestBus.fireEvent(
 	    				new PageChangeRequest(
 	    						DataReference.SUPER));
-	    		
 	    	} else {
 	    		// move to the right place
 		    	setFocusWidget(nextItem);
