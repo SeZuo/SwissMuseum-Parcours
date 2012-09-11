@@ -24,8 +24,9 @@ import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.Model.ViewMode;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
-import ch.sebastienzurfluh.client.view.BrowseView;
+import ch.sebastienzurfluh.client.view.View;
 
 import com.google.gwt.user.client.ui.Panel;
 
@@ -55,12 +56,12 @@ public class AppPresenter {
 		PageRequestEventHandler pageRequestHandler = new PageRequestEventHandler(eventBus, model);
 		ResourceRequestEventHandler resourceRequestHandler = new ResourceRequestEventHandler(eventBus, model);
 
-		BrowseView view = new BrowseView(eventBus, pageRequestHandler, resourceRequestHandler, model);
+		View view = new View(eventBus, pageRequestHandler, resourceRequestHandler, model);
 
 		parent.add(view);
 		
-		view.afterAttached();
-
+		model.setViewMode(Config.START_VIEW_MODE);
+		
 		// Start the app
 		eventBus.fireEvent(new PageChangeRequest(DataReference.SUPER));
 	}

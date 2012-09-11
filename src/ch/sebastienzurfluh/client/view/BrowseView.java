@@ -62,6 +62,7 @@ public class BrowseView extends SimplePanel {
 		assert eventBus != null;
 		assert model != null;
 		assert pageRequestEventHandler != null;
+		assert resourceRequestHandler != null;
 		
 		this.eventBus = eventBus;
 		this.model = model;

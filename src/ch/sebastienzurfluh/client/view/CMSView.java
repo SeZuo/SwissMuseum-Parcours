@@ -25,6 +25,8 @@ import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.view.cms.EditWidget;
+import ch.sebastienzurfluh.client.view.cms.GroupTreeWidget;
+import ch.sebastienzurfluh.client.view.cms.PageTreeWidget;
 import ch.sebastienzurfluh.client.view.cms.TreeWidget;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestClickHandler;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -43,8 +45,7 @@ public class CMSView extends VerticalPanel {
 	private TreeWidget groupPanel;
 	private EventBus eventBus;
 	private Model model;
-	private EditWidget page;
-	private FooterWidget footer;
+	private EditWidget editPanel;
 	
 	
 	
@@ -56,22 +57,18 @@ public class CMSView extends VerticalPanel {
 		assert eventBus != null;
 		assert model != null;
 		assert pageRequestEventHandler != null;
+		assert resourceRequestHandler != null;
 		
 		this.eventBus = eventBus;
 		this.model = model;
 		
-		pagePanel = new TreeWidget(DataType.PAGE, eventBus, model);
-		groupPanel = new TreeWidget(DataType.GROUP, eventBus, model);
-
+		pageRequestHandler = new PageRequestClickHandler(eventBus);
+		
 		// Setup main panel
 		mainPanel = new HorizontalPanel();
-		
 		mainPanel.setStyleName("mainPanel");
-
-		pageRequestHandler = new PageRequestClickHandler(eventBus);
-
-		// create mainPanel before filling it
 		add(mainPanel);
+		
 		add(new FooterWidget());
 	}
 	
@@ -81,6 +78,12 @@ public class CMSView extends VerticalPanel {
 	 * Call this after the panel has been attached.
 	 */
 	public void afterAttached() {
+		pagePanel = new PageTreeWidget(DataType.PAGE, eventBus, model, pageRequestHandler);
+		groupPanel = new GroupTreeWidget(DataType.GROUP, eventBus, model, pageRequestHandler);
+//		editPanel = new EditWidget();
 		
+		mainPanel.add(groupPanel);
+		mainPanel.add(pagePanel);
+//		mainPanel.add(editPanel);
 	}
 }

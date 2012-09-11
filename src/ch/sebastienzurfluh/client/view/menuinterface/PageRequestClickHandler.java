@@ -19,7 +19,7 @@ public class PageRequestClickHandler implements ClickHandler {
 		requestPage(((MenuButton) event.getSource()).getReference());
 	}
 	
-	public void requestPage(DataReference reference) {
+	private void requestPage(DataReference reference) {
 		eventBus.fireEvent(new PageChangeRequest(reference));
 	}
 	

@@ -56,13 +56,13 @@ public class PageRequestEventHandler implements EventBusListener {
 		if(e instanceof PageChangeRequest) {
 			final PageChangeRequest pageChangeRequest = (PageChangeRequest) e;
 			
+			
 			//TODO Check if the requested page is OK.
 			
 			// Abort in case the page is already loaded.
 			if (pageChangeRequest.getPageReference().equals(cachedReference))
 				return;
 			cachedReference = pageChangeRequest.getPageReference();
-			
 			
 			
 			if(pageChangeRequest.isForeignPageChangeRequest())

@@ -137,8 +137,10 @@ public class Model extends Observable {
 			// resources == null
 			break;
 		case GROUP:
+			System.out.println("Group request");
 			// page view: the navigation and the page content will be visible
 			setCurrentGroupMenu(currentReference);
+			System.out.println("Current group menu set");
 			setAllPageMenusInCurrentGroup(currentReference);
 			
 			// a group has been opened we need to load the first page
@@ -424,7 +426,7 @@ public class Model extends Observable {
 	}
 	
 	/**
-	 * Layout indicates to the view how to display it's content
+	 * ViewMode indicates to the view what widgets to load
 	 */
 	public enum ViewMode {
 		NONE, BROWSE, EDIT;
@@ -432,7 +434,6 @@ public class Model extends Observable {
 	
 	/**
 	 * Sets the current view mode
-	 * 
 	 */
 	public void setViewMode(ViewMode viewMode) {
 		System.out.println("Model: setLayout: " +
@@ -443,7 +444,6 @@ public class Model extends Observable {
 		
 		this.viewMode = viewMode;
 				
-		
 		notifyAllObservers(viewModeObservable);
 	}
 	

@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  */
 public class View extends SimplePanel implements Observer {
 	private EventBus eventBus;
-	private PageRequestEventHandler pageRequestHandler;
+	private PageRequestEventHandler pageRequestEventHandler;
 	private ResourceRequestEventHandler resourceRequestHandler;
 	private Model model;
 	
@@ -35,19 +35,21 @@ public class View extends SimplePanel implements Observer {
 		
 		this.eventBus = eventBus;
 		this.model = model;
-		this.pageRequestHandler = pageRequestEventHandler;
+		this.pageRequestEventHandler = pageRequestEventHandler;
 		this.resourceRequestHandler = resourceRequestHandler;
+		
+		model.viewModeObservable.subscribeObserver(this);
 	}
 	
-	public void setViewMode(ViewMode viewMode) {
+	private void setViewMode(ViewMode viewMode) {
 		switch(viewMode) {
 		case EDIT:
-			CMSView cmsView = new CMSView(eventBus, pageRequestHandler, resourceRequestHandler, model);
+			CMSView cmsView = new CMSView(eventBus, pageRequestEventHandler, resourceRequestHandler, model);
 			this.setWidget(cmsView);
 			cmsView.afterAttached();
 			break;
 		case BROWSE:
-			BrowseView view = new BrowseView(eventBus, pageRequestHandler, resourceRequestHandler, model);
+			BrowseView view = new BrowseView(eventBus, pageRequestEventHandler, resourceRequestHandler, model);
 			this.setWidget(view);
 			view.afterAttached();
 			break;
@@ -58,5 +60,6 @@ public class View extends SimplePanel implements Observer {
 
 	@Override
 	public void notifyObserver(Observable source) {
+		setViewMode(model.getCurrentViewMode());
 	}
 }
