@@ -47,7 +47,7 @@ public class GroupTreeWidget extends TreeWidget {
 				this.setVisible(false);
 			} else {
 				this.setVisible(true);
-				updateFocusedTile();
+				updateFocusedTile(model.getCurrentGroupMenu().getReference());
 			}
 		}
 	}

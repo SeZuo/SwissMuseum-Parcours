@@ -48,7 +48,15 @@ public class TreeWidget extends VerticalPanel implements Observer {
 		entries = new VerticalPanel();
 		add(entries);
 		
-		Label plus = new Label();
+		Tile plus = new Tile(
+				new MenuData(
+						DataReference.NONE,
+						0,
+						"Ajouter.",
+						"(Mode édition uniquement)",
+						"resources/images/generic_tiles/plus.gif",
+						""));
+		plus.setMode(TileMode.DETAILED);
 		plus.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -56,6 +64,7 @@ public class TreeWidget extends VerticalPanel implements Observer {
 			}
 		});
 		add(plus);
+		
 	}
 	
 	/**
@@ -79,21 +88,23 @@ public class TreeWidget extends VerticalPanel implements Observer {
 	
 	/**
 	 * Updates the currently focused tile with data from the model.
+	 * 
+	 * @param focusReference the reference to focus to.
 	 */
-	protected void updateFocusedTile() { 
-		if(model.getCurrentPageData() == null) {
-			focusedTile = NO_TILE;
-			return;
-		}
-		
-		for(Tile tile : entryStore) {
-			if (tile.getReference().equals(model.getCurrentPageData().getReference())) {
+	protected void updateFocusedTile(DataReference focusReference) { 
+			if(focusReference == null) {
 				focusedTile.setMenuFocus(false);
-				tile.setMenuFocus(true);
-				focusedTile = tile;
-				break;
+				focusedTile = NO_TILE;
+				return;
 			}
-		}
+			for(Tile tile : entryStore) {
+				if (tile.getReference().equals(focusReference)) {
+					focusedTile.setMenuFocus(false);
+					tile.setMenuFocus(true);
+					focusedTile = tile;
+					break;
+				}
+			}
 	}
 	
 	/**

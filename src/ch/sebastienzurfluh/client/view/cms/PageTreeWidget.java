@@ -43,7 +43,7 @@ public class PageTreeWidget extends TreeWidget {
 				this.setVisible(false);
 			} else {
 				this.setVisible(true);
-				updateFocusedTile();
+				updateFocusedTile(model.getCurrentPageData().getReference());
 			}
 		}
 	}
