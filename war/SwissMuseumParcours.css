@@ -201,7 +201,17 @@ table {
 .footerWidget {
 	font-size: 0.8em;
 	font-family: courier;
-	color: #110000;
+	color: #303030;
+}
+
+.footerWidget-big {
+	font-size: 2em;
+	font-family: courier;
+	font-weight: bold;
+	position: fixed;
+	bottom: 0;
+	color: white;
+	background-color: #686868;
 }
 
 /********************** WIDGET - TEXT LINK **********************************/
@@ -259,4 +269,123 @@ table {
 .pageWidget-image-image {
 	text-align: right;
 	width: 10em;
+}
+
+/********************** CMS    -           **********************************/
+.cms-View {
+	width: 100%;
+}
+.cms-mainPanel {
+	width: 100%;
+}
+
+.cms-editorWidget {
+	width: 100%;
+}
+
+.cms-treeWidget {
+	width: 10em;
+}
+
+.cms-tabPanel{
+	margin: 2em 0;
+	width: 100%;
+}
+
+.cms-tileMenu-title {
+	margin: 0.5em;
+	font-size: 2em;
+    font-family: monospace;
+    color: #110000;
+    border-bottom: 0.2em solid #303030;
+}
+
+.multiEditPanel {
+	width: 95%;
+
+	margin: 1em 1em 3em 1em;
+	padding: 1em;
+	
+	-moz-box-shadow:    inset 0 0 10px #000000;
+	-webkit-box-shadow: inset 0 0 10px #000000;
+	box-shadow:         inset 0 0 10px #000000;
+}
+
+.gwt-TabBar {
+	width: 0%;
+}
+.gwt-TabBarFirst-wrapper .gwt-TabBarFirst .gwt-TabBarRest-wrapper .gwt-TabBarRest {
+	width: 30px;
+}
+
+.gwt-DecoratedTabBar {
+	border-bottom: 0.2em solid #303030;
+	
+	margin: 0;
+	padding: 0;
+	
+	overflow: hidden;
+	
+	font-weight: bold;
+}
+
+.gwt-TabPanelBottom {
+	border-bottom: 1px dashed #303030;
+	border-left: 1px dashed #303030;
+	border-right: 1px dashed #303030;
+	
+	padding: 0.5em;
+}
+.gwt-TabBarItem-wrapper {
+	background-color: white;
+	color: #303030;
+	
+	cursor: pointer;
+	
+	padding: 0.5em 0.5em 0.3em 0.5em;
+	
+	
+	font-weight: bold;
+	-moz-border-radius: 1em 1em 0 0;
+	-webkit-border-radius: 1em 1em 0 0;
+	border-radius: 0.5em 0.5em 0 0; /* future proofing */
+	-khtml-border-radius: 1em 1em 0 0; /* for old Konqueror browsers */
+}
+
+.gwt-TabBarItem-wrapper-selected {
+	background-color: #686868;
+	color: white;
+}
+
+.gwt-TextBox, .gwt-TextArea {
+	width: 90%;
+	
+	padding: 1em;
+    margin: 0 0 0.8em 0;
+    
+    float: right;
+	
+	border: 1px solid white; 
+	
+    -webkit-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1); 
+    -moz-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1); 
+    box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1); 
+    
+    background: rgba(245,245,245,0.5);
+}
+
+.cms-textboxLabel {
+	padding: 1em;
+}
+
+.cms-toolbar {
+	float: left;
+}
+
+.cms-toolbar-button {
+	float : right;
+	margin: 0 0.5em;
 }

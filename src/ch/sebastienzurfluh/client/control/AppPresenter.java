@@ -20,6 +20,7 @@
 package ch.sebastienzurfluh.client.control;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
+import ch.sebastienzurfluh.client.control.eventbus.IntentHandler;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
@@ -55,6 +56,7 @@ public class AppPresenter {
 		
 		PageRequestEventHandler pageRequestHandler = new PageRequestEventHandler(eventBus, model);
 		ResourceRequestEventHandler resourceRequestHandler = new ResourceRequestEventHandler(eventBus, model);
+		
 
 		View view = new View(eventBus, pageRequestHandler, resourceRequestHandler, model);
 

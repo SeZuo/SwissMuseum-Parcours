@@ -47,9 +47,13 @@ public abstract class Event {
 		 */
 		RESOURCE_REQUEST,
 		/*
-		 * Fired when the user wants to create a new model element
+		 * Fired when the user creates/modifies/deletes a model element
 		 */
-		NEW_ELEMENT;
+		ACTION,
+		/**
+		 * Fired when the user is requesting the means to take an {@code Action} on the DB.
+		 */
+		INTENT;
 	}
 
 	/**

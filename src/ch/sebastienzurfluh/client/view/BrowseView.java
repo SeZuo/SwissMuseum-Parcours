@@ -73,7 +73,7 @@ public class BrowseView extends SimplePanel {
 		// Setup main panel
 		mainPanel = new AnimatedMainPanel(model, groupPanel, pagePanel);
 		
-		mainPanel.setStyleName("mainPanel");
+		mainPanel.setStyleName("cmsView");
 
 		pageRequestHandler = new PageRequestClickHandler(eventBus);
 

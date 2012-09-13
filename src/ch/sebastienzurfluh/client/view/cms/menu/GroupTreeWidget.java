@@ -1,9 +1,8 @@
-package ch.sebastienzurfluh.client.view.cms;
+package ch.sebastienzurfluh.client.view.cms.menu;
 
-import com.google.gwt.event.dom.client.ClickHandler;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
-import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.CMSModel;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.view.tilemenu.Tile;
@@ -13,9 +12,8 @@ public class GroupTreeWidget extends TreeWidget {
 	public GroupTreeWidget(
 			DataType type,
 			EventBus eventBus,
-			Model model,
-			ClickHandler pageRequestHandler) {
-		super(type, eventBus, model, pageRequestHandler);
+			CMSModel model) {
+		super(type, eventBus, model);
 		
 		model.allGroupsMenusChangesObservable.subscribeObserver(this);
 		model.currentGroupMenuObservable.subscribeObserver(this);

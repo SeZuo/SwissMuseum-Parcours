@@ -8,7 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 public class PageRequestClickHandler implements ClickHandler {
-	private EventBus eventBus;
+	protected EventBus eventBus;
 
 	public PageRequestClickHandler(EventBus eventBus) {
 		this.eventBus = eventBus;
@@ -16,10 +16,10 @@ public class PageRequestClickHandler implements ClickHandler {
 	
 	@Override
 	public void onClick(ClickEvent event) {
-		requestPage(((MenuButton) event.getSource()).getReference());
+		takeAction(((MenuButton) event.getSource()).getReference());
 	}
 	
-	private void requestPage(DataReference reference) {
+	private void takeAction(DataReference reference) {
 		eventBus.fireEvent(new PageChangeRequest(reference));
 	}
 	

@@ -23,12 +23,12 @@ import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
-import ch.sebastienzurfluh.client.model.Model;
-import ch.sebastienzurfluh.client.view.cms.EditWidget;
-import ch.sebastienzurfluh.client.view.cms.GroupTreeWidget;
-import ch.sebastienzurfluh.client.view.cms.PageTreeWidget;
-import ch.sebastienzurfluh.client.view.cms.TreeWidget;
-import ch.sebastienzurfluh.client.view.menuinterface.PageRequestClickHandler;
+import ch.sebastienzurfluh.client.model.CMSModel;
+import ch.sebastienzurfluh.client.view.cms.edit.MultiEditPanel;
+import ch.sebastienzurfluh.client.view.cms.menu.GroupTreeWidget;
+import ch.sebastienzurfluh.client.view.cms.menu.PageTreeWidget;
+import ch.sebastienzurfluh.client.view.cms.menu.TreeWidget;
+
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -39,13 +39,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class CMSView extends VerticalPanel {
 	// Shared handler for page requests
-	private PageRequestClickHandler pageRequestHandler;
 	private HorizontalPanel mainPanel;
 	private TreeWidget pagePanel;
 	private TreeWidget groupPanel;
 	private EventBus eventBus;
-	private Model model;
-	private EditWidget editPanel;
+	private CMSModel model;
+	private MultiEditPanel editPanel;
 	
 	
 	
@@ -53,7 +52,7 @@ public class CMSView extends VerticalPanel {
 	public CMSView(final EventBus eventBus,
 			PageRequestEventHandler pageRequestEventHandler,
 			ResourceRequestEventHandler resourceRequestHandler,
-			Model model) {
+			CMSModel model) {
 		assert eventBus != null;
 		assert model != null;
 		assert pageRequestEventHandler != null;
@@ -62,14 +61,16 @@ public class CMSView extends VerticalPanel {
 		this.eventBus = eventBus;
 		this.model = model;
 		
-		pageRequestHandler = new PageRequestClickHandler(eventBus);
+		setStyleName("cms-View");
 		
 		// Setup main panel
 		mainPanel = new HorizontalPanel();
-		mainPanel.setStyleName("mainPanel");
+		mainPanel.setStyleName("cms-mainPanel");
 		add(mainPanel);
 		
-		add(new FooterWidget());
+		FooterWidget footer = new FooterWidget();
+		footer.setStyleName("footerWidget-big");
+		add(footer);
 	}
 	
 	/**
@@ -78,12 +79,14 @@ public class CMSView extends VerticalPanel {
 	 * Call this after the panel has been attached.
 	 */
 	public void afterAttached() {
-		pagePanel = new PageTreeWidget(DataType.PAGE, eventBus, model, pageRequestHandler);
-		groupPanel = new GroupTreeWidget(DataType.GROUP, eventBus, model, pageRequestHandler);
-//		editPanel = new EditWidget();
+		pagePanel = new PageTreeWidget(DataType.PAGE, eventBus, model);
+		groupPanel = new GroupTreeWidget(DataType.GROUP, eventBus, model);
+		editPanel = new MultiEditPanel(model, eventBus);
 		
 		mainPanel.add(groupPanel);
 		mainPanel.add(pagePanel);
-//		mainPanel.add(editPanel);
+		mainPanel.add(editPanel);
+		
+		mainPanel.setCellWidth(editPanel, "100%");
 	}
 }

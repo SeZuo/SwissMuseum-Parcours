@@ -42,7 +42,7 @@ public class ResourceRequestEventHandler implements EventBusListener {
 		this.model = model;
 		
 		eventBus.addListener(this);
-		System.out.println("PAGE HANDLER CREATED");
+		System.out.println("RESOURCE HANDLER CREATED");
 	}
 
 	@Override

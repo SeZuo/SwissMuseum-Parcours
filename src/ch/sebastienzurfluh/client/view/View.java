@@ -1,8 +1,10 @@
 package ch.sebastienzurfluh.client.view;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
+import ch.sebastienzurfluh.client.control.eventbus.IntentHandler;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
+import ch.sebastienzurfluh.client.model.CMSModel;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.Model.ViewMode;
 import ch.sebastienzurfluh.client.patterns.Observable;
@@ -44,7 +46,15 @@ public class View extends SimplePanel implements Observer {
 	private void setViewMode(ViewMode viewMode) {
 		switch(viewMode) {
 		case EDIT:
-			CMSView cmsView = new CMSView(eventBus, pageRequestEventHandler, resourceRequestHandler, model);
+			CMSModel cmsModel = new CMSModel(model);
+			// This should be in Control
+			IntentHandler intentHandler = new IntentHandler(cmsModel, eventBus);
+			CMSView cmsView = 
+				new CMSView(
+						eventBus,
+						pageRequestEventHandler,
+						resourceRequestHandler,
+						cmsModel);
 			this.setWidget(cmsView);
 			cmsView.afterAttached();
 			break;

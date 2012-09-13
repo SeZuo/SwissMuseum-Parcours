@@ -124,7 +124,8 @@ public class Model extends Observable {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						System.out.println("Model:load Cannot get data from the connector");
+						System.out.println(
+								"Model: load: cannot get data from the connector. Retrying.");
 						Model.this.load(currentReference);
 					};
 				});
@@ -134,7 +135,6 @@ public class Model extends Observable {
 			setPreviousPageMenu(MenuData.NONE);
 			setNextPageMenu(MenuData.NONE);
 			setAllPageMenusInCurrentGroup(new LinkedList<MenuData>());
-			// resources == null
 			break;
 		case GROUP:
 			System.out.println("Group request");
@@ -318,7 +318,7 @@ public class Model extends Observable {
 	/**
 	 * @param allPagesMenusInCurrentGroup all the pages of the current group menus.
 	 */
-	public void setAllPageMenusInCurrentGroup(Collection<MenuData> allPagesMenusInCurrentGroup) {
+	private void setAllPageMenusInCurrentGroup(Collection<MenuData> allPagesMenusInCurrentGroup) {
 		this.allPagesMenusInCurrentGroup = allPagesMenusInCurrentGroup;
 		notifyAllObservers(allPagesMenusInCurrentGroupObservable);
 	}
@@ -437,7 +437,7 @@ public class Model extends Observable {
 	 */
 	public void setViewMode(ViewMode viewMode) {
 		System.out.println("Model: setLayout: " +
-				viewMode + " (current: " + getCurrentViewMode() + ")");
+				viewMode + " (before: " + getCurrentViewMode() + ")");
 
 		if (this.viewMode.equals(viewMode))
 			return;

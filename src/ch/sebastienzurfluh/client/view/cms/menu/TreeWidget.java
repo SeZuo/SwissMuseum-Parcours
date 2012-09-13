@@ -1,15 +1,17 @@
-package ch.sebastienzurfluh.client.view.cms;
+package ch.sebastienzurfluh.client.view.cms.menu;
 
 import java.util.LinkedList;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
+import ch.sebastienzurfluh.client.control.eventbus.events.Action;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
-import ch.sebastienzurfluh.client.control.eventbus.events.NewElementEvent;
-import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.control.eventbus.events.IntentEvent;
+import ch.sebastienzurfluh.client.model.CMSModel;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
+import ch.sebastienzurfluh.client.view.menuinterface.MenuButton;
 import ch.sebastienzurfluh.client.view.tilemenu.Tile;
 import ch.sebastienzurfluh.client.view.tilemenu.Tile.TileMode;
 
@@ -17,12 +19,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class TreeWidget extends VerticalPanel implements Observer {
 	protected VerticalPanel entries;
 	protected DataType type;
-	protected Model model;
+	protected CMSModel model;
 	protected ClickHandler pageRequestHandler;
 	
 	
@@ -35,20 +36,30 @@ public class TreeWidget extends VerticalPanel implements Observer {
 	public TreeWidget(
 			final DataType type,
 			final EventBus eventBus,
-			Model model,
-			ClickHandler pageRequestHandler) {
+			CMSModel model) {
 		this.type = type;
 		this.model = model;
-		this.pageRequestHandler = pageRequestHandler;
+		
+		pageRequestHandler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				eventBus.fireEvent(
+						new IntentEvent(
+								((MenuButton) event.getSource()).getReference(),
+								Action.MODIFY));
+			}
+		};
+		
+		setStyleName("cms-TreeWidget");
 		
 		Label titleLabel = new Label(type.toString());
-		titleLabel.setStyleName("tileMenu-title");
+		titleLabel.setStyleName("cms-tileMenu-title");
 		add(titleLabel);
 		
 		entries = new VerticalPanel();
 		add(entries);
 		
-		Tile plus = new Tile(
+		Tile newTile = new Tile(
 				new MenuData(
 						DataReference.NONE,
 						0,
@@ -56,14 +67,14 @@ public class TreeWidget extends VerticalPanel implements Observer {
 						"(Mode édition uniquement)",
 						"resources/images/generic_tiles/plus.gif",
 						""));
-		plus.setMode(TileMode.DETAILED);
-		plus.addClickHandler(new ClickHandler() {
+		newTile.setMode(TileMode.DETAILED);
+		newTile.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				eventBus.fireEvent(new NewElementEvent(type));
+				eventBus.fireEvent(new IntentEvent(new DataReference(type,0), Action.CREATE));
 			}
 		});
-		add(plus);
+		add(newTile);
 		
 	}
 	

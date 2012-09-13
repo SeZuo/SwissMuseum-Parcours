@@ -19,14 +19,14 @@
 
 package ch.sebastienzurfluh.client.view;
 
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
 
 /**
  * This widget settles on the bottom of the application's panel.
  * @author Sebastien Zurfluh
  *
  */
-public class FooterWidget extends Label {
+public class FooterWidget extends HTML {
 	public FooterWidget() {
 		super("Created by Sébastien Zurfluh for the Swiss Museum");
 		

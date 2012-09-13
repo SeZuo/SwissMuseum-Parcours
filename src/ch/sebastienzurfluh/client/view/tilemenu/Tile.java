@@ -71,6 +71,12 @@ public class Tile extends FocusPanel implements MenuButton {
 		setIconOnlyMode();
 	}
 	
+	public Tile(MenuData menuData, TileMode mode) {
+		this(menuData);
+		
+		setMode(mode);
+	}
+	
 	private static String iconOnlyStyleDependentName = TileMode.ICON_ONLY.toString();
 	private static String detailedStyleDependentName = TileMode.DETAILED.toString();
 
