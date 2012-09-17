@@ -24,12 +24,15 @@ import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.CMSModel;
+import ch.sebastienzurfluh.client.view.cms.Header;
 import ch.sebastienzurfluh.client.view.cms.edit.MultiEditPanel;
 import ch.sebastienzurfluh.client.view.cms.menu.GroupTreeWidget;
 import ch.sebastienzurfluh.client.view.cms.menu.PageTreeWidget;
 import ch.sebastienzurfluh.client.view.cms.menu.TreeWidget;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -39,7 +42,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class CMSView extends VerticalPanel {
 	// Shared handler for page requests
-	private HorizontalPanel mainPanel;
+	private HorizontalPanel textsPanel;
 	private TreeWidget pagePanel;
 	private TreeWidget groupPanel;
 	private EventBus eventBus;
@@ -63,10 +66,25 @@ public class CMSView extends VerticalPanel {
 		
 		setStyleName("cms-View");
 		
+		
+		HorizontalPanel resourcePanel = new HorizontalPanel();
+		
+		
 		// Setup main panel
-		mainPanel = new HorizontalPanel();
-		mainPanel.setStyleName("cms-mainPanel");
-		add(mainPanel);
+		textsPanel = new HorizontalPanel();
+		textsPanel.setStyleName("cms-mainPanel");
+		
+		TabPanel resourceAndText = new TabPanel();
+		resourceAndText.setStyleName("resourceAndTextPanel");
+		
+		resourceAndText.add(new AboutPanel(), new Header());
+		
+		resourceAndText.add(textsPanel, "Textes");
+		resourceAndText.add(resourcePanel, "Ressources");
+		
+		resourceAndText.selectTab(1);
+		
+		add(resourceAndText);
 		
 		FooterWidget footer = new FooterWidget();
 		footer.setStyleName("footerWidget-big");
@@ -83,10 +101,10 @@ public class CMSView extends VerticalPanel {
 		groupPanel = new GroupTreeWidget(DataType.GROUP, eventBus, model);
 		editPanel = new MultiEditPanel(model, eventBus);
 		
-		mainPanel.add(groupPanel);
-		mainPanel.add(pagePanel);
-		mainPanel.add(editPanel);
+		textsPanel.add(groupPanel);
+		textsPanel.add(pagePanel);
+		textsPanel.add(editPanel);
 		
-		mainPanel.setCellWidth(editPanel, "100%");
+		textsPanel.setCellWidth(editPanel, "100%");
 	}
 }
