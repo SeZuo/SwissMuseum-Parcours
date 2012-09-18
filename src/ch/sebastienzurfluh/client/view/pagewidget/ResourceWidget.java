@@ -13,6 +13,14 @@ import ch.sebastienzurfluh.client.model.structure.ResourceData;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
 
+/**
+ * The ResourceWidget can be added to any widget and will automatically requests it's data
+ * and wait for it to be available before rendering.
+ *
+ *
+ * @author Sebastien Zurfluh
+ *
+ */
 public class ResourceWidget extends SimplePanel implements Observer {
 	private Model model;
 	private DataReference reference;
@@ -32,6 +40,7 @@ public class ResourceWidget extends SimplePanel implements Observer {
 	private String imageExtension = "-image";
 	
 	public ResourceWidget(DataReference reference, EventBus eventBus, Model model) {
+		System.out.println("ResourceWidget: new resource widget " + reference);
 		this.model = model;
 		this.reference = reference;
 		this.eventBus = eventBus;

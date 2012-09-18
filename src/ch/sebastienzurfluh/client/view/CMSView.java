@@ -26,6 +26,7 @@ import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.CMSModel;
 import ch.sebastienzurfluh.client.view.cms.Header;
 import ch.sebastienzurfluh.client.view.cms.edit.MultiEditPanel;
+import ch.sebastienzurfluh.client.view.cms.edit.ResourceManager;
 import ch.sebastienzurfluh.client.view.cms.menu.GroupTreeWidget;
 import ch.sebastienzurfluh.client.view.cms.menu.PageTreeWidget;
 import ch.sebastienzurfluh.client.view.cms.menu.TreeWidget;
@@ -67,7 +68,6 @@ public class CMSView extends VerticalPanel {
 		setStyleName("cms-View");
 		
 		
-		HorizontalPanel resourcePanel = new HorizontalPanel();
 		
 		
 		// Setup main panel
@@ -79,7 +79,10 @@ public class CMSView extends VerticalPanel {
 		
 		resourceAndText.add(new AboutPanel(), new Header());
 		
-		resourceAndText.add(textsPanel, "Textes");
+		resourceAndText.add(textsPanel, "Parcours");
+		
+		// Useless panel.
+		ResourceManager resourcePanel = new ResourceManager();
 		resourceAndText.add(resourcePanel, "Ressources");
 		
 		resourceAndText.selectTab(1);

@@ -25,7 +25,8 @@ package ch.sebastienzurfluh.client.control.eventbus.events;
  *
  */
 public enum ResourceType {
+	NONE,
 	IMAGE,
 	VIDEO,
-	UNDEFINED;
+	AUDIO;
 }

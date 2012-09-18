@@ -1,8 +1,5 @@
 package ch.sebastienzurfluh.client.view.pagewidget;
 
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
-
 /**
  * Immutable token to store page elements.
  *

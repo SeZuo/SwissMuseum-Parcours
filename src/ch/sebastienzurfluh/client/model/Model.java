@@ -149,6 +149,10 @@ public class Model extends Observable {
 			setCurrentPageData(currentReference);
 			setPreviousPageMenu(currentReference);
 			setNextPageMenu(currentReference);
+			
+			// clear the old resources
+			clearResources();
+			
 			break;
 		case RESOURCE:
 			addResource(currentReference);
@@ -374,6 +378,13 @@ public class Model extends Observable {
 								" Cannot get data from the connector");
 					};
 				});
+	}
+	
+	/**
+	 * Delete the old resources.
+	 */
+	private void clearResources() {
+		allNeededResources = new LinkedList<ResourceData>();
 	}
 	
 	/**

@@ -48,9 +48,10 @@ public class PageEditorWidget extends VerticalPanel implements Observer {
 
 	public void setModifyState() {
 		switch(cmsModel.getCurrentIntentReference().getType()) {
-		case GROUP:
 		case PAGE:
 			tabPanel.clear();
+			// The previous page widget will not be destroyed and will continue to ask for data?
+			cmsModel.currentPageDataObservable.unsubscribeObserver(browse);	// This line prevents an epic bug!
 			browse = new PageWidget(eventBus, cmsModel.getModel());
 			break;
 		default:

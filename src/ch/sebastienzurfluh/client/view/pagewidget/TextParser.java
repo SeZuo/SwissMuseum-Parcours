@@ -2,11 +2,8 @@ package ch.sebastienzurfluh.client.view.pagewidget;
 
 import java.util.LinkedList;
 
-import ch.sebastienzurfluh.client.control.eventbus.Event;
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
-import ch.sebastienzurfluh.client.control.eventbus.events.PageChangeRequest;
-import ch.sebastienzurfluh.client.control.eventbus.events.ResourceRequest;
 import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 
@@ -22,6 +19,7 @@ public class TextParser {
 	}
 	
 	public LinkedList<PageToken> parse(String text) {
+		System.out.println("TextParser: parsing...");
 		return parseImages(text);
 	}
 	

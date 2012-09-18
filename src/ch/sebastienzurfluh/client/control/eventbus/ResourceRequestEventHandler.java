@@ -54,7 +54,6 @@ public class ResourceRequestEventHandler implements EventBusListener {
 	public void notify(Event e) {
 		if(e instanceof ResourceRequest) {
 			final ResourceRequest resourceRequest = (ResourceRequest) e;
-			
 			model.load(resourceRequest.getResourceReference());
 		}
 	}

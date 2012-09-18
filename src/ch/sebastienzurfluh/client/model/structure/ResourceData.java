@@ -33,6 +33,14 @@ public class ResourceData {
 	private String title, details, url;
 	private ResourceType resourceType;
 	
+	public static ResourceData NONE =
+			new ResourceData(
+					DataReference.NONE,
+					ResourceType.NONE,
+					"",
+					"",
+					"");
+	
 	/**
 	 * @param reference of the resource.
 	 * @param resourceType
