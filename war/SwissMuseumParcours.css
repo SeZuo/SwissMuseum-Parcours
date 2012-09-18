@@ -391,3 +391,25 @@ table {
 	float : right;
 	margin: 0 0.5em;
 }
+
+/* the glass background behind the popup */ 
+.gwt-PopupPanelGlass {
+	background: rgba(160,160,160,0.5);
+}
+
+/* the outside of the popup */
+.gwt-PopupPanel {
+	background: #606060;
+	
+	
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+	border-radius: 1em; /* future proofing */
+	-khtml-border-radius: 1em; /* for old Konqueror browsers */
+}
+    
+/* the wrapper around the content */
+.gwt-PopupPanel .popupContent {
+	color: white;
+	margin: 1em;
+}
