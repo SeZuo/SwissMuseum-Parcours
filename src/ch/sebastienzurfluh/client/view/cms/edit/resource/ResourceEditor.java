@@ -27,6 +27,16 @@ public class ResourceEditor extends VerticalPanel {
 		add(createNewLine("URL de la resource", resourceURLBox));
 	}
 	
+	public void setResource(ResourceType type) {
+		switch(type) {
+		case IMAGE:
+			resourceTypeBox.setTabIndex(1);
+			break;
+		default:
+			resourceTypeBox.setTabIndex(0);
+		}
+	}
+	
 	private FlowPanel createNewEnumLine(String labelText, ListBox textBox) {
 		for(ResourceType resourceType : ResourceType.values()) {
 			resourceTypeBox.addItem(resourceType.toString());

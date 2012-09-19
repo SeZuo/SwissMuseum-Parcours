@@ -506,3 +506,8 @@ table {
 	border: 1px dashed white;
 }
 
+.cms-resourceCreator-resourceEditor {
+	margin: 0.2em;
+	color: white;
+	width: 90%;
+}
