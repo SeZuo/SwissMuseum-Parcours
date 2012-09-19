@@ -69,9 +69,6 @@ public class MultiEditPanel extends VerticalPanel implements Observer {
 			resourceEdit.setVisible(true);
 			break;
 		default:
-			menuEdit.setVisible(false);
-			pageEdit.setVisible(false);
-			resourceEdit.setVisible(false);
 			return;
 		}
 		

@@ -244,6 +244,11 @@ public class CakeConnector implements IOConnector {
 			AsyncCallback<ResourceData> asyncCallback) {
 		asyncRequest(Requests.GETRESOURCE, referenceId, "", asyncCallback);
 	}
+	@Override
+	public void asyncRequestAllResourceData(
+			AsyncCallback<Collection<ResourceData>> asyncCallback) {
+		//TODO
+	}
 }
 
 class Entry extends JavaScriptObject {

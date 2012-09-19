@@ -3,6 +3,7 @@ package ch.sebastienzurfluh.client.control.eventbus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.events.IntentEvent;
 import ch.sebastienzurfluh.client.model.CMSModel;
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 
 /**
  * Handles user intents (defined in {@Action} class).
@@ -42,7 +43,10 @@ public class IntentHandler implements EventBusListener {
 			switch(intent.getAction()) {
 			case MODIFY:
 				System.out.println("IntentHandler: MODIFY loading.");
-				cmsModel.load(intent.getReference());
+				if(intent.getReference().equals(DataReference.ALL_RESOURCES))
+					cmsModel.loadAllResources();
+				else
+					cmsModel.load(intent.getReference());
 				break;
 			default:
 				// Only modify needs a specific action as we need to load the corresponding data.

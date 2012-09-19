@@ -46,7 +46,7 @@ import ch.sebastienzurfluh.client.patterns.Observable;
  * @author Sebastien Zurfluh
  */
 public class Model extends Observable {
-	IOConnector connector;
+	protected IOConnector connector;
 	
 	public Model(IOConnector connector) {
 		this.connector = connector;

@@ -2,6 +2,7 @@ package ch.sebastienzurfluh.client.model;
 
 import java.util.Collection;
 import ch.sebastienzurfluh.client.model.Model.ViewMode;
+import ch.sebastienzurfluh.client.model.io.IOConnector;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
@@ -18,6 +19,7 @@ import ch.sebastienzurfluh.client.patterns.Observable;
  */
 public class ModelWrapper {
 	Model model;
+	IOConnector connector;
 	
 	/**
 	 * @return the wrapped model
@@ -28,6 +30,7 @@ public class ModelWrapper {
 	
 	public ModelWrapper(Model model) {
 		this.model = model;
+		this.connector = model.connector;
 		
 		allGroupsMenusChangesObservable = model.allGroupsMenusChangesObservable;
 		

@@ -81,4 +81,18 @@ public class TestConnector implements IOConnector {
 						"Title of the resource", "Description of the resource.",
 						"resources/images/pix/light_yellow.gif"));
 	}
+
+	@Override
+	public void asyncRequestAllResourceData(
+			AsyncCallback<Collection<ResourceData>> asyncCallback) {
+		LinkedList<ResourceData> resourceList = new LinkedList<ResourceData>();
+		resourceList.add(
+				new ResourceData(
+						new DataReference(DataType.RESOURCE, 1),
+						ResourceType.IMAGE,
+						"Title of the resource", "Description of the resource.",
+						"resources/images/pix/light_yellow.gif"));
+		asyncCallback.onSuccess(resourceList);
+				
+	}
 }

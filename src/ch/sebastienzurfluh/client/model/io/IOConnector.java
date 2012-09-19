@@ -68,4 +68,10 @@ public interface IOConnector {
 	 */
 	void asyncRequestResourceData(int referenceId,
 			AsyncCallback<ResourceData> asyncCallback);
+
+	/**
+	 * Request all the resource in the DB.
+	 * @param asyncCallBack says what to do with the result
+	 */
+	void asyncRequestAllResourceData(AsyncCallback<Collection<ResourceData>> asyncCallback);
 }

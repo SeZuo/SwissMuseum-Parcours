@@ -41,7 +41,7 @@ public class PageEditorWidget extends VerticalPanel implements Observer {
 	public void setCreateState() {
 		tabPanel.clear();
 		tabPanel.add(new PageWidget(eventBus, cmsModel.getModel()), "Voir");
-		tabPanel.add(new PageEditor(), "Editer");
+		tabPanel.add(new PageEditor(cmsModel, eventBus), "Editer");
 		
 		tabPanel.selectTab(1);
 	}
@@ -72,7 +72,7 @@ public class PageEditorWidget extends VerticalPanel implements Observer {
 			
 			tabPanel.add(browse, "Voir");
 			
-			edit = new PageEditor(cmsModel.getCurrentPageData());
+			edit = new PageEditor(cmsModel.getCurrentPageData(), cmsModel, eventBus);
 			tabPanel.add(edit, "Editer");
 			
 			tabPanel.selectTab(0);

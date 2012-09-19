@@ -135,6 +135,9 @@ public class Tile extends FocusPanel implements MenuButton {
 		}
 	}
 	
+	/**
+	 * A human-readable representation of the {@code Tile}
+	 */
 	@Override
 	public String toString() {
 		return "{Tile: "+menuReference.toString()+"}";

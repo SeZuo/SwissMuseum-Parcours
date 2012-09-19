@@ -4,10 +4,13 @@
 
 package ch.sebastienzurfluh.client.view.cms.edit.page;
 
+import ch.sebastienzurfluh.client.control.eventbus.EventBus;
+import ch.sebastienzurfluh.client.model.CMSModel;
 import ch.sebastienzurfluh.client.model.structure.Data;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -24,10 +27,17 @@ public class PageEditor extends VerticalPanel {
 	/**
 	 * Create a blank page editor.
 	 */
-	public PageEditor() {
+	public PageEditor(CMSModel model, EventBus eventBus) {
 		add(createNewLine("Titre", titleBox));
 		add(createNewLine("Sous-titre", subtitleBox));
-		add(createNewLine("Contenu", contentBox));
+		
+		
+		FlowPanel contentBoxAndControls = new FlowPanel();
+		MenuBar controls = new Controls(model , eventBus, contentBox);
+		contentBoxAndControls.add(controls);
+		contentBoxAndControls.add(contentBox);
+		
+		add(createNewLine("Contenu", contentBoxAndControls));
 		
 		contentBox.setVisibleLines(15);
 	}
@@ -46,8 +56,8 @@ public class PageEditor extends VerticalPanel {
 	 * Create a menu editor with default values given by the {@code MenuData}.
 	 * @param menuData
 	 */
-	public PageEditor(Data data) {
-		this();
+	public PageEditor(Data data, CMSModel cmsModel, EventBus eventBus) {
+		this(cmsModel, eventBus);
 		
 		titleBox.setText(data.getPageTitle());
 		subtitleBox.setText(data.getPageContentHeader());

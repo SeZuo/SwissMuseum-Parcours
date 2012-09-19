@@ -40,6 +40,10 @@ public class DataReference {
 	 */
 	public static final DataReference SUPER = new DataReference(DataType.SUPER, 0);
 	
+	/**
+	 * This references all the resources at the same time.
+	 */
+	public static final DataReference ALL_RESOURCES = new DataReference(DataType.RESOURCE, -1);
 	
 	/**
 	 * Creates an unique reference to the data (page or resource).

@@ -1,7 +1,13 @@
 package ch.sebastienzurfluh.client.model;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import ch.sebastienzurfluh.client.control.eventbus.events.Action;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
+import ch.sebastienzurfluh.client.model.structure.ResourceData;
 import ch.sebastienzurfluh.client.patterns.Observable;
 
 /**
@@ -14,7 +20,6 @@ import ch.sebastienzurfluh.client.patterns.Observable;
  *
  */
 public class CMSModel extends ModelWrapper {
-
 	public CMSModel(Model model) {
 		super(model);
 	}
@@ -22,6 +27,48 @@ public class CMSModel extends ModelWrapper {
 	private Action currentIntentAction = Action.NONE;
 	private DataReference currentIntentReference = DataReference.NONE;
 	public Observable currentIntentObservable = new Observable();
+	
+	private Collection<ResourceData> allResources = new LinkedList<ResourceData>();
+	public Observable allResourcesObservable = new Observable();
+	
+	/**
+	 * <p>This method is limited to the use of the CMS</p>
+	 * 
+	 * <p>Loads all the resources from the connector into the observable object allResources.
+	 */
+	public void loadAllResources() {
+		connector.asyncRequestAllResourceData(
+				new AsyncCallback<Collection<ResourceData>>() {
+					@Override
+					public void onSuccess(Collection<ResourceData> resourceList) {
+						setAllResources(resourceList);
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println("Model:asyncRequestResourceData" +
+								" Cannot get data from the connector");
+					};
+				});
+		allResourcesObservable.notifyObservers();
+	}
+	
+	
+	/**
+	 * @param allResources is a collection containing all the resources
+	 */
+	public void setAllResources(Collection<ResourceData> allResources) {
+		this.allResources = allResources;
+		
+		currentIntentObservable.notifyObservers();
+	}
+	
+	/**
+	 * @return allResources is a collection containing all the resources
+	 */
+	public Collection<ResourceData> getAllResources() {
+		return allResources;
+	}
 	
 	/**
 	 * <p>Provide the last user intent.</p>

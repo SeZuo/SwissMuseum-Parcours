@@ -22,12 +22,12 @@ package ch.sebastienzurfluh.client.control.eventbus;
 import ch.sebastienzurfluh.client.control.eventbus.Event.EventType;
 import ch.sebastienzurfluh.client.control.eventbus.events.ResourceRequest;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.model.structure.DataReference;
 
 /**
  * This object will handle the resource requests.
  * 
  * @author Sebastien Zurfluh
- *
  */
 public class ResourceRequestEventHandler implements EventBusListener {
 	EventBus eventBus;
@@ -54,7 +54,7 @@ public class ResourceRequestEventHandler implements EventBusListener {
 	public void notify(Event e) {
 		if(e instanceof ResourceRequest) {
 			final ResourceRequest resourceRequest = (ResourceRequest) e;
-			model.load(resourceRequest.getResourceReference());
+				model.load(resourceRequest.getResourceReference());
 		}
 	}
 

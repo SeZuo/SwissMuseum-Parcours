@@ -43,7 +43,7 @@ public class ResourceEditorWidget extends VerticalPanel implements Observer {
 	 * @param resourceData of the resource
 	 * @return a new tile formed with the given data.
 	 */
-	private Tile createTileFromResource(ResourceData resourceData) {
+	private static Tile createTileFromResource(ResourceData resourceData) {
 		MenuData menuFromResource = new MenuData(
 				resourceData.getReference(),
 				0,
@@ -57,31 +57,6 @@ public class ResourceEditorWidget extends VerticalPanel implements Observer {
 	public void setCreateState() {
 		resourceList.clear();
 		setVisible(false);
-		
-//		Label addLabel = new Label("Créer");
-//		
-//		// Note that if you use something else than mouse out, the selection does not work.
-//		addLabel.addMouseOutHandler(new MouseOutHandler() {
-//			
-//			@Override
-//			public void onMouseOut(MouseOutEvent event) {
-//				createNewResourceTab();
-//				resourceList.selectTab(resourceList.getWidgetCount()-1);
-//			}
-//		});
-//		
-//		HTML onAddComputeWait = new HTML("<div align=center>chargement en cours...</div>");
-//		
-//		HorizontalPanel createPanel = new HorizontalPanel();
-//		
-//		createPanel.add(addLabel);
-//		createPanel.add(onAddComputeWait);
-//		
-//		final PopupPanel popup = new PopupPanel(false, true); // Create a modal dialog box that will not auto-hide
-//		popup.add(new Label("Please wait"));
-//		popup.setGlassEnabled(true); // Enable the glass panel
-//		popup.center();
-//		popup.show();
 	}
 
 	public void setModifyState() {
