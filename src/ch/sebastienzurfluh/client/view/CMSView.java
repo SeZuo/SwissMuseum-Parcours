@@ -81,10 +81,6 @@ public class CMSView extends VerticalPanel {
 		
 		resourceAndText.add(textsPanel, "Parcours");
 		
-		// Useless panel.
-		ResourceManager resourcePanel = new ResourceManager();
-		resourceAndText.add(resourcePanel, "Ressources");
-		
 		resourceAndText.selectTab(1);
 		
 		add(resourceAndText);
