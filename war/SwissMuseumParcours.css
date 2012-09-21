@@ -23,6 +23,11 @@
 
 /********************** GENERAL ***********************************************/
 
+@font-face {
+	font-family: titleFont;
+	src: url('resources/fonts/scriptbl.ttf');
+}
+
 body {
 	font-size: 16px; /* no px elsewhere */
 	font-family: sans-serif;
@@ -31,6 +36,10 @@ body {
 table {
 	border-collapse: separate;
 	border-spacing: 0;
+}
+
+div {
+	display: inline-block;
 }
 
 .simplePage {
@@ -54,7 +63,7 @@ table {
 	-moz-box-shadow:    0px 3px 5px 0px #ccc;
   	-webkit-box-shadow: 0px 3px 5px 0px #ccc;
   	box-shadow:         0px 3px 5px 0px #ccc;
-  	margin-bottom: 1em;
+  	margin-bottom:		1em;
 }
 
 /********************** MENUS **************************************************/
@@ -63,23 +72,41 @@ table {
 
 /********************** MENUS - NAVIGATION *************************************/
 .navigationItem {
+	float: left;
 }
 
 .navigationItem-image {
-	width: 37.5em;
-	height: 12.5em;
+	/* CSS3 not working yet */
+	object-fit: cover;
 	margin: 0.1em;
 	padding: 0em;
 	border: 0em;
-	background-color: light-grey;
+	float: left;
+	background-color: #606060;
+	-moz-box-shadow:    0px 0px 0px 6px #ccc;
+  	-webkit-box-shadow: 0px 0px 0px 6px #ccc;
+ 	box-shadow:       	0px 0px 0px 6px #ccc;
+}
+
+.navigationSlider-movingContainer {
+	position: absolute;
+	width: auto;
+	height: auto;
+}
+
+.navigationSlider-fixedContainer {
+	width: 100%;
 }
 
 .navigationSlider {
-	width: 37.5em;
-	height: 12.5em; // should be the same as the navigationItem height.
+	width: 100%;
+	height: 200px;
+	display: inline-block;
 	overflow: hidden;
 	cursor: pointer;
-	background-image: resources/images/generic_tiles/super_ruler.jpg;
+	background-image: url('resources/images/generic_tiles/super_ruler.jpg');
+	background-repeat: no-repeat;
+	background-position: center;
 }
 .navigationSlider-button-text {
 	font-size: 1em;
@@ -106,7 +133,10 @@ table {
   	-webkit-box-shadow: 0px 0px 0px 6px #ccc;
  	 box-shadow:        0px 0px 0px 6px #ccc;
 }
-.navigaionWidget {}
+.navigationWidget {
+	width: 100%;
+	height: 200px;
+}
 
 
 
@@ -136,8 +166,9 @@ table {
 	float: none;
 	cursor: pointer;
 }
-// This is supposed to be a special decoration only visible when
-// the mouse-clicking the tile.
+/*
+ * This is supposed to be a special decoration only visible when the mouse-clicking the tile.
+ */
 .tile-iconOnly-mouseDown, .tile-detailed-mouseDown {
 	border: 1em solid red;
 }
@@ -231,44 +262,105 @@ table {
 }
 .pageWidget-title {
 	font-size: 3em;
-    font-family: courier;
-    color: #FFFFFF;
+    font-family: titleFont;
+    /* color: #FFFFFF; */
+    color: #303030;
+    overflow: visible;
+    width: 100%;
 }
+
+/* Image placed between the body and the header/title sections */
+.pageWidget-title-image {
+	height: 1em;
+	width: 100%;
+	overflow: visible;
+	top: -0.5em;
+}
+
 .pageWidget-spanTitle {
-	background-color: #8CD9A7
+	/* background-color: #8CD9A7 */
 }
 .pageWidget-header {
 	font-size: 2em;
-    font-family: verdana;
-    color: #444444;
+	font-family: titleFont;
+	color: #606060;
+	width: 90%;
+	padding: 2em;
+	background-image: url('resources/images/fioritures/line.jpg');
+	background-repeat: no-repeat;
 }
 .pageWidget-content {
 	margin: 0.3em 0em;
 	font-size: 1em;
     font-family: verdana;
     color: #000000;
+    white-space: pre-line;
 }
 
 .pageWidget-image-container {
 	float: right;
-	font-family: serif;
+	font-family: sans-serif;
 	border: 1px solid black;
 	margin: 1em 0em 1em 5em;
 	text-align: left;
 	width: 10em;
 }
 .pageWidget-image-title {
-	padding: 0.1em;
+	padding: 0.2em;
 	width: 10em;
+	font-family: titleFont;
 }
 .pageWidget-image-details {
 	font-style: italic;
-	padding: 0.1em;
+	padding: 0.2em;
 	width: 10em;
+	font-size: 0.8em;
 }
 .pageWidget-image-image {
 	text-align: right;
 	width: 10em;
+	cursor: pointer;
+}
+
+.resourceGallery-image {
+	max-width: 100%;
+}
+
+.resourceGallery-image-title {
+	color: white;
+	
+	padding: 0.2em;
+	width: 10em;
+	font-family: titleFont;
+}
+
+.resourceGallery-image-details {
+	color: white;
+	
+	width: 100%;
+	
+	font-style: italic;
+	padding: 1em;
+	width: 10em;
+	font-size: 0.8em;
+}
+
+.resourceGallery {
+	background: #606060;
+	
+	/* zoom a bit the entire panel */
+	font-size: 2em;
+	
+	padding: 0;
+	margin: 0;
+	
+	left: 0 !important;
+	width: 100%;
+	
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+	border-radius: 1em; /* future proofing */
+	-khtml-border-radius: 1em; 
 }
 
 /********************** CMS    -           **********************************/
