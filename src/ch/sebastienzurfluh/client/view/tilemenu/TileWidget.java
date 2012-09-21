@@ -26,7 +26,7 @@ import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.view.menuinterface.MenuWidget;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestClickHandler;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 
 /**
@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Sebastien Zurfluh
  *
  */
-public class TileWidget extends VerticalPanel implements MenuWidget {
+public class TileWidget extends FlowPanel implements MenuWidget {
 	private String stylePrimaryName = "tileWidget";
 	private TileMenu tileMenu;
 	private Model model;

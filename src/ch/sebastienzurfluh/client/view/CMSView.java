@@ -26,22 +26,20 @@ import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
 import ch.sebastienzurfluh.client.model.CMSModel;
 import ch.sebastienzurfluh.client.view.cms.Header;
 import ch.sebastienzurfluh.client.view.cms.edit.MultiEditPanel;
-import ch.sebastienzurfluh.client.view.cms.edit.ResourceManager;
 import ch.sebastienzurfluh.client.view.cms.menu.GroupTreeWidget;
 import ch.sebastienzurfluh.client.view.cms.menu.PageTreeWidget;
 import ch.sebastienzurfluh.client.view.cms.menu.TreeWidget;
 
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * This view lets the user browse the booklet catalogue.
  *
  * @author Sebastien Zurfluh
  */
-public class CMSView extends VerticalPanel {
+public class CMSView extends FlowPanel {
 	// Shared handler for page requests
 	private HorizontalPanel textsPanel;
 	private TreeWidget pagePanel;

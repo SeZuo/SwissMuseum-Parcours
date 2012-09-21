@@ -32,7 +32,7 @@ import ch.sebastienzurfluh.client.view.tilemenu.TileWidget;
 
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * This view lets the user browse the booklet catalogue.
@@ -43,8 +43,8 @@ public class BrowseView extends SimplePanel {
 	// Shared handler for page requests
 	private PageRequestClickHandler pageRequestHandler;
 	private AnimatedMainPanel mainPanel;
-	private VerticalPanel pagePanel;
-	private VerticalPanel groupPanel;
+	private FlowPanel pagePanel;
+	private FlowPanel groupPanel;
 	private EventBus eventBus;
 	private Model model;
 	private TileWidget tileMenu;
@@ -67,13 +67,15 @@ public class BrowseView extends SimplePanel {
 		this.eventBus = eventBus;
 		this.model = model;
 		
-		pagePanel = new VerticalPanel();
-		groupPanel = new VerticalPanel();
+		pagePanel = new FlowPanel();
+		groupPanel = new FlowPanel();
 
 		// Setup main panel
 		mainPanel = new AnimatedMainPanel(model, groupPanel, pagePanel);
 		
-		mainPanel.setStyleName("cmsView");
+		mainPanel.setStyleName("mainPanel");
+		setStyleName("mainPanel");
+		
 
 		pageRequestHandler = new PageRequestClickHandler(eventBus);
 

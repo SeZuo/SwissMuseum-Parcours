@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 import ch.sebastienzurfluh.client.model.CMSModel;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
@@ -14,7 +14,7 @@ import ch.sebastienzurfluh.client.patterns.Observer;
 import ch.sebastienzurfluh.client.view.tilemenu.Tile;
 import ch.sebastienzurfluh.client.view.tilemenu.Tile.TileMode;
 
-public class ResourceEditorWidget extends VerticalPanel implements Observer {
+public class ResourceEditorWidget extends FlowPanel implements Observer {
 	private CMSModel cmsModel;
 	
 	private DecoratedTabPanel resourceList;

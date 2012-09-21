@@ -9,10 +9,10 @@ import ch.sebastienzurfluh.client.view.cms.edit.menu.MenuEditorWidget;
 import ch.sebastienzurfluh.client.view.cms.edit.page.PageEditorWidget;
 import ch.sebastienzurfluh.client.view.cms.edit.resource.ResourceEditorWidget;
 
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 
-public class MultiEditPanel extends VerticalPanel implements Observer {
+public class MultiEditPanel extends FlowPanel implements Observer {
 	private MenuEditorWidget menuEdit;
 	private PageEditorWidget pageEdit;
 	private ResourceEditorWidget resourceEdit;

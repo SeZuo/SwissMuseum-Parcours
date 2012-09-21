@@ -76,9 +76,11 @@ public class NavigationSlider extends FocusPanel implements MenuList, Observer {
 		setStyleName("navigationSlider");
 		
 		tilePanel = new HorizontalPanel();
+		tilePanel.setStyleName("navigationSlider-movingContainer");
 		tileList = new LinkedList<NavigationItem>();
 		
 		animationPanel = new AbsolutePanel();
+		tilePanel.setStyleName("navigationSlider-fixedContainer");
 		animationPanel.add(tilePanel);
 		
 		add(animationPanel);

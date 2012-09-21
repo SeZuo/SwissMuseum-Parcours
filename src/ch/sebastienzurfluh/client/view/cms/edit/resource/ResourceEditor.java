@@ -8,10 +8,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ResourceEditor extends VerticalPanel {
+public class ResourceEditor extends FlowPanel {
 	private TextBox titleBox = new TextBox();
 	private TextArea descriptionBox = new TextArea();
 	private ListBox resourceTypeBox = new ListBox();

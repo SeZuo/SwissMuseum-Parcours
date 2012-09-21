@@ -13,13 +13,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Zak Linder
  */
-public class PageEditor extends VerticalPanel {
+public class PageEditor extends FlowPanel {
 	private TextBox titleBox = new TextBox();
 	private TextArea subtitleBox = new TextArea();
 	private StretchyTextArea contentBox = new StretchyTextArea();

@@ -18,10 +18,10 @@ import ch.sebastienzurfluh.client.view.tilemenu.Tile.TileMode;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
-public class TreeWidget extends VerticalPanel implements Observer {
-	protected VerticalPanel entries;
+public class TreeWidget extends FlowPanel implements Observer {
+	protected FlowPanel entries;
 	protected DataType type;
 	protected CMSModel model;
 	protected ClickHandler pageRequestHandler;
@@ -56,7 +56,7 @@ public class TreeWidget extends VerticalPanel implements Observer {
 		titleLabel.setStyleName("cms-tileMenu-title");
 		add(titleLabel);
 		
-		entries = new VerticalPanel();
+		entries = new FlowPanel();
 		add(entries);
 		
 		Tile newTile = new Tile(

@@ -1,9 +1,9 @@
 package ch.sebastienzurfluh.client.view;
 
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
-public class AboutPanel extends VerticalPanel {
+public class AboutPanel extends FlowPanel {
 	public AboutPanel() {
 		add(new HTML("<h1>A propos de Mimosa 3.</h1><p>Créé par Sébastien Zurfluh pour le" +
 				"Musée des Suisses dans le Monde, Mimosa 3 permet l'édition des Parcours " +

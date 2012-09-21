@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 public class ResourcePicker extends PopupPanel implements Observer {
 	private EventBus eventBus;
@@ -38,7 +38,7 @@ public class ResourcePicker extends PopupPanel implements Observer {
 		this.cmsModel = cmsModel;
 		this.eventBus = eventBus;
 		
-		VerticalPanel resourcePickerPanel = new VerticalPanel();
+		FlowPanel resourcePickerPanel = new FlowPanel();
 		
 		Label title = new Label("Choisissez une image à insérer.");
 		title.setStyleName("resourcePicker-title");

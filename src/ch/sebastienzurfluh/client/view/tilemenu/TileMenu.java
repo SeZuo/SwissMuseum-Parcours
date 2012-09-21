@@ -28,7 +28,7 @@ import ch.sebastienzurfluh.client.view.tilemenu.Tile.TileMode;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 
 /**
@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Sebastien Zurfluh
  *
  */
-public class TileMenu extends VerticalPanel implements MenuList {
+public class TileMenu extends FlowPanel implements MenuList {
 	private String stylePrimaryName = "tileMenu";
 	private FlowPanel tilePanel;
 	private LinkedList<Tile> tileOrderList;

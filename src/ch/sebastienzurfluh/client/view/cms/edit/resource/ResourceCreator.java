@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 public class ResourceCreator extends PopupPanel implements Observer {
 	private EventBus eventBus;
@@ -43,7 +43,7 @@ public class ResourceCreator extends PopupPanel implements Observer {
 		this.eventBus = eventBus;
 		this.textArea = insertImageInThisTextArea;
 		
-		VerticalPanel resourcePickerPanel = new VerticalPanel();
+		FlowPanel resourcePickerPanel = new FlowPanel();
 		
 		Label title = new Label("Créer une image.");
 		title.setStyleName("resourcePicker-title");

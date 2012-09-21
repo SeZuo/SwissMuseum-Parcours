@@ -319,7 +319,7 @@ class Entry extends JavaScriptObject {
 	}-*/;
 
 	public final native String getResourceDetails() /*-{
-    	return this.resources.details;
+    	return this.resources.description;
 	}-*/;
 
 	public final native String getResourceURL() /*-{

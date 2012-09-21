@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * This widget is a square icon menu.
@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class Tile extends FocusPanel implements MenuButton {
 	private Image tileImage;
-	private VerticalPanel details;
+	private FlowPanel details;
 	private String stylePrimaryName = "tile";
 	
 	private HorizontalPanel tilePanel = new HorizontalPanel();
@@ -55,7 +55,7 @@ public class Tile extends FocusPanel implements MenuButton {
 		tileImage.setAltText(menuData.getTitle());
 		tilePanel.add(tileImage);
 		
-		details = new VerticalPanel();
+		details = new FlowPanel();
 		details.setStyleName(stylePrimaryName+ "-" + "tileDetails"); 
 		Label titleLabel = new Label(menuData.getTitle());
 		titleLabel.setStyleName(stylePrimaryName + "-" + "tileTitle");

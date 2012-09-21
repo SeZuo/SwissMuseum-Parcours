@@ -3,7 +3,7 @@ package ch.sebastienzurfluh.client.view.cms.edit.page;
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.model.CMSModel;
@@ -11,7 +11,7 @@ import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
 import ch.sebastienzurfluh.client.view.pagewidget.PageWidget;
 
-public class PageEditorWidget extends VerticalPanel implements Observer {
+public class PageEditorWidget extends FlowPanel implements Observer {
 	private CMSModel cmsModel;
 	
 	private DecoratedTabPanel tabPanel;

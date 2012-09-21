@@ -6,10 +6,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MenuEditor extends VerticalPanel {
+public class MenuEditor extends FlowPanel {
 	private TextBox titleBox = new TextBox();
 	private TextArea descriptionBox = new TextArea();
 	private TextBox thumbImgURLBox = new TextBox();

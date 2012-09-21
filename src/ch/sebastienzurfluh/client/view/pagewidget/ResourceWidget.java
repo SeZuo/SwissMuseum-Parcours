@@ -1,5 +1,7 @@
 package ch.sebastienzurfluh.client.view.pagewidget;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -70,6 +72,19 @@ public class ResourceWidget extends SimplePanel implements Observer {
 			if (resource.getReference().equals(this.getReference())) {
 				image.setAltText(resource.getTitle());
 				image.setUrl(resource.getURL());
+				
+				final ResourceGallery imageGallery =
+						new ResourceGallery(
+								image.getUrl(),
+								resource.getTitle(),
+								resource.getDetails());
+				image.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						imageGallery.center();
+					}
+				});
+				
 				title.setText(resource.getTitle());
 				details.setText(resource.getDetails());
 				model.allNeededResourcesObservable.unsubscribeObserver(this);

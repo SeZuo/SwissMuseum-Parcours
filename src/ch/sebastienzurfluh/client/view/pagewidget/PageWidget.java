@@ -29,8 +29,9 @@ import ch.sebastienzurfluh.client.patterns.Observer;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 
 /**
@@ -41,7 +42,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Sebastien Zurfluh
  *
  */
-public class PageWidget extends VerticalPanel implements Observer {
+public class PageWidget extends FlowPanel implements Observer {
 	private HTML title;
 	private Label header;
 	private FlowPanel content;
@@ -61,11 +62,16 @@ public class PageWidget extends VerticalPanel implements Observer {
 		title.setStyleName(primaryStyleName + "-title");
 		header = new Label("");
 		header.setStyleName(primaryStyleName + "-header");
+		
+//		Image titleImage = new Image("resources/images/fioritures/line.jpg");
+//		titleImage.setStyleName(primaryStyleName + "-title-image");
+		
 		content = new FlowPanel();
 		content.setStyleName(primaryStyleName + "-content");
 		
 		this.add(title);
 		this.add(header);
+//		this.add(titleImage);
 		this.add(content);
 		
 		this.setStyleName(primaryStyleName);
@@ -81,7 +87,7 @@ public class PageWidget extends VerticalPanel implements Observer {
 					"<span class='" + primaryStyleName + "-spanTitle'>"
 					+ model.getCurrentPageData().getPageTitle()
 					+ "</span>");
-			this.header.setText(model.getCurrentPageData().getPageContentHeader());
+			this.header.setText(" " + model.getCurrentPageData().getPageContentHeader());
 			
 			this.content.clear();
 			LinkedList<PageToken> tokenisedContent = 
