@@ -9,7 +9,11 @@ import ch.sebastienzurfluh.client.model.Model;
 import ch.sebastienzurfluh.client.model.Model.ViewMode;
 import ch.sebastienzurfluh.client.patterns.Observable;
 import ch.sebastienzurfluh.client.patterns.Observer;
-
+import ch.sebastienzurfluh.client.view.animations.ScrollToTheTop;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 /**

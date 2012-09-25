@@ -24,13 +24,18 @@ import ch.sebastienzurfluh.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.client.model.Model;
+import ch.sebastienzurfluh.client.view.animations.ScrollToTheTop;
 import ch.sebastienzurfluh.client.view.eventbushooks.ScrollToPanelOnEvent;
 import ch.sebastienzurfluh.client.view.menuinterface.PageRequestClickHandler;
 import ch.sebastienzurfluh.client.view.navigation.NavigationWidget;
 import ch.sebastienzurfluh.client.view.pagewidget.PageWidget;
 import ch.sebastienzurfluh.client.view.tilemenu.TileWidget;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -51,7 +56,6 @@ public class BrowseView extends SimplePanel {
 	private PageWidget page;
 	private NavigationWidget navigation;
 	private FooterWidget footer;
-	
 	
 	
 
@@ -81,7 +85,6 @@ public class BrowseView extends SimplePanel {
 
 		// create mainPanel before filling it
 		setWidget(mainPanel);
-		
 	}
 	
 	/**
@@ -103,6 +106,17 @@ public class BrowseView extends SimplePanel {
 		
 		tileMenu = new TileWidget(eventBus, pageRequestHandler, model);
 		groupPanel.add(tileMenu);
+		
+		// Create the return to the top button.
+		Image returnToTheTop = new Image("resources/images/buttons/go-top.png");
+		returnToTheTop.setStyleName("returnToTop");
+		returnToTheTop.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ScrollToTheTop.getInstance().start();
+			}
+		});
+		groupPanel.add(returnToTheTop);
 		
 		footer = new FooterWidget();
 		groupPanel.add(footer);

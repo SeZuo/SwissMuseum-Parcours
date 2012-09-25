@@ -66,6 +66,38 @@ div {
   	margin-bottom:		1em;
 }
 
+.returnToTop {
+	position: fixed;
+	bottom: 0;
+	right: 1em;
+	
+	z-index: 150;
+	
+	border: 2px solid #606060;
+	color: white;
+	background-color: rgba(160, 160, 160, 0.6);
+	padding: 0.5em;
+	margin: 0.5em 0.2em;
+	
+	font-weight:bold;
+	font-size: 1em;
+	
+	cursor: pointer;
+	
+	outline: none;
+	
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+	border-radius: 1em;
+	-khtml-border-radius: 1em;
+}
+
+.returnToTop:hover {
+	-moz-box-shadow:    inset 0px 0px 15px 2px #aaa, 0px 0px 15px 2px #aaa;
+  	-webkit-box-shadow: inset 0px 0px 15px 2px #aaa, 0px 0px 15px 2px #aaa;
+ 	box-shadow:       	inset 0px 0px 15px 2px #aaa, 0px 0px 15px 2px #aaa;
+}
+
 /********************** MENUS **************************************************/
 
 				
