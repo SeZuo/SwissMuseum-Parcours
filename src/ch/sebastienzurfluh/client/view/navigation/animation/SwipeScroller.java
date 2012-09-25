@@ -65,7 +65,9 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	 */
 	public void setFocusWidget(int rank, boolean animate) {
 		slider.setCurrentItem(rank);
-		int itemPosition = (rank-1) * slider.getItemWidth();
+		int itemPosition = (rank-1) * slider.getWidgetWidth();
+		System.out.println("SwipeScroller: New calculated position: " + itemPosition +
+				" with rank " + rank);
 		if(animate) {
 			scrollTo(itemPosition, SLOW);
 		} else {
