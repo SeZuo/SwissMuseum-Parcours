@@ -2,7 +2,9 @@ package ch.sebastienzurfluh.client.view.pagewidget;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.media.client.Video;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -28,18 +30,18 @@ public class ResourceWidget extends SimplePanel implements Observer {
 	private DataReference reference;
 	private EventBus eventBus;
 	
-	
-	private Image image = new Image("resources/images/icons/loading.gif");
+	private SimplePanel resourceContainer = new SimplePanel(new Image("resources/images/icons/loading.gif"));
 	private Label title = new Label();
 	private Label details = new Label();
 	
 	
 	// Styles
-	private String primaryStyle = "pageWidget-image";
+	private String primaryStyle = "pageWidget-resource";
 	private String containerExtension = "-container";
 	private String titleExtension = "-title";
 	private String detailsExtension = "-details";
 	private String imageExtension = "-image";
+	private String videoExtension = "-video";
 	
 	public ResourceWidget(DataReference reference, EventBus eventBus, Model model) {
 		System.out.println("ResourceWidget: new resource widget " + reference);
@@ -48,13 +50,12 @@ public class ResourceWidget extends SimplePanel implements Observer {
 		this.eventBus = eventBus;
 		
 		setStyleName(primaryStyle+containerExtension);
-		image.setStyleName(primaryStyle+imageExtension);
 		title.setStyleName(primaryStyle+titleExtension);
 		details.setStyleName(primaryStyle+detailsExtension);
 		
 		FlowPanel innerLayout = new FlowPanel();
 		
-		innerLayout.add(image);
+		innerLayout.add(resourceContainer);
 		innerLayout.add(title);
 		innerLayout.add(details);
 		
@@ -70,20 +71,39 @@ public class ResourceWidget extends SimplePanel implements Observer {
 	public void notifyObserver(Observable source) {
 		for (ResourceData resource : model.getAllNeededResources()) {
 			if (resource.getReference().equals(this.getReference())) {
-				image.setAltText(resource.getTitle());
-				image.setUrl(resource.getURL());
+				switch(resource.getResourceType()) {
+				case IMAGE:
+					Image image = new Image(resource.getURL());
+					image.setStyleName(primaryStyle+imageExtension);
+					image.setAltText(resource.getTitle());
+					
+					final ResourceGallery imageGallery =
+							new ResourceGallery(
+									image.getUrl(),
+									resource.getTitle(),
+									resource.getDetails());
+					image.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							imageGallery.center();
+						}
+					});
+					resourceContainer.setWidget(image);
+					break;
+				case VIDEO:
+					HTML video = new HTML(
+							"<video controls='controls' class ='" + primaryStyle+videoExtension +
+							"'>" +
+							"<source src='" + resource.getURL() + "' type='video/ogg' />" +
+							"Your browser does not support the video tag." +
+							"</video> <video src=''");
+					resourceContainer.setWidget(video);
+					break;
+				default:
+					// destroy the object. It is never referenced, only attached to it's parent.
+					this.removeFromParent();
+				}
 				
-				final ResourceGallery imageGallery =
-						new ResourceGallery(
-								image.getUrl(),
-								resource.getTitle(),
-								resource.getDetails());
-				image.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						imageGallery.center();
-					}
-				});
 				
 				title.setText(resource.getTitle());
 				details.setText(resource.getDetails());

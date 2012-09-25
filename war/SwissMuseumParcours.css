@@ -297,29 +297,33 @@ div {
     white-space: pre-line;
 }
 
-.pageWidget-image-container {
-	float: right;
+.pageWidget-resource-container {
+	float: left;
 	font-family: sans-serif;
 	border: 1px solid black;
-	margin: 1em 0em 1em 5em;
+	margin: 1em 0em 1em 1em;
 	text-align: left;
 	width: 10em;
 }
-.pageWidget-image-title {
+.pageWidget-resource-title {
 	padding: 0.2em;
 	width: 10em;
 	font-family: titleFont;
 }
-.pageWidget-image-details {
+.pageWidget-resource-details {
 	font-style: italic;
 	padding: 0.2em;
 	width: 10em;
 	font-size: 0.8em;
 }
-.pageWidget-image-image {
+.pageWidget-resource-image {
 	text-align: right;
 	width: 10em;
 	cursor: pointer;
+}
+.pageWidget-resource-video {
+	text-align: center;
+	max-width: 20em;
 }
 
 .resourceGallery-image {
@@ -329,7 +333,7 @@ div {
 .resourceGallery-image-title {
 	color: white;
 	
-	padding: 0.2em;
+	padding: 0 0.5em;
 	width: 10em;
 	font-family: titleFont;
 }
@@ -337,7 +341,7 @@ div {
 .resourceGallery-image-details {
 	color: white;
 	
-	width: 100%;
+	width: 90%;
 	
 	font-style: italic;
 	padding: 1em;
@@ -354,8 +358,7 @@ div {
 	padding: 0;
 	margin: 0;
 	
-	left: 0 !important;
-	width: 100%;
+	width: 90%;
 	
 	-moz-border-radius: 1em;
 	-webkit-border-radius: 1em;

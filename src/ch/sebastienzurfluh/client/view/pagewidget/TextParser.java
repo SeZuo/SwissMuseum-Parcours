@@ -20,10 +20,10 @@ public class TextParser {
 	
 	public LinkedList<PageToken> parse(String text) {
 		System.out.println("TextParser: parsing...");
-		return parseImages(text);
+		return parseResources(text);
 	}
 	
-	private LinkedList<PageToken> parseImages(String parsing) {
+	private LinkedList<PageToken> parseResources(String parsing) {
 		LinkedList<PageToken> tokenList = new LinkedList<PageToken>();
 		StringBuilder parsed = new StringBuilder();
 		
@@ -33,7 +33,6 @@ public class TextParser {
 			
 			if(imgDefBegin == -1 || imgDefEnd == -1) {
 				parsed.append(parsing);
-				
 				break;
 			} else {
 				parsed.append(parsing.substring(0, imgDefBegin));

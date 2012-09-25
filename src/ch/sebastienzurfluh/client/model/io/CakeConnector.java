@@ -112,8 +112,7 @@ public class CakeConnector implements IOConnector {
 						case GETRESOURCE:
 							ResourceData parsedData2 =
 									parseResourceData(entries.get(0),
-											referenceId,
-											ResourceType.IMAGE);
+											referenceId);
 							callback.onSuccess((T) parsedData2);
 						}
 					}
@@ -158,15 +157,30 @@ public class CakeConnector implements IOConnector {
 				entry.getMenuSliderImgURL());
 	}
 
-	private ResourceData parseResourceData(Entry entry, int referenceId, ResourceType expectedResourceType) {
+	private ResourceData parseResourceData(Entry entry, int referenceId) {
 		return new ResourceData(
 				new DataReference(DataType.RESOURCE, referenceId),
-				expectedResourceType,
+				getResourceType(entry.getResourceType()),
 				entry.getResourceTitles(),
 				entry.getResourceDetails(),
 				entry.getResourceURL());
 	}
 
+	/**
+	 * Return the right resource type
+	 * @param resourceType, a string representing the resource type
+	 * @return
+	 */
+	private ResourceType getResourceType(String resourceType) {
+		if (resourceType.equals("img"))
+			return ResourceType.IMAGE;
+		if (resourceType.equals("vid"))
+			return ResourceType.VIDEO;
+		if (resourceType.equals("aud"))
+			return ResourceType.AUDIO;
+		return null;
+	}
+	
 	private DataReference getDataReference(DataType type, Entry entry) {
 		switch(type) {
 		case GROUP:
@@ -257,7 +271,7 @@ class Entry extends JavaScriptObject {
 
 
 	// Groups
-	
+
 	public final native String getGroupReference() /*-{
 		return this.groups.id;
 	}-*/;
@@ -325,4 +339,9 @@ class Entry extends JavaScriptObject {
 	public final native String getResourceURL() /*-{
 	   	return this.resources.url;
 	}-*/;
+	
+	public final native String getResourceType() /*-{
+		return this.resources.type;
+	}-*/;
+
 }
