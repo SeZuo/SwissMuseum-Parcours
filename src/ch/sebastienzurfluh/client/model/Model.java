@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import ch.sebastienzurfluh.client.control.eventbus.events.DataType;
-import ch.sebastienzurfluh.client.model.io.IOConnector;
+import ch.sebastienzurfluh.client.model.io.IConnector;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
@@ -46,9 +46,9 @@ import ch.sebastienzurfluh.client.patterns.Observable;
  * @author Sebastien Zurfluh
  */
 public class Model extends Observable {
-	protected IOConnector connector;
+	protected IConnector connector;
 	
-	public Model(IOConnector connector) {
+	public Model(IConnector connector) {
 		this.connector = connector;
 	}
 	

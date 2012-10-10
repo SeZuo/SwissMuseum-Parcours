@@ -2,7 +2,7 @@ package ch.sebastienzurfluh.client.model;
 
 import java.util.Collection;
 import ch.sebastienzurfluh.client.model.Model.ViewMode;
-import ch.sebastienzurfluh.client.model.io.IOConnector;
+import ch.sebastienzurfluh.client.model.io.IConnector;
 import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
 import ch.sebastienzurfluh.client.model.structure.MenuData;
@@ -19,7 +19,7 @@ import ch.sebastienzurfluh.client.patterns.Observable;
  */
 public class ModelWrapper {
 	Model model;
-	IOConnector connector;
+	IConnector connector;
 	
 	/**
 	 * @return the wrapped model

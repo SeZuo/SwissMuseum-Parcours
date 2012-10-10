@@ -12,5 +12,4 @@ public class ActionEvent extends IntentEvent {
 	public EventType getType() {
 		return EventType.ACTION;
 	}
-
 }

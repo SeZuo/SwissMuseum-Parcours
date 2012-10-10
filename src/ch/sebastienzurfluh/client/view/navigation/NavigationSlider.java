@@ -38,6 +38,8 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -226,6 +228,7 @@ public class NavigationSlider extends FocusPanel implements MenuList, Observer {
 		@Override
 		public void onPreviewNativeEvent(NativePreviewEvent event) {
 			if (event.getTypeInt() == Event.ONTOUCHSTART 
+					|| event.getTypeInt() == Event.ONTOUCHEND
 					|| event.getTypeInt() == Event.ONTOUCHMOVE 
 					|| event.getTypeInt() == Event.ONMOUSEDOWN
 					|| event.getTypeInt() == Event.ONMOUSEMOVE
@@ -236,7 +239,8 @@ public class NavigationSlider extends FocusPanel implements MenuList, Observer {
 	};
 	
 	/**
-	 * Variable to avoid the use of multiple preventDefault handlers when both mouse and touch are used.
+	 * Variable to avoid the use of multiple preventDefault handlers when both mouse and touch are
+	 * used.
 	 */
 	private boolean defaultsPrevented = false;
 	/**
@@ -272,6 +276,16 @@ public class NavigationSlider extends FocusPanel implements MenuList, Observer {
 				}
 			}
 		}, MouseOutEvent.getType());
+		
+		addDomHandler(new TouchEndHandler() {
+			@Override
+			public void onTouchEnd(TouchEndEvent event) {
+				if (handlerRegistration != null) {
+					handlerRegistration.removeHandler();
+					defaultsPrevented = false;
+				}
+			}
+		}, TouchEndEvent.getType());
 	}
 
 	/*******************************************************************************/

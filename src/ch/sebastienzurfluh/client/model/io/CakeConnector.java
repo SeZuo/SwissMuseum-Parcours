@@ -218,7 +218,10 @@ public class CakeConnector implements IOConnector {
 		GETALLPAGEMENUSFROMGROUP("menus/listAllPageMenusFromGroup"),
 		GETFIRSTDATAOFGROUP("page_elements/getFirstPageDataFromGroup"),
 		GETDATA("page_elements/getData"),
-		GETRESOURCE("resources/get");
+		GETRESOURCE("resources/get"),
+		GETLASTGROUPID("groups/lastId"),
+		GETLASTPAGEID("page_elements/lastId"),
+		GETLASTRESOURCEID("resources/lastId");
 
 		String request;
 		Requests(String request) {
@@ -253,14 +256,36 @@ public class CakeConnector implements IOConnector {
 			AsyncCallback<Collection<MenuData>> asyncCallback) {
 		asyncRequest(Requests.GETALLPAGEMENUSFROMGROUP, referenceId, "", asyncCallback);
 	}
+	
 	@Override
 	public void asyncRequestResourceData(int referenceId,
 			AsyncCallback<ResourceData> asyncCallback) {
 		asyncRequest(Requests.GETRESOURCE, referenceId, "", asyncCallback);
 	}
+	
 	@Override
 	public void asyncRequestAllResourceData(
 			AsyncCallback<Collection<ResourceData>> asyncCallback) {
+		//TODO asyncRequest(Requests.GETLASTRESOURCEID, asyncCallback);
+	}
+	@Override
+	public void createResource(ResourceData resourceData,
+			AsyncCallback<DataReference> asyncCallback) {
+		//TODO
+	}
+	@Override
+	public void createPage(Data pageData,
+			AsyncCallback<DataReference> asyncCallback) {
+		//TODO
+	}
+	@Override
+	public void createGroup(MenuData groupData,
+			AsyncCallback<DataReference> asyncCallback) {
+		//TODO
+	}
+	@Override
+	public void delete(DataReference reference,
+			AsyncCallback<Object> asyncCallback) {
 		//TODO
 	}
 }

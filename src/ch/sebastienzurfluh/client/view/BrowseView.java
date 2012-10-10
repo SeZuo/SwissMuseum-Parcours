@@ -78,6 +78,7 @@ public class BrowseView extends SimplePanel {
 		mainPanel = new AnimatedMainPanel(model, groupPanel, pagePanel);
 		
 		mainPanel.setStyleName("mainPanel");
+		
 		setStyleName("mainPanel");
 		
 

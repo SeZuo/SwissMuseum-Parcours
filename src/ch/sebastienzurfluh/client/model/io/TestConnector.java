@@ -12,7 +12,7 @@ import ch.sebastienzurfluh.client.model.structure.ResourceData;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class TestConnector implements IOConnector {
+public class TestConnector implements IConnector {
 	private Collection<MenuData> groupMenuList = new LinkedList<MenuData>();
 	private Collection<Data> pageDataList = new LinkedList<Data>();
 	

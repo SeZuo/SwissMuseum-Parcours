@@ -6,22 +6,37 @@ import java.util.LinkedList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import ch.sebastienzurfluh.client.control.eventbus.events.Action;
+import ch.sebastienzurfluh.client.model.io.IOConnector;
+import ch.sebastienzurfluh.client.model.structure.Data;
 import ch.sebastienzurfluh.client.model.structure.DataReference;
+import ch.sebastienzurfluh.client.model.structure.MenuData;
 import ch.sebastienzurfluh.client.model.structure.ResourceData;
 import ch.sebastienzurfluh.client.patterns.Observable;
 
 /**
  * {@code CMSModel} gives an extended version of the model for the CMSView purposes.
- * It is linked to the original view model in order to switch from one to the other without any
- * overhead.
+ * 
+ * Changes to the CMSModel will also change the original Model. This permits to switch from one to
+ * the other without overhead.
+ * 
+ * {@code CMSModel} follows the ACID principle (Atomicty, Consistency, Isolation, Durability).
  *
  *
  * @author Sebastien Zurfluh
  *
  */
 public class CMSModel extends ModelWrapper {
+	private IOConnector connector;
+	
 	public CMSModel(Model model) {
 		super(model);
+		
+		try {
+			connector = (IOConnector) model.connector;
+		} catch (Exception e) {
+		System.out.println("The connection to the database is read-only." +
+				" You won't be able to commit the changes.");
+		}
 	}
 	
 	private Action currentIntentAction = Action.NONE;
@@ -95,5 +110,50 @@ public class CMSModel extends ModelWrapper {
 	
 	public DataReference getCurrentIntentReference() {
 		return currentIntentReference;
+	}
+	
+	public void createResource(final ResourceData resourceData) {
+		connector.createResource(resourceData, new AsyncCallback<DataReference>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println("CMSModel: resource creation failed.");
+			}
+
+			@Override
+			public void onSuccess(DataReference result) {
+				//TODO specify intent to edit the new entry
+				CMSModel.this.load(result);
+			}
+		});
+	}
+	
+	public void createPage(Data data) {
+		connector.createPage(data, new AsyncCallback<DataReference>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println("CMSModel: resource creation failed.");
+			}
+
+			@Override
+			public void onSuccess(DataReference result) {
+				//TODO specify intent to edit the new entry
+				CMSModel.this.load(result);
+			}
+		});
+	}
+	
+	public void createGroup(MenuData groupMenu) {
+		connector.createGroup(groupMenu, new AsyncCallback<DataReference>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println("CMSModel: resource creation failed.");
+			}
+
+			@Override
+			public void onSuccess(DataReference result) {
+				//TODO specify intent to edit the new entry
+				CMSModel.this.load(result);
+			}
+		});
 	}
 }
