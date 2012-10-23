@@ -20,7 +20,7 @@
 package ch.sebastienzurfluh.swissmuseum.parcours.client;
 
 
-import ch.sebastienzurfluh.swissmuseum.core.client.control.AppPresenter;
+import ch.sebastienzurfluh.swissmuseum.parcours.client.control.AppPresenter;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
