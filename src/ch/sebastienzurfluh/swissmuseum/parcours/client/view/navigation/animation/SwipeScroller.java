@@ -122,7 +122,7 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 		// adding and removing the handlers is the best solution to
 		// avoid unwanted move events.
 		mouseMoveHandler = slider.addMouseMoveHandler(this);
-		touchMoveHandler = slider.addTouchMoveHandler(this);
+//		touchMoveHandler = slider.addTouchMoveHandler(this);
 		
 		startPosition = xPosition;
 		movingRelativePosition = startPosition;
@@ -142,7 +142,7 @@ public class SwipeScroller extends Animation  implements NavigationAnimator {
 	private void onEnd(int newXPos) {
 		// see {@code onStart}
 		mouseMoveHandler.removeHandler();
-		touchMoveHandler.removeHandler();
+//		touchMoveHandler.removeHandler();
 		
 		int previousItem = slider.getCurrentItemRank();
 		int nextItem;

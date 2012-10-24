@@ -7,7 +7,7 @@ public class ParcoursConfig extends Config {
 	/**
 	 * TEST_MODE should be enabled if you want to use the offline test database.
 	 */
-	public static final boolean TEST_MODE = false;
+	public static final boolean TEST_MODE = true;
 	
 	/**
 	 * How do you wanna start the app: BROWSE or EDIT?

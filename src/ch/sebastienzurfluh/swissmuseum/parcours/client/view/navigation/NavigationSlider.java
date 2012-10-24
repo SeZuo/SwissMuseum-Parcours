@@ -35,6 +35,7 @@ import ch.sebastienzurfluh.swissmuseum.parcours.client.view.navigation.animation
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.navigation.animation.AnimatorFactory.AnimatorType;
 
 import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -42,6 +43,7 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.TouchEndEvent;
 import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -105,11 +107,12 @@ public class NavigationSlider extends FocusPanel implements MenuList, Observer {
 //		addMouseUpHandler(animatedScroller);
 		
 		RootPanel.get().addDomHandler(animatedScroller, TouchStartEvent.getType());
+		RootPanel.get().addDomHandler(animatedScroller, TouchMoveEvent.getType());
 		RootPanel.get().addDomHandler(animatedScroller, TouchEndEvent.getType());
 		RootPanel.get().addDomHandler(animatedScroller, MouseDownEvent.getType());
 		RootPanel.get().addDomHandler(animatedScroller, MouseUpEvent.getType());
 		
-		preventBrowserInterference();
+//		preventBrowserInterference();
 		
 		model.currentPageDataObservable.subscribeObserver(this);
 	}
