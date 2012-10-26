@@ -53,7 +53,6 @@ public class BrowseView extends SimplePanel {
 	private EventBus eventBus;
 	private Model model;
 	private TileWidget tileMenu;
-	private PageWidget page;
 	private NavigationWidget navigation;
 	private FooterWidget footer;
 	
@@ -97,9 +96,6 @@ public class BrowseView extends SimplePanel {
 		navigation = new NavigationWidget(eventBus, model);
 		pagePanel.add(navigation);
 		
-		page = new PageWidget(eventBus, model);
-		pagePanel.add(page);
-		
 		
 		Image headerImage = new Image("resources/images/fioritures/parcours_entete_2.png");
 		headerImage.setStyleName("header");
@@ -123,6 +119,6 @@ public class BrowseView extends SimplePanel {
 		groupPanel.add(footer);
 
 		// Add some global functionalities with low priority
-		ScrollToPanelOnEvent.addRule(eventBus, page, EventType.PAGE_CHANGE_EVENT);
+		ScrollToPanelOnEvent.addRule(eventBus, navigation, EventType.PAGE_CHANGE_EVENT);
 	}
 }

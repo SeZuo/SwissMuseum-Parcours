@@ -19,19 +19,22 @@
 
 package ch.sebastienzurfluh.swissmuseum.parcours.client.view.navigation;
 
-import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.DataReference;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.MenuData;
 import ch.sebastienzurfluh.swissmuseum.core.client.view.menuinterface.MenuButton;
+import ch.sebastienzurfluh.swissmuseum.core.client.view.pagewidget.PageWidget;
 
 /**
  * This is an item of the {@link NavigationSlider}.
  * @author Sebastien Zurfluh
  *
  */
-public class NavigationItem extends FocusPanel implements MenuButton {
+public class NavigationItem extends FlowPanel implements MenuButton {
 	private Image tileImage;
 	private DataReference menuReference;
 	private String stylePrimaryName = "navigationItem";
@@ -48,7 +51,7 @@ public class NavigationItem extends FocusPanel implements MenuButton {
 		tileImage.setStyleName(stylePrimaryName + "-" + "image");
 		tileImage.setAltText(menuData.getTitle());
 
-		setWidget(tileImage);
+		add(tileImage);
 	}
 
 	public DataReference getReference() {
@@ -57,6 +60,11 @@ public class NavigationItem extends FocusPanel implements MenuButton {
 
 	public int getPriority() {
 		return priority;
+	}
+
+	@Override
+	public HandlerRegistration addClickHandler(ClickHandler handler) {
+		return null;
 	}
 }
 

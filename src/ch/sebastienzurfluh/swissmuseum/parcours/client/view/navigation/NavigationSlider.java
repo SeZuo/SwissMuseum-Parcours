@@ -33,6 +33,7 @@ import ch.sebastienzurfluh.swissmuseum.core.client.view.menuinterface.MenuList;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.navigation.animation.AnimatorFactory;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.navigation.animation.NavigationAnimator;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.navigation.animation.AnimatorFactory.AnimatorType;
+import ch.sebastienzurfluh.swissmuseum.parcours.client.view.pagewidget.StaticPageWidget;
 
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -60,6 +61,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class NavigationSlider extends FocusPanel implements MenuList, Observer {
 	private Model model;
+	private EventBus eventBus;
 	private AbsolutePanel animationPanel;
 	private HorizontalPanel tilePanel;
 	private LinkedList<NavigationItem> tileList;
@@ -79,6 +81,7 @@ public class NavigationSlider extends FocusPanel implements MenuList, Observer {
 	
 	public NavigationSlider(String string, EventBus pageRequestBus, Model model) {
 		this.model = model;
+		this.eventBus = pageRequestBus;
 		
 		setStyleName("navigationSlider");
 		
@@ -119,6 +122,7 @@ public class NavigationSlider extends FocusPanel implements MenuList, Observer {
 
 	private void addTile(MenuData menuData) {
 		NavigationItem tile = new NavigationItem(menuData);
+		tile.add(new StaticPageWidget(eventBus, model, null));
 		tileList.add(tile);
 		tilePanel.add(tile);
 	}

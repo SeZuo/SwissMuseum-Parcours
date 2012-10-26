@@ -44,7 +44,6 @@ public class AnimatorFactory {
 			case SWIPE:
 				return new SwipeScroller(animatedPanel, movingWidget, parentSlider, pageRequestBus);
 			case STATIC:
-				return new StaticFlipper(animatedPanel, movingWidget, parentSlider);
 			default:
 				throw(new Error("AnimatorFactory: animation wrong name"));
 		}
