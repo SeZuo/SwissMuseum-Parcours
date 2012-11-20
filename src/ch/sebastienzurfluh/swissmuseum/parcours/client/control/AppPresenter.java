@@ -60,8 +60,6 @@ public class AppPresenter {
 
 		parent.add(view);
 		
-		model.setViewMode(ParcoursConfig.START_VIEW_MODE);
-		
 		// Start the app
 		eventBus.fireEvent(new PageChangeRequest(DataReference.SUPER));
 	}
