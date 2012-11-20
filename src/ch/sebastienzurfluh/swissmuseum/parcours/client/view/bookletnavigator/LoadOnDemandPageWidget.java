@@ -1,4 +1,4 @@
-package ch.sebastienzurfluh.swissmuseum.parcours.client.view.pagewidget;
+package ch.sebastienzurfluh.swissmuseum.parcours.client.view.bookletnavigator;
 
 import java.util.LinkedList;
 

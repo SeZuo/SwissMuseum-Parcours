@@ -56,7 +56,7 @@ public class AppPresenter {
 		ResourceRequestEventHandler resourceRequestHandler = new ResourceRequestEventHandler(eventBus, model);
 		
 
-		View view = new View(eventBus, pageRequestHandler, resourceRequestHandler, model);
+		View view = new View(eventBus, model, pageRequestHandler, resourceRequestHandler);
 
 		parent.add(view);
 		
