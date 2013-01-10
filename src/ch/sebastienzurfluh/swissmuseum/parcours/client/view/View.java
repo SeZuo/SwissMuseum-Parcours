@@ -5,10 +5,8 @@ import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
-//import ch.sebastienzurfluh.swissmuseum.core.client.view.FooterWidget;
 import ch.sebastienzurfluh.swissmuseum.core.client.view.eventbushooks.ScrollToPanelOnEvent;
 import ch.sebastienzurfluh.swissmuseum.core.client.view.menuinterface.PageRequestClickHandler;
-//import ch.sebastienzurfluh.swissmuseum.core.client.view.tilemenu.TileWidget;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.bookletnavigator.BookletNavigator;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.groupnavigator.GroupNavigator;
 
@@ -17,6 +15,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.mgwt.mvp.client.Animation;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
+import com.googlecode.mgwt.ui.client.MGWTStyle;
 import com.googlecode.mgwt.ui.client.animation.AnimationHelper;
 
 /**
@@ -49,6 +48,15 @@ public class View extends SimplePanel {
 		
 		// Initialise the MGWT library (animations and transition effects).
 		MGWT.applySettings(MGWTSettings.getAppSetting());
+		
+
+		// Load the styles in the right order. This method is used because MGWT keeps overwriting
+		// my styles.
+		MGWTStyle.getTheme().getMGWTClientBundle().getMainCss().ensureInjected();
+		MGWTStyle.injectStyleSheet("SwissMuseumCore.css");
+		MGWTStyle.injectStyleSheet("SwissMuseumParcours.css");
+		
+		setStyleName("mainPanel");
 
 		AnimationHelper animationHelper = new AnimationHelper();
 		RootPanel.get().add(animationHelper);
@@ -57,7 +65,7 @@ public class View extends SimplePanel {
 		PageRequestClickHandler pageRequestHandler = new PageRequestClickHandler(eventBus);
 
 		
-		BookletNavigator bookletNavigator = new BookletNavigator(model, eventBus);
+		BookletNavigator bookletNavigator = new BookletNavigator(eventBus, model);
 		GroupNavigator groupNavigator =
 				new GroupNavigator(eventBus, model, pageRequestHandler);
 		
@@ -67,9 +75,6 @@ public class View extends SimplePanel {
 		
 		// Switch between BookletNavigator and GroupNavigator when needed.
 		new WidgetSwitcher(model, groupNavigator, bookletNavigator, animationHelper);
-		
-		
-		setStyleName("mainPanel");
 		
 		
 //		// Create the return to the top button.

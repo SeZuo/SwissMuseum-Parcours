@@ -11,6 +11,11 @@ import ch.sebastienzurfluh.swissmuseum.core.client.patterns.Observer;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.bookletnavigator.BookletNavigator;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.groupnavigator.GroupNavigator;
 
+/**
+ * This object watches the changes in the model to adapt the current screen disposition to the data.
+ * 
+ * @author Sebastien Zurfluh
+ */
 public class WidgetSwitcher implements Observer {
 	private Model model;
 	

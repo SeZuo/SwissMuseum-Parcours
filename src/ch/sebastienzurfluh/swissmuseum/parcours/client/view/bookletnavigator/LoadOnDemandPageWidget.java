@@ -24,7 +24,6 @@ public class LoadOnDemandPageWidget extends FlowPanel implements Observer {
 	
 	private static String primaryStyleName =  "pageWidget";
 	
-	
 	public LoadOnDemandPageWidget(MenuData menuData, EventBus pageChangeEventBus, Model model) {
 		this.model = model;
 		this.menuData = menuData;
@@ -32,23 +31,33 @@ public class LoadOnDemandPageWidget extends FlowPanel implements Observer {
 		parser = new TextParser(pageChangeEventBus, model);
 		
 		title = new HTML("");
-		title.setStyleName(primaryStyleName + "-title");
+		
 		header = new Label("");
-		header.setStyleName(primaryStyleName + "-header");
+		
 		
 		content = new FlowPanel();
-		content.setStyleName(primaryStyleName + "-content");
+		
 		
 		this.add(title);
 		this.add(header);
 		this.add(content);
 		
-		this.setStyleName(primaryStyleName);
+		
 		
 		if(model.getCurrentPageData().getReference().equals(menuData.getReference()))
 			load();
 		else
 			postponeLoad();
+	}
+	
+	/** Defer theming until the widget is rendered **/
+	@Override
+	protected void onLoad() {
+		super.onLoad();
+		title.setStyleName(primaryStyleName + "-title");
+		header.setStyleName(primaryStyleName + "-header");
+		content.setStyleName(primaryStyleName + "-content");
+		setStyleName(primaryStyleName);
 	}
 	
 	/**

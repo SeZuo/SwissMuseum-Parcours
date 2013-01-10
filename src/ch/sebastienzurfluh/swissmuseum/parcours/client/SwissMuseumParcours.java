@@ -24,7 +24,6 @@ import ch.sebastienzurfluh.swissmuseum.parcours.client.control.AppPresenter;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.googlecode.mgwt.ui.client.MGWTStyle;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -34,12 +33,6 @@ public class SwissMuseumParcours implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		// Load the styles in the right order. This method is used because MGWT keeps overwriting
-		// my styles.
-		MGWTStyle.getTheme().getMGWTClientBundle().getMainCss().ensureInjected();
-		MGWTStyle.injectStyleSheet("SwissMuseumCore.css");
-		MGWTStyle.injectStyleSheet("SwissMuseumParcours.css");
-		
 		AppPresenter appPresenter = new AppPresenter(RootPanel.get());
 		appPresenter.start();
 	}

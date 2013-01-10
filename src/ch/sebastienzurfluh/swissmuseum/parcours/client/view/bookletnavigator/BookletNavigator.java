@@ -10,6 +10,7 @@ import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.MenuData;
 import ch.sebastienzurfluh.swissmuseum.core.client.patterns.Observable;
 import ch.sebastienzurfluh.swissmuseum.core.client.patterns.Observer;
+import ch.sebastienzurfluh.swissmuseum.core.client.view.menuinterface.PageRequestClickHandler;
 
 /**
  * The BookletNavigator listens to the changes in the set of pages in the current booklet and
@@ -25,18 +26,21 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 
 	private Carousel carousel;
 
-	public BookletNavigator(Model model, EventBus eventBus) {
+	public BookletNavigator(
+			EventBus eventBus,
+			Model model) {
 		this.model = model;
 		this.eventBus = eventBus;
 		
-		carousel = new Carousel();
+		carousel = new InteractiveCarousel(eventBus);
 		add(carousel);
-		  
+		
 		model.allPagesMenusInCurrentGroupObservable.subscribeObserver(this);
 	}
 
 	@Override
 	public void notifyObserver(Observable source) {
+		carousel.clear();
 		for(MenuData menuData : model.getAllPageMenusInCurrentGroup()) {
 			ScrollPanel  scrollable = GWT.create(ScrollPanel.class);
 			LoadOnDemandPageWidget page = new LoadOnDemandPageWidget(menuData, eventBus, model);
