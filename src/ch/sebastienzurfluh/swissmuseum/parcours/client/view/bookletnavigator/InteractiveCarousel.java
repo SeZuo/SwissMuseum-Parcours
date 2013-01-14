@@ -23,6 +23,7 @@ import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.DataReference;
+import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.MenuData;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -56,10 +57,20 @@ public class InteractiveCarousel extends Carousel {
 					} else if (previousSelection < event.getSelectedItem()) {
 						previousSelection = event.getSelectedItem();
 						Window.alert("model.getNextPage " + model.getNextPageMenu().getTitle());
-						eventBus.fireEvent(new PageChangeRequest(model.getNextPageMenu().getReference()));
+						
+						// get the next page reference (without using the model's dedicated method
+						int i = 0;
+						for (MenuData menuData : model.getAllPageMenusInCurrentGroup()) {
+							if (i == event.getSelectedItem()) {
+								eventBus.fireEvent(new PageChangeRequest(menuData.getReference()));
+								break;
+							}
+							i++;
+						}
 					} else if (previousSelection > event.getSelectedItem()) {
 						previousSelection = event.getSelectedItem();
-						eventBus.fireEvent(new PageChangeRequest(model.getPreviousPageMenu().getReference()));
+						eventBus.fireEvent(new PageChangeRequest(
+								model.getPreviousPageMenu().getReference()));
 					}
 				}
 				Window.alert("New selection is " + previousSelection);
