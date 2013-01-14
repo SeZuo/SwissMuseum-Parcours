@@ -45,26 +45,24 @@ public class InteractiveCarousel extends Carousel {
 			
 			@Override
 			public void onSelection(SelectionEvent<Integer> event) {
-				if (previousSelection == event.getSelectedItem()) {
-					previousSelection = -1;
-					eventBus.fireEvent(new PageChangeRequest(DataReference.SUPER));
-					return;
+				Window.alert("Previous selection:" + previousSelection
+						+ "\n and the current selection is " + event.getSelectedItem());
+				if (previousSelection == -1) {
+					previousSelection = event.getSelectedItem();
 				} else {
-
-					if (previousSelection != -1 && previousSelection < event.getSelectedItem()) {
+					if (previousSelection == event.getSelectedItem()) {
+						previousSelection = -1;
+						eventBus.fireEvent(new PageChangeRequest(DataReference.SUPER));
+					} else if (previousSelection < event.getSelectedItem()) {
 						previousSelection = event.getSelectedItem();
+						Window.alert("model.getNextPage " + model.getNextPageMenu().getTitle());
 						eventBus.fireEvent(new PageChangeRequest(model.getNextPageMenu().getReference()));
-						return;
-					}
-
-					if (previousSelection > event.getSelectedItem()) {
+					} else if (previousSelection > event.getSelectedItem()) {
 						previousSelection = event.getSelectedItem();
 						eventBus.fireEvent(new PageChangeRequest(model.getPreviousPageMenu().getReference()));
-						return;
 					}
-					
-					previousSelection = event.getSelectedItem();
 				}
+				Window.alert("New selection is " + previousSelection);
 			}
 		});
 	}
