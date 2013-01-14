@@ -1,6 +1,9 @@
 # Auto generated backups #
 *~
 
+# Backend related stuff #
+war/CakePHPv2
+
 # Some gwt speicial folders #
 .project
 .classpath
@@ -12,6 +15,7 @@ gwt-unitCache/
 war/WEB-INF/
 src/META-INF/
 src/log4j.properties
+war/SwissMuseumParcours
 war/SwissMuseumParcours/*cache.*
 war/SwissMuseumParcours/hosted.html
 war/SwissMuseumParcours/junit-standards.html

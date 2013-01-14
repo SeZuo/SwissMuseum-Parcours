@@ -29,8 +29,14 @@
     <!--                                                               -->
     <!-- Consider inlining CSS to reduce the number of requested files -->
     <!--                                                               -->
-    <link type="text/css" rel="stylesheet" href="SwissMuseumCore.css">
-    <link type="text/css" rel="stylesheet" href="SwissMuseumParcours.css">
+    <style type="text/css">
+		@font-face {
+			font-family: titleFont;
+			src: url('resources/fonts/scriptbl.ttf');
+		}
+	</style>
+    
+    <!-- This is done in the entry point following the client bundle way -->
 
     <!--                                           -->
     <!-- Any title is fine                         -->
@@ -51,7 +57,7 @@
   <!-- you can leave the body empty if you want  -->
   <!-- to create a completely dynamic UI.        -->
   <!--                                           -->
-  <body>
+  <body style="background-color: white">
 
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>

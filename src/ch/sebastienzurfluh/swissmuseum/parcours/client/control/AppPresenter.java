@@ -56,11 +56,9 @@ public class AppPresenter {
 		ResourceRequestEventHandler resourceRequestHandler = new ResourceRequestEventHandler(eventBus, model);
 		
 
-		View view = new View(eventBus, pageRequestHandler, resourceRequestHandler, model);
+		View view = new View(eventBus, model, pageRequestHandler, resourceRequestHandler);
 
 		parent.add(view);
-		
-		model.setViewMode(ParcoursConfig.START_VIEW_MODE);
 		
 		// Start the app
 		eventBus.fireEvent(new PageChangeRequest(DataReference.SUPER));
