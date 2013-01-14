@@ -32,7 +32,7 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 		this.model = model;
 		this.eventBus = eventBus;
 		
-		carousel = new InteractiveCarousel(eventBus);
+		carousel = new InteractiveCarousel(eventBus, model);
 		add(carousel);
 		
 		model.allPagesMenusInCurrentGroupObservable.subscribeObserver(this);
