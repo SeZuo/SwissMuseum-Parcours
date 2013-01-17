@@ -41,7 +41,7 @@ public class WidgetSwitcher implements Observer {
 	private GroupNavigator groupNavigator;
 	private BookletNavigator bookletNavigator;
 	private AnimationHelper animationHelper;
-	
+
 
 	public WidgetSwitcher(
 			Model model,

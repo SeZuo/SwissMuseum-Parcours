@@ -21,7 +21,10 @@ package ch.sebastienzurfluh.swissmuseum.parcours.client.view.bookletnavigator;
 
 import java.util.LinkedList;
 
+import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.AbstractEvent;
+import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.AbstractEvent.EventType;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.EventBus;
+import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.EventBusListener;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.MenuData;
 import ch.sebastienzurfluh.swissmuseum.core.client.patterns.Observable;
@@ -29,23 +32,35 @@ import ch.sebastienzurfluh.swissmuseum.core.client.patterns.Observer;
 import ch.sebastienzurfluh.swissmuseum.core.client.view.pagewidget.PageToken;
 import ch.sebastienzurfluh.swissmuseum.core.client.view.pagewidget.TextParser;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
+import com.googlecode.mgwt.ui.client.widget.RoundPanel;
+import com.googlecode.mgwt.ui.client.widget.ScrollPanel;
 
-public class LoadOnDemandPageWidget extends FlowPanel implements Observer {
+public class LoadOnDemandPageWidget extends LayoutPanel implements Observer, EventBusListener {
 	private HTML title;
 	private Label header;
 	private FlowPanel content;
+	private RoundPanel mainContainer;
+	private ScrollPanel scrollPanel;
 	private TextParser parser;
 	private Model model;
 	private MenuData menuData;
+	private EventBus eventBus;
 	
 	private static String primaryStyleName =  "pageWidget";
 	
-	public LoadOnDemandPageWidget(MenuData menuData, EventBus pageChangeEventBus, Model model) {
+	public LoadOnDemandPageWidget(
+			MenuData menuData,
+			EventBus pageChangeEventBus,
+			Model model) {
 		this.model = model;
 		this.menuData = menuData;
+		this.eventBus = pageChangeEventBus;
+		
 		
 		parser = new TextParser(pageChangeEventBus, model);
 		
@@ -56,12 +71,18 @@ public class LoadOnDemandPageWidget extends FlowPanel implements Observer {
 		
 		content = new FlowPanel();
 		
+		mainContainer = new RoundPanel();
+		mainContainer.add(title);
+		mainContainer.add(header);
+		mainContainer.add(content);
 		
-		this.add(title);
-		this.add(header);
-		this.add(content);
-		
-		
+
+		scrollPanel = new ScrollPanel();
+		scrollPanel.setScrollingEnabledX(false);
+		scrollPanel.setWidget(mainContainer);
+
+		setHeight(Window.getClientHeight() + "px");
+		add(scrollPanel);
 		
 		if(model.getCurrentPageData().getReference().equals(menuData.getReference()))
 			load();
@@ -76,7 +97,7 @@ public class LoadOnDemandPageWidget extends FlowPanel implements Observer {
 		title.setStyleName(primaryStyleName + "-title");
 		header.setStyleName(primaryStyleName + "-header");
 		content.setStyleName(primaryStyleName + "-content");
-		setStyleName(primaryStyleName);
+		mainContainer.setStyleName(primaryStyleName);
 	}
 	
 	/**
@@ -99,6 +120,8 @@ public class LoadOnDemandPageWidget extends FlowPanel implements Observer {
 				this.content.add(new HTML(pageToken.getText()));
 			}
 		}
+		// Needed for the panel to show properly!
+		scrollPanel.refresh();
 	}
 	
 	/**
@@ -118,5 +141,15 @@ public class LoadOnDemandPageWidget extends FlowPanel implements Observer {
 			// the page will only load once.
 			model.currentPageDataObservable.unsubscribeObserver(this);
 		}
+	}
+
+	@Override
+	public EventType getEventType() {
+		return EventType.PAGE_MODIFIED_EVENT;
+	}
+
+	@Override
+	public void notify(AbstractEvent e) {
+		scrollPanel.refresh();
 	}
 }

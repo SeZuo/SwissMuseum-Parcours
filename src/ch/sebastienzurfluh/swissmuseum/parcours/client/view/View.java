@@ -29,6 +29,7 @@ import ch.sebastienzurfluh.swissmuseum.core.client.view.menuinterface.PageReques
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.bookletnavigator.BookletNavigator;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.groupnavigator.GroupNavigator;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.mgwt.mvp.client.Animation;
@@ -90,6 +91,7 @@ public class View extends SimplePanel {
 		
 		
 		animationHelper.goTo(groupNavigator, Animation.FADE);
+		
 		
 		
 		// Switch between BookletNavigator and GroupNavigator when needed.

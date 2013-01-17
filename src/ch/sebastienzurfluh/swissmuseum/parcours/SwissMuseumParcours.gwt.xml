@@ -3,12 +3,13 @@
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
   
+  <!-- Inherits the project's core                                -->
+  <inherits name='ch.sebastienzurfluh.swissmuseum.core.swissmuseum_core'/>
+  
   <!-- Inherit the mobile libraries.                       		  -->
   <inherits name='com.googlecode.gwtphonegap.PhoneGap' />
   <inherits name="com.googlecode.mgwt.MGWT"/>
   
-  <!-- Inherits the project's core                                -->
-  <inherits name='ch.sebastienzurfluh.swissmuseum.core.swissmuseum_core'/>
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='ch.sebastienzurfluh.swissmuseum.parcours.client.SwissMuseumParcours'/>

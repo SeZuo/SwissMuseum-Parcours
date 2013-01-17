@@ -27,7 +27,6 @@ import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.MenuData;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.Window;
 import com.googlecode.mgwt.ui.client.widget.Carousel;
 
 /** This extended {@link Carousel} sends notifications through {@link EventBus} when a page is 
@@ -46,8 +45,6 @@ public class InteractiveCarousel extends Carousel {
 			
 			@Override
 			public void onSelection(SelectionEvent<Integer> event) {
-				Window.alert("Previous selection:" + previousSelection
-						+ "\n and the current selection is " + event.getSelectedItem());
 				if (previousSelection == -1) {
 					previousSelection = event.getSelectedItem();
 				} else {
@@ -56,7 +53,6 @@ public class InteractiveCarousel extends Carousel {
 						eventBus.fireEvent(new PageChangeRequest(DataReference.SUPER));
 					} else if (previousSelection < event.getSelectedItem()) {
 						previousSelection = event.getSelectedItem();
-						Window.alert("model.getNextPage " + model.getNextPageMenu().getTitle());
 						
 						// get the next page reference (without using the model's dedicated method
 						int i = 0;
@@ -73,7 +69,6 @@ public class InteractiveCarousel extends Carousel {
 								model.getPreviousPageMenu().getReference()));
 					}
 				}
-				Window.alert("New selection is " + previousSelection);
 			}
 		});
 	}

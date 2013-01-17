@@ -2,7 +2,7 @@
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>SwissMuseum___Core.html</welcome-file>
+    <welcome-file>SwissMuseumParcours.html</welcome-file>
   </welcome-file-list>
 
 </web-app>
