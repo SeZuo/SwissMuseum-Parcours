@@ -19,11 +19,11 @@
 
 package ch.sebastienzurfluh.swissmuseum.parcours.client.control;
 
-import ch.sebastienzurfluh.swissmuseum.core.client.control.Config;
+import ch.sebastienzurfluh.swissmuseum.core.client.control.DefaultConfig;
 
-public class ParcoursConfig extends Config {
+public class ParcoursConfig extends DefaultConfig {
 	@Override
 	public boolean isTestMode() {
-		return true;
+		return false;
 	}
 }

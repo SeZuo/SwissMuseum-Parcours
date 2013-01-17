@@ -52,7 +52,10 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 		carousel = new InteractiveCarousel(eventBus, model);
 		add(carousel);
 		
+		
+		// Needed for the panel to show properly!
 		this.setHeight(Window.getClientHeight() + "px");
+		carousel.setHeight(Window.getClientHeight() + "px");
 		
 		model.allPagesMenusInCurrentGroupObservable.subscribeObserver(this);
 	}
@@ -65,6 +68,5 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 					new LoadOnDemandPageWidget(menuData, eventBus, model);
 			carousel.add(page);
 		}
-		carousel.setHeight(Window.getClientHeight() + "px");
 	}
 }

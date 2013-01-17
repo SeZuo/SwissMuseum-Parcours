@@ -23,6 +23,28 @@
 
 /********************** GENERAL ***********************************************/
 
+.gwt-PopupPanelGlass {
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.mgwt-Carousel-Indicator {
+	width: 8px;
+	height: 8px;
+	background-color: white;
+	border-radius: 4px;
+	margin: 4px;
+	border: 1px black solid;
+}
+
+ .mgwt-Carousel-Indicator-active {
+	width: 8px;
+	height: 8px;
+	background-color: #FF0930;
+	border-radius: 4px;
+	margin: 4px;
+	border: 1px black solid; 
+ }
+
 /********************** MENUS **************************************************/
 
 /********************** MENUS - NAVIGATION *************************************/

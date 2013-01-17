@@ -81,7 +81,10 @@ public class LoadOnDemandPageWidget extends LayoutPanel implements Observer, Eve
 		scrollPanel.setScrollingEnabledX(false);
 		scrollPanel.setWidget(mainContainer);
 
+		// Needed for the panel to show properly!
 		setHeight(Window.getClientHeight() + "px");
+		
+		
 		add(scrollPanel);
 		
 		if(model.getCurrentPageData().getReference().equals(menuData.getReference()))
