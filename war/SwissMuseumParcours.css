@@ -44,6 +44,23 @@
 	margin: 4px;
 	border: 1px black solid; 
  }
+ 
+/********************** BOOKLET NAVIGATOR **************************************/
+
+.page-logoContainer {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: table
+}
+
+.page-logoCentered {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
 
 /********************** MENUS **************************************************/
 

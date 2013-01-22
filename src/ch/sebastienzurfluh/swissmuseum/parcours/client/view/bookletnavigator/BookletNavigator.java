@@ -20,6 +20,9 @@
 package ch.sebastienzurfluh.swissmuseum.parcours.client.view.bookletnavigator;
 
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.mgwt.ui.client.widget.Carousel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 
@@ -63,10 +66,27 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 	@Override
 	public void notifyObserver(Observable source) {
 		carousel.clear();
+		carousel.add(new ReturnToHomeAnimation());
 		for(MenuData menuData : model.getAllPageMenusInCurrentGroup()) {
 			LoadOnDemandPageWidget page = 
 					new LoadOnDemandPageWidget(menuData, eventBus, model);
 			carousel.add(page);
+		}
+		carousel.add(new ReturnToHomeAnimation());
+	}
+	
+	class ReturnToHomeAnimation extends SimplePanel {
+
+		public ReturnToHomeAnimation() {
+			SimplePanel innerPanel =
+					new SimplePanel(new Image("resources/images/generic_tiles/logo.png"));
+			
+			innerPanel.setStyleName("page-logoCentered");
+			
+			this.setWidget(innerPanel);			
+			
+			this.setStyleName("page-logoContainer");
+			this.setHeight(Window.getClientHeight() + "px");
 		}
 	}
 }

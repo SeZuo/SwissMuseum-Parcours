@@ -27,6 +27,7 @@ import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.MenuData;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.Carousel;
 
 /** This extended {@link Carousel} sends notifications through {@link EventBus} when a page is 
@@ -36,9 +37,12 @@ import com.googlecode.mgwt.ui.client.widget.Carousel;
  *
  */
 public class InteractiveCarousel extends Carousel {
+	private int widgetCount = 0;
+	
 	public InteractiveCarousel(
 			final EventBus eventBus, final Model model) {
 		super();
+		widgetCount = 0;
 		
 		addSelectionHandler(new SelectionHandler<Integer>() {
 			int previousSelection = -1;
@@ -47,13 +51,15 @@ public class InteractiveCarousel extends Carousel {
 			public void onSelection(SelectionEvent<Integer> event) {
 				if (previousSelection == -1) {
 					previousSelection = event.getSelectedItem();
+					setSelectedPage(1);
 				} else {
-					if (previousSelection == event.getSelectedItem()) {
+					if ((event.getSelectedItem() == 0 || event.getSelectedItem() == widgetCount-1)) {
 						previousSelection = -1;
 						eventBus.fireEvent(new PageChangeRequest(DataReference.SUPER));
 					} else if (previousSelection < event.getSelectedItem()) {
 						previousSelection = event.getSelectedItem();
 						
+						// WORKAROUND
 						// get the next page reference (without using the model's dedicated method
 						int i = 0;
 						for (MenuData menuData : model.getAllPageMenusInCurrentGroup()) {
@@ -63,6 +69,7 @@ public class InteractiveCarousel extends Carousel {
 							}
 							i++;
 						}
+						// END OF WORKAROUND
 					} else if (previousSelection > event.getSelectedItem()) {
 						previousSelection = event.getSelectedItem();
 						eventBus.fireEvent(new PageChangeRequest(
@@ -71,5 +78,17 @@ public class InteractiveCarousel extends Carousel {
 				}
 			}
 		});
+	}
+	
+	@Override
+	public void add(Widget w) {
+		super.add(w);
+		widgetCount++;
+	}
+	
+	@Override
+	public void clear() {
+		super.clear();
+		widgetCount = 0;
 	}
 }
