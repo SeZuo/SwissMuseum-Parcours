@@ -208,8 +208,41 @@ public class LocalStorageConnector implements IOConnector {
 
 	@Override
 	public void asyncRequestGetAllPageMenusFromGroup(int referenceId,
-			AsyncCallback<Collection<MenuData>> asyncCallBack) {
-		//TODO
+			AsyncCallback<Collection<MenuData>> asyncCallback) {
+		System.out.println("LocalStorageConnector: asyncRequestGetAllPageMenusFromGroup");
+		
+		final String query = "SELECT " +
+				"pages.id AS page_id, " +
+				"menus.title AS menu_title, " +
+				"menus.description AS menu_description, " +
+				"menus.thumb_img_url, " +
+				"menus.img_url, " +
+				"\'affiliations.order\' AS \'order\' " +
+				"FROM pages " +
+				"JOIN menus ON menus.id = pages.menu_id " +
+				"JOIN affiliations ON affiliations.page_id = pages.id " +
+				"WHERE affiliations.group_id = \'" + referenceId + "\' " +
+				"ORDER BY \'affiliations.order\' ASC";
+		
+		asyncRequest(query, new WithResult<Collection<MenuData>>() {
+					@Override
+					public void processResponse(
+							SQLResultSet<GenericRow> response,
+							AsyncCallback<Collection<MenuData>> asyncCallback) {
+						Collection<MenuData> allGroupMenus = new LinkedList<MenuData>();
+    					for (GenericRow result : response.getRows()) {
+    						allGroupMenus.add(new MenuData(
+    								new DataReference(DataType.PAGE, result.getInt("page_id")),
+    								result.getInt("order"),
+    								result.getString("menu_title"),
+    								result.getString("menu_description"),
+    								result.getString("thumb_img_url"),
+    								result.getString("img_url")));
+						}
+    					
+    					asyncCallback.onSuccess(allGroupMenus);
+					}
+				}, asyncCallback);
 	}
 
 	@Override
