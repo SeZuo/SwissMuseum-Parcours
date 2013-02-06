@@ -94,7 +94,7 @@ public class DatabaseHandle {
 		        		+ "  title TEXT NOT NULL,"
 		        		+ "  url TEXT NOT NULL,"
 		        		+ "  description TEXT NOT NULL,"
-		        		+ "  type text  NOT NULL"
+		        		+ "  type TEXT NOT NULL"
 		        		+ ");",
 		        		"CREATE INDEX IF NOT EXISTS pages_menu_id ON pages (menu_id);",
 		        		"CREATE INDEX IF NOT EXISTS groups_menu_id ON groups (menu_id);"};

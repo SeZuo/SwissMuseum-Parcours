@@ -160,8 +160,50 @@ public class LocalStorageConnector implements IOConnector {
 
 	@Override
 	public void asyncRequestGetData(int referenceId,
-			AsyncCallback<Data> asyncCallBack) {
-		//TODO
+			AsyncCallback<Data> asyncCallback) {
+		System.out.println("LocalStorageConnector: asyncRequestGetData");
+		
+		final String query = "SELECT " +
+				"pages.*, " +
+				"menus.title AS menu_title, " +
+				"menus.description AS menu_description, " +
+				"menus.thumb_img_url, " +
+				"menus.img_url, " +
+				"\'affiliations.order\' AS \'order\' " +
+				"FROM pages " +
+				"JOIN menus ON menus.id = pages.menu_id " +
+				"JOIN affiliations ON affiliations.page_id = pages.id " +
+				"WHERE pages.id = \'" + referenceId + "\' ";
+		
+		System.out.println(">" + query);
+		
+		asyncRequest(query, new WithResult<Data>() {
+					@Override
+					public void processResponse(
+							SQLResultSet<GenericRow> response,
+							AsyncCallback<Data> asyncCallback) {
+						
+						GenericRow genericRow = response.getRows().getItem(0);
+						
+						System.out.print("Attributes names: ");
+						for (String attrNames : response.getRows().getItem(0).getAttributeNames()) {
+							System.out.print(attrNames + ", ");
+						} System.out.println();
+						
+						Data firstDataOfGroup = new Data(
+								new DataReference(DataType.PAGE, genericRow.getInt("id")),
+								genericRow.getInt("order"),
+								genericRow.getString("title"),
+								genericRow.getString("subtitle"),
+								genericRow.getString("content"),
+								genericRow.getString("menu_title"),
+								genericRow.getString("menu_description"),
+								genericRow.getString("thumb_img_url"),
+								genericRow.getString("img_url"));
+    					
+    					asyncCallback.onSuccess(firstDataOfGroup);
+						}
+					}, asyncCallback);
 	}
 
 	@Override
