@@ -35,9 +35,7 @@ public class LocalStorageConnector implements IOConnector {
 	 * I WANT to send a function as a parameter.
 	 */
 	interface WithResult<ResponseType> {
-		abstract void processResponse(
-				SQLResultSet<GenericRow> response,
-				AsyncCallback<ResponseType> asyncCallback);
+		abstract void processResponse(SQLResultSet<GenericRow> response);
 	}
 	
 	/**
@@ -47,10 +45,10 @@ public class LocalStorageConnector implements IOConnector {
 	 */
 	public <ResponseType> void asyncRequest(
 			final String query,
-			final WithResult<ResponseType> asyncWithResult,
-			final AsyncCallback<ResponseType> asyncCallback) {
+			final WithResult<ResponseType> asyncWithResult) {
 		DatabaseHandle.getInstance().readTransaction(new TransactionCallback() {
     		public void onTransactionStart(SQLTransaction tx) {
+    			System.out.println("LocalStorageConnector: asyncRequest: started query >" + query);
     			tx.executeSql(query, null,
     					new StatementCallback<GenericRow>() {
 
@@ -58,7 +56,8 @@ public class LocalStorageConnector implements IOConnector {
     				public void onSuccess(
     						SQLTransaction transaction,
     						SQLResultSet<GenericRow> resultSet) {
-    					asyncWithResult.processResponse(resultSet, asyncCallback);
+    					System.out.println("LocalStorageConnector: asyncRequest: success of query >" + query);
+    					asyncWithResult.processResponse(resultSet);
     				}
 
     				@Override
@@ -90,11 +89,12 @@ public class LocalStorageConnector implements IOConnector {
 				"FROM menus JOIN groups " +
 				"ON menus.id = groups.menu_id";
 		
+		System.out.println(">" + query);
+		
 		asyncRequest(query, new WithResult<Collection<MenuData>>() {
 					@Override
 					public void processResponse(
-							SQLResultSet<GenericRow> response,
-							AsyncCallback<Collection<MenuData>> asyncCallback) {
+							SQLResultSet<GenericRow> response) {
 						Collection<MenuData> allGroupMenus = new LinkedList<MenuData>();
     					for (GenericRow result : response.getRows()) {
     						allGroupMenus.add(new MenuData(
@@ -107,12 +107,12 @@ public class LocalStorageConnector implements IOConnector {
     					
     					asyncCallback.onSuccess(allGroupMenus);
 					}
-				}, asyncCallback);
+				});
 	}
 
 	@Override
 	public void asyncRequestGetFirstDataOfGroup(int referenceId,
-			AsyncCallback<Data> asyncCallback) {
+			final AsyncCallback<Data> asyncCallback) {
 		System.out.println("LocalStorageConnector: asyncRequestGetFirstDataOfGroup");
 		
 		final String query = "SELECT " +
@@ -121,20 +121,19 @@ public class LocalStorageConnector implements IOConnector {
 				"menus.description AS menu_description, " +
 				"menus.thumb_img_url, " +
 				"menus.img_url, " +
-				"\'affiliations.order\' AS \'order\' " +
+				"affiliations.ordering AS \'order\' " +
 				"FROM pages " +
 				"JOIN menus ON menus.id = pages.menu_id " +
 				"JOIN affiliations ON affiliations.page_id = pages.id " +
 				"WHERE affiliations.group_id = \'" + referenceId + "\' " +
-				"ORDER BY \'affiliations.order\' ASC LIMIT 1";
+				"ORDER BY \'order\' ASC LIMIT 1";
 		
 		System.out.println(">" + query);
 		
 		asyncRequest(query, new WithResult<Data>() {
 					@Override
 					public void processResponse(
-							SQLResultSet<GenericRow> response,
-							AsyncCallback<Data> asyncCallback) {
+							SQLResultSet<GenericRow> response) {
 						
 						GenericRow genericRow = response.getRows().getItem(0);
 						
@@ -150,13 +149,12 @@ public class LocalStorageConnector implements IOConnector {
 								genericRow.getString("img_url"));
     					
     					asyncCallback.onSuccess(firstDataOfGroup);
-						}
-					}, asyncCallback);
+					}});
 	}
 
 	@Override
 	public void asyncRequestGetData(int referenceId,
-			AsyncCallback<Data> asyncCallback) {
+			final AsyncCallback<Data> asyncCallback) {
 		System.out.println("LocalStorageConnector: asyncRequestGetData");
 		
 		final String query = "SELECT " +
@@ -165,7 +163,7 @@ public class LocalStorageConnector implements IOConnector {
 				"menus.description AS menu_description, " +
 				"menus.thumb_img_url, " +
 				"menus.img_url, " +
-				"\'affiliations.order\' AS \'order\' " +
+				"affiliations.ordering AS \'order\' " +
 				"FROM pages " +
 				"JOIN menus ON menus.id = pages.menu_id " +
 				"JOIN affiliations ON affiliations.page_id = pages.id " +
@@ -175,9 +173,7 @@ public class LocalStorageConnector implements IOConnector {
 		
 		asyncRequest(query, new WithResult<Data>() {
 					@Override
-					public void processResponse(
-							SQLResultSet<GenericRow> response,
-							AsyncCallback<Data> asyncCallback) {
+					public void processResponse(SQLResultSet<GenericRow> response) {
 						
 						GenericRow genericRow = response.getRows().getItem(0);
 						
@@ -193,13 +189,12 @@ public class LocalStorageConnector implements IOConnector {
 								genericRow.getString("img_url"));
     					
     					asyncCallback.onSuccess(firstDataOfGroup);
-						}
-					}, asyncCallback);
+						}});
 	}
 
 	@Override
 	public void asyncRequestGetAllPageMenusFromGroup(int referenceId,
-			AsyncCallback<Collection<MenuData>> asyncCallback) {
+			final AsyncCallback<Collection<MenuData>> asyncCallback) {
 		System.out.println("LocalStorageConnector: asyncRequestGetAllPageMenusFromGroup");
 		
 		final String query = "SELECT " +
@@ -208,22 +203,30 @@ public class LocalStorageConnector implements IOConnector {
 				"menus.description AS menu_description, " +
 				"menus.thumb_img_url, " +
 				"menus.img_url, " +
-				"\'affiliations.order\' AS \'order\' " +
+				"affiliations.ordering AS \'order\' " +
 				"FROM pages " +
 				"JOIN menus ON menus.id = pages.menu_id " +
 				"JOIN affiliations ON affiliations.page_id = pages.id " +
 				"WHERE affiliations.group_id = \'" + referenceId + "\' " +
-				"ORDER BY \'affiliations.order\' ASC";
+				"ORDER BY \'order\' ASC";
+		
+		System.out.println(">" + query);
 		
 		asyncRequest(query, new WithResult<Collection<MenuData>>() {
 					@Override
-					public void processResponse(
-							SQLResultSet<GenericRow> response,
-							AsyncCallback<Collection<MenuData>> asyncCallback) {
+					public void processResponse(SQLResultSet<GenericRow> response) {
+						System.out.print("LocalStorageConnector: " +
+								"asyncRequestGetAllPageMenusFromGroup: processing response..." );
+						
 						Collection<MenuData> allGroupMenus = new LinkedList<MenuData>();
+						
+						System.out.println(" " + response.getRows().getLength() + " rows ");
+						
     					for (GenericRow result : response.getRows()) {
     						allGroupMenus.add(new MenuData(
-    								new DataReference(DataType.PAGE, result.getInt("page_id")),
+    								new DataReference(
+    										DataType.PAGE,
+    										result.getInt("page_id")),
     								result.getInt("order"),
     								result.getString("menu_title"),
     								result.getString("menu_description"),
@@ -231,28 +234,31 @@ public class LocalStorageConnector implements IOConnector {
     								result.getString("img_url")));
 						}
     					
+    					System.out.println(
+    							"LocalStorageConnector: asyncRequestGetAllPageMenusFromGroup:"
+    							+ "response set size: " + allGroupMenus.size());
     					asyncCallback.onSuccess(allGroupMenus);
-					}
-				}, asyncCallback);
+					}});
 	}
 
 	@Override
 	public void asyncRequestResourceData(int referenceId,
-			AsyncCallback<ResourceData> asyncCallback) {
+			final AsyncCallback<ResourceData> asyncCallback) {
 		System.out.println("LocalStorageConnector: asyncRequestResourceData");
 		
 		final String query = "SELECT * " +
 				"FROM resources " +
-				"WHERE resources.id = \'" + referenceId + "\' ";
+				"WHERE resources.id = \'" + referenceId + "\' LIMIT 1";
 		
 		System.out.println(">" + query);
 		
 		asyncRequest(query, new WithResult<ResourceData>() {
 					@Override
 					public void processResponse(
-							SQLResultSet<GenericRow> response,
-							AsyncCallback<ResourceData> asyncCallback) {
+							SQLResultSet<GenericRow> response) {
 						GenericRow genericRow = response.getRows().getItem(0);
+						System.out.println("ResourceData of type " +
+								ResourceType.fromString(genericRow.getString("type")) + " created.");
 						ResourceData resourceData = new ResourceData(
 								new DataReference(DataType.RESOURCE, genericRow.getInt("id")),
 								ResourceType.fromString(genericRow.getString("type")),
@@ -261,12 +267,12 @@ public class LocalStorageConnector implements IOConnector {
 								genericRow.getString("url"));
     					
     					asyncCallback.onSuccess(resourceData);
-						}
-					}, asyncCallback);
+						}});
 	}
 
 	@Override
-	public void asyncRequestAllResourceData(AsyncCallback<Collection<ResourceData>> asyncCallback) {
+	public void asyncRequestAllResourceData(
+			final AsyncCallback<Collection<ResourceData>> asyncCallback) {
 		
 		System.out.println("LocalStorageConnector: asyncRequestAllResourceData");
 		
@@ -276,9 +282,7 @@ public class LocalStorageConnector implements IOConnector {
 		
 		asyncRequest(query, new WithResult<Collection<ResourceData>>() {
 			@Override
-			public void processResponse(
-					SQLResultSet<GenericRow> response,
-					AsyncCallback<Collection<ResourceData>> asyncCallback) {
+			public void processResponse(SQLResultSet<GenericRow> response) {
 				Collection<ResourceData> allResourceData = new LinkedList<ResourceData>();
 				for (GenericRow result : response.getRows())
 					allResourceData.add(
@@ -290,8 +294,7 @@ public class LocalStorageConnector implements IOConnector {
 									result.getString("url")));
 
 				asyncCallback.onSuccess(allResourceData);
-			}
-		}, asyncCallback);
+			}});
 	}
 
 	@Override
