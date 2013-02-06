@@ -19,16 +19,22 @@
 
 package ch.sebastienzurfluh.swissmuseum.parcours.client.control;
 
-import ch.sebastienzurfluh.swissmuseum.core.client.control.ModelFactory;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.events.PageChangeRequest;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
+import ch.sebastienzurfluh.swissmuseum.core.client.model.io.IOConnector;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.DataReference;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.View;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
+import com.googlecode.gwtphonegap.client.PhoneGapAvailableEvent;
+import com.googlecode.gwtphonegap.client.PhoneGapAvailableHandler;
+import com.googlecode.gwtphonegap.client.PhoneGapTimeoutEvent;
+import com.googlecode.gwtphonegap.client.PhoneGapTimeoutHandler;
 
 /**
  * This class creates the web app and adds it to the given panel.
@@ -42,25 +48,65 @@ public class AppPresenter {
 	public AppPresenter(Panel parent) {
 		this.parent = parent;
 	}
-
+	
 	/**
+	 * Does what's needed before the app starts.
 	 * Loads and display the application in the panel defined at construction.
+	 * 
+	 * This method is asynchronuous.
 	 */
 	public void start() {
+		PhoneGapHandle.getInstance().addHandler(new PhoneGapAvailableHandler() {
+			@Override
+			public void onPhoneGapAvailable(PhoneGapAvailableEvent event) {
+				System.out.println("AppPresenter: " + "PhoneGap available");
+				startAfterPhoneGapLoad();
+			}
+		});
+		
+		PhoneGapHandle.getInstance().addHandler(new PhoneGapTimeoutHandler() {
+			
+			@Override
+			public void onPhoneGapTimeout(PhoneGapTimeoutEvent event) {
+				// we do the same if phonegap doesn't work
+				System.out.println("AppPresenter: " + "PhoneGap NOT available");
+				startAfterPhoneGapLoad();
+			}
+		});
+		
+		PhoneGapHandle.getInstance().initializePhoneGap();
+	}
+
+	private void startAfterPhoneGapLoad() {
 		eventBus = new EventBus();
 
-		model = ModelFactory.createModel(new ParcoursConfig());
+		AsyncConnectorFactory.createConnector(new ParcoursConfig(), new AsyncCallback<IOConnector>() {
+			
+			@Override
+			public void onSuccess(IOConnector result) {
+				model = new Model(result);
+				
+				PageRequestEventHandler pageRequestHandler = new PageRequestEventHandler(eventBus, model);
+				ResourceRequestEventHandler resourceRequestHandler = new ResourceRequestEventHandler(eventBus, model);
+
+
+				View view = new View(eventBus, model, pageRequestHandler, resourceRequestHandler);
+
+				parent.add(view);
+
+				// Start the app
+				eventBus.fireEvent(new PageChangeRequest(DataReference.SUPER));
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("The app failed to initialise.");
+			}
+		});
+		
+		
+
 
 		
-		PageRequestEventHandler pageRequestHandler = new PageRequestEventHandler(eventBus, model);
-		ResourceRequestEventHandler resourceRequestHandler = new ResourceRequestEventHandler(eventBus, model);
-		
-
-		View view = new View(eventBus, model, pageRequestHandler, resourceRequestHandler);
-
-		parent.add(view);
-		
-		// Start the app
-		eventBus.fireEvent(new PageChangeRequest(DataReference.SUPER));
 	}
 }

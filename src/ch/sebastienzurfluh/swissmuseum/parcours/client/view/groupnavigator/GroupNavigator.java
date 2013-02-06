@@ -28,8 +28,9 @@ import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 
 public class GroupNavigator extends LayoutPanel {
 	public GroupNavigator(EventBus eventBus, Model model, PageRequestClickHandler pageRequestHandler) {
-		Image headerImage = new Image("resources/images/fioritures/parcours_entete_2.png");
+		Image headerImage = new Image("resources/images/fioritures/parcours_entete_3.png");
 		headerImage.setStyleName("header");
+		
 		add(headerImage);
 		
 		LoadOnDemandTileWidget tileMenus =
