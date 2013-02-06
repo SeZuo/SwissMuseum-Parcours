@@ -13,6 +13,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.events.DataType;
+import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.events.ResourceType;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.io.IConnector;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.io.IOConnector;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.Data;
@@ -137,11 +138,6 @@ public class LocalStorageConnector implements IOConnector {
 						
 						GenericRow genericRow = response.getRows().getItem(0);
 						
-						System.out.print("Attributes names: ");
-						for (String attrNames : response.getRows().getItem(0).getAttributeNames()) {
-							System.out.print(attrNames + ", ");
-						} System.out.println();
-						
 						Data firstDataOfGroup = new Data(
 								new DataReference(DataType.PAGE, genericRow.getInt("id")),
 								genericRow.getInt("order"),
@@ -184,11 +180,6 @@ public class LocalStorageConnector implements IOConnector {
 							AsyncCallback<Data> asyncCallback) {
 						
 						GenericRow genericRow = response.getRows().getItem(0);
-						
-						System.out.print("Attributes names: ");
-						for (String attrNames : response.getRows().getItem(0).getAttributeNames()) {
-							System.out.print(attrNames + ", ");
-						} System.out.println();
 						
 						Data firstDataOfGroup = new Data(
 								new DataReference(DataType.PAGE, genericRow.getInt("id")),
@@ -248,31 +239,81 @@ public class LocalStorageConnector implements IOConnector {
 	@Override
 	public void asyncRequestResourceData(int referenceId,
 			AsyncCallback<ResourceData> asyncCallback) {
-		//TODO
+		System.out.println("LocalStorageConnector: asyncRequestResourceData");
+		
+		final String query = "SELECT * " +
+				"FROM resources " +
+				"WHERE resources.id = \'" + referenceId + "\' ";
+		
+		System.out.println(">" + query);
+		
+		asyncRequest(query, new WithResult<ResourceData>() {
+					@Override
+					public void processResponse(
+							SQLResultSet<GenericRow> response,
+							AsyncCallback<ResourceData> asyncCallback) {
+						GenericRow genericRow = response.getRows().getItem(0);
+						ResourceData resourceData = new ResourceData(
+								new DataReference(DataType.RESOURCE, genericRow.getInt("id")),
+								ResourceType.fromString(genericRow.getString("type")),
+								genericRow.getString("title"),
+								genericRow.getString("details"),
+								genericRow.getString("url"));
+    					
+    					asyncCallback.onSuccess(resourceData);
+						}
+					}, asyncCallback);
 	}
 
 	@Override
-	public void asyncRequestAllResourceData(
-			AsyncCallback<Collection<ResourceData>> asyncCallback) {
-		//TODO
+	public void asyncRequestAllResourceData(AsyncCallback<Collection<ResourceData>> asyncCallback) {
+		
+		System.out.println("LocalStorageConnector: asyncRequestAllResourceData");
+		
+		final String query = "SELECT * FROM resources ";
+		
+		System.out.println(">" + query);
+		
+		asyncRequest(query, new WithResult<Collection<ResourceData>>() {
+			@Override
+			public void processResponse(
+					SQLResultSet<GenericRow> response,
+					AsyncCallback<Collection<ResourceData>> asyncCallback) {
+				Collection<ResourceData> allResourceData = new LinkedList<ResourceData>();
+				for (GenericRow result : response.getRows())
+					allResourceData.add(
+							new ResourceData(
+									new DataReference(DataType.RESOURCE, result.getInt("id")),
+									ResourceType.fromString(result.getString("type")),
+									result.getString("title"),
+									result.getString("details"),
+									result.getString("url")));
+
+				asyncCallback.onSuccess(allResourceData);
+			}
+		}, asyncCallback);
 	}
 
 	@Override
 	public void createResource(ResourceData resourceData,
 			AsyncCallback<DataReference> asyncCallback) {
+		assert false : this.getClass().toString() + " does not implement OConnector.";
 	}
 
 	@Override
 	public void createPage(Data data, AsyncCallback<DataReference> asyncCallback) {
+		assert false : this.getClass().toString() + " does not implement OConnector.";
 	}
 
 	@Override
 	public void createGroup(MenuData groupData,
 			AsyncCallback<DataReference> asyncCallback) {
+		assert false : this.getClass().toString() + " does not implement OConnector.";
 	}
 
 	@Override
 	public void delete(DataReference reference,
 			AsyncCallback<Object> asyncCallback) {
+		assert false : this.getClass().toString() + " does not implement OConnector.";
 	}
 }
