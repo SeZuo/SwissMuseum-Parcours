@@ -10,8 +10,9 @@ It is used as a frontend view of the "Parcours" (an exhibition booklet) accessed
 
 Prerequisites:
 ==============
- + GWT 2.4
+ + GWT 2.5
  + CakePHP 3.1 backend (see the "Parcours DB" project)
+ + sebasti4n/SwissMuseumCore project
 
 Running:
 ========
