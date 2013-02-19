@@ -19,17 +19,14 @@
 
 package ch.sebastienzurfluh.swissmuseum.parcours.client.view;
 
-import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.AbstractEvent.EventType;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
-import ch.sebastienzurfluh.swissmuseum.core.client.view.eventbushooks.ScrollToPanelOnEvent;
 import ch.sebastienzurfluh.swissmuseum.core.client.view.menuinterface.PageRequestClickHandler;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.bookletnavigator.BookletNavigator;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.groupnavigator.GroupNavigator;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.mgwt.mvp.client.Animation;
@@ -87,7 +84,7 @@ public class View extends SimplePanel {
 		
 		BookletNavigator bookletNavigator = new BookletNavigator(eventBus, model);
 		GroupNavigator groupNavigator =
-				new GroupNavigator(eventBus, model, pageRequestHandler);
+				new GroupNavigator(eventBus, model, pageRequestHandler, animationHelper);
 		
 		
 		animationHelper.goTo(groupNavigator, Animation.FADE);
@@ -113,6 +110,6 @@ public class View extends SimplePanel {
 //		RootPanel.get().add(footer);
 
 		// Add some global functionalities with low priority
-		ScrollToPanelOnEvent.addRule(eventBus, RootPanel.get(), EventType.PAGE_CHANGE_EVENT);
+//		ScrollToPanelOnEvent.addRule(eventBus, RootPanel.get(), EventType.PAGE_CHANGE_EVENT);
 	}
 }

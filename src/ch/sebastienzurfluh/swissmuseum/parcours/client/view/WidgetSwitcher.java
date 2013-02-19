@@ -70,6 +70,7 @@ public class WidgetSwitcher implements Observer {
 
 			animationHelper.goTo(groupNavigator, Animation.SLIDE_REVERSE);
 		} else {
+			System.out.println("We will proceed with page view.");
 			// A page exists! We want the page view.
 			if (model.getCurrentPageData().getReference().getType().equals(currentView))
 				return;

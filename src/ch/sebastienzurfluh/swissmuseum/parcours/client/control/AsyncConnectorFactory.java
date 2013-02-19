@@ -23,8 +23,15 @@ public class AsyncConnectorFactory {
 			DefaultConfig config,
 			final AsyncCallback<IOConnector> asyncWithConnector) {
 		
-		if (config.isTestMode())
+		if (config.isTestMode()) {
 			asyncWithConnector.onSuccess(createConnector(Connector.TEST));
+			return;
+		}
+		
+		if(config.isForcedRemoteDB()) {
+			asyncWithConnector.onSuccess(createConnector(Connector.CAKE));
+			return;
+		}
 		
 		if (Database.isSupported())
 			DatabaseHandle.sync(new AsyncCallback<Object>() {

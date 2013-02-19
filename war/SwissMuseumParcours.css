@@ -53,7 +53,8 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    display: table
+    display: table;
+    background-color: black;
 }
 
 .page-logoCentered {
@@ -62,7 +63,80 @@
     text-align: center;
 }
 
+
 /********************** MENUS **************************************************/
+
+/********************** MENUS - INFO *******************************************/
+
+.infoPanel {
+	
+}
+
+.infoPanel-returnButton {
+	border: 2px solid #606060;
+	color: black;
+	background: rgb(140, 140, 140);
+	background: rgba(160, 160, 160, 0.6);
+	padding: 0.5em 1em;
+	margin: 0.5em 0.2em;
+	
+	font-weight:bold;
+	font-size: 1em;
+	
+	cursor: pointer;
+	
+	outline: none;
+	
+	-moz-border-radius: 	2em 0em 0em 2em;
+	-webkit-border-radius: 	2em 0em 0em 2em;
+	border-radius: 			2em 0em 0em 2em;
+	-khtml-border-radius: 	2em 0em 0em 2em;
+	
+	-moz-box-shadow:    0px 0px 1px 0px black, inset 0px 0px 35px 1px white;
+  	-webkit-box-shadow: 0px 0px 1px 0px black, inset 0px 0px 35px 1px white;
+ 	 box-shadow:        0px 0px 1px 0px black, inset 0px 0px 35px 1px white;
+}
+
+.infoPanel-title {
+	border: 2px solid #606060;
+	color: black;
+	background: white;
+	padding: 0.5em 1em;
+	margin: 0.5em 0.2em;
+	
+	font-weight:bold;
+	font-size: 1em;
+	
+	cursor: pointer;
+	
+	outline: none;
+	
+	-moz-border-radius: 	0em 0.3em 0.3em 0em;
+	-webkit-border-radius: 	0em 0.3em 0.3em 0em;
+	border-radius: 			0em 0.3em 0.3em 0em;
+	-khtml-border-radius: 	0em 0.3em 0.3em 0em;
+	
+	-moz-box-shadow:    0px 0px 1px 0px black;
+  	-webkit-box-shadow: 0px 0px 1px 0px black;
+ 	 box-shadow:        0px 0px 1px 0px black;
+}
+
+.infoMenuBar-button {
+	width: 3em;
+	height: 3em;
+	padding: 1em;
+}
+
+.infoMenuBar {
+	width: 100%;
+	padding: 1em;
+	background: whiteSmoke;
+}
+
+.infoMenuBar-title {
+	font-size: 2em;
+	font-family: titleFont, serif;
+}	
 
 /********************** MENUS - NAVIGATION *************************************/
 .navigationItem {
@@ -103,7 +177,7 @@
 	color: white;
 	text-shadow: black 0em 0em 0.3em;
 }
-.navigationSlider-button-inner {
+.navigationSlider-button-inner { 
 	margin: 0em;
 	padding: 0.1em;
 	background-color: #121212;

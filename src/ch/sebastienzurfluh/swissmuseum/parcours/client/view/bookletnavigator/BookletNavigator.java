@@ -79,7 +79,7 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 
 		public ReturnToHomeAnimation() {
 			SimplePanel innerPanel =
-					new SimplePanel(new Image("resources/images/generic_tiles/logo.png"));
+					new SimplePanel(new Image("resources/images/generic_tiles/logo_parcours.png"));
 			
 			innerPanel.setStyleName("page-logoCentered");
 			

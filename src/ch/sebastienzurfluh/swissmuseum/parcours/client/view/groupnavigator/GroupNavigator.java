@@ -22,16 +22,25 @@ package ch.sebastienzurfluh.swissmuseum.parcours.client.view.groupnavigator;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
 import ch.sebastienzurfluh.swissmuseum.core.client.view.menuinterface.PageRequestClickHandler;
+import ch.sebastienzurfluh.swissmuseum.parcours.client.view.infos.InfoMenubar;
 
 import com.google.gwt.user.client.ui.Image;
+import com.googlecode.mgwt.ui.client.animation.AnimationHelper;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 
 public class GroupNavigator extends LayoutPanel {
-	public GroupNavigator(EventBus eventBus, Model model, PageRequestClickHandler pageRequestHandler) {
+	public GroupNavigator(
+			EventBus eventBus,
+			Model model,
+			PageRequestClickHandler pageRequestHandler,
+			AnimationHelper animationHelper) {
+		
+		InfoMenubar header = new InfoMenubar(animationHelper, this);
+		
 		Image headerImage = new Image("resources/images/fioritures/parcours_entete_3.png");
 		headerImage.setStyleName("header");
 		
-		add(headerImage);
+		add(header);
 		
 		LoadOnDemandTileWidget tileMenus =
 				new LoadOnDemandTileWidget(eventBus, pageRequestHandler, model);
