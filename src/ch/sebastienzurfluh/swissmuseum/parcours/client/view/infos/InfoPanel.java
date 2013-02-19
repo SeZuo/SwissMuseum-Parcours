@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.mvp.client.Animation;
 import com.googlecode.mgwt.ui.client.animation.AnimationHelper;
@@ -35,6 +34,8 @@ public class InfoPanel extends FlowPanel {
 	public InfoPanel(String title,
 			final Widget returnToIt,
 			final AnimationHelper animationHelper) {
+		
+		setStyleName("infoPanel");
 		
 		HorizontalPanel titleLine = new HorizontalPanel();
 		

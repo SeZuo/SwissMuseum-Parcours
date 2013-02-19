@@ -20,7 +20,6 @@
 package ch.sebastienzurfluh.swissmuseum.parcours.client.view.bookletnavigator;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.mgwt.ui.client.widget.Carousel;
@@ -31,6 +30,7 @@ import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.MenuData;
 import ch.sebastienzurfluh.swissmuseum.core.client.patterns.Observable;
 import ch.sebastienzurfluh.swissmuseum.core.client.patterns.Observer;
+import ch.sebastienzurfluh.swissmuseum.core.client.view.pagewidget.TextParser;
 
 /**
  * The BookletNavigator listens to the changes in the set of pages in the current booklet and
@@ -44,6 +44,8 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 	private Model model;
 	private EventBus eventBus;
 
+	private TextParser textParser;
+
 	private Carousel carousel;
 
 	public BookletNavigator(
@@ -51,6 +53,11 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 			Model model) {
 		this.model = model;
 		this.eventBus = eventBus;
+		
+		/**
+		 * We need only one parser for all the pages
+		 */
+		this.textParser = new TextParser(eventBus, model);
 		
 		carousel = new InteractiveCarousel(eventBus, model);
 		add(carousel);
@@ -69,7 +76,7 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 		carousel.add(new ReturnToHomeAnimation());
 		for(MenuData menuData : model.getAllPageMenusInCurrentGroup()) {
 			LoadOnDemandPageWidget page = 
-					new LoadOnDemandPageWidget(menuData, eventBus, model);
+					new LoadOnDemandPageWidget(menuData, eventBus, model, textParser);
 			carousel.add(page);
 		}
 		carousel.add(new ReturnToHomeAnimation());
@@ -83,10 +90,10 @@ public class BookletNavigator extends LayoutPanel implements Observer {
 			
 			innerPanel.setStyleName("page-logoCentered");
 			
-			this.setWidget(innerPanel);			
-			
 			this.setStyleName("page-logoContainer");
 			this.setHeight(Window.getClientHeight() + "px");
+			
+			this.setWidget(innerPanel);			
 		}
 	}
 }

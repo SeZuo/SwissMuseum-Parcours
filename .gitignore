@@ -1,10 +1,13 @@
 # Auto generated backups #
 *~
 
+# No resources #
+war/favicon.ico
+
 # Backend related stuff #
 war/CakePHPv2
 
-# Some gwt speicial folders #
+# Some gwt special folders #
 .project
 .classpath
 .settings

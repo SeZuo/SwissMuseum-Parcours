@@ -29,6 +29,6 @@ public class ParcoursConfig extends DefaultConfig {
 	
 	@Override
 	public boolean isForcedRemoteDB() {
-		return true;
+		return false;
 	}
 }

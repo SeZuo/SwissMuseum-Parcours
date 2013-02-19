@@ -52,17 +52,18 @@ public class LoadOnDemandPageWidget extends LayoutPanel implements Observer, Eve
 	private EventBus eventBus;
 	
 	private static String primaryStyleName =  "pageWidget";
+	private static String CLIENT_WINDOW_HEIGHT_PX = Window.getClientHeight() + "px";
+	
 	
 	public LoadOnDemandPageWidget(
 			MenuData menuData,
 			EventBus pageChangeEventBus,
-			Model model) {
+			Model model,
+			TextParser textParser) {
 		this.model = model;
 		this.menuData = menuData;
 		this.eventBus = pageChangeEventBus;
-		
-		
-		parser = new TextParser(pageChangeEventBus, model);
+		this.parser = textParser;
 		
 		title = new HTML("");
 		
@@ -81,11 +82,15 @@ public class LoadOnDemandPageWidget extends LayoutPanel implements Observer, Eve
 		scrollPanel.setScrollingEnabledX(false);
 		scrollPanel.setWidget(mainContainer);
 
-		// Needed for the panel to show properly!
-		setHeight(Window.getClientHeight() + "px");
 		
+		title.setStyleName(primaryStyleName + "-title");
+		header.setStyleName(primaryStyleName + "-header");
+		content.setStyleName(primaryStyleName + "-content");
+		mainContainer.setStyleName(primaryStyleName);
 		
 		add(scrollPanel);
+		// Needed for the panel to show properly!
+		setHeight(CLIENT_WINDOW_HEIGHT_PX);
 		
 		if(model.getCurrentPageData().getReference().equals(menuData.getReference()))
 			load();
@@ -97,10 +102,7 @@ public class LoadOnDemandPageWidget extends LayoutPanel implements Observer, Eve
 	@Override
 	protected void onLoad() {
 		super.onLoad();
-		title.setStyleName(primaryStyleName + "-title");
-		header.setStyleName(primaryStyleName + "-header");
-		content.setStyleName(primaryStyleName + "-content");
-		mainContainer.setStyleName(primaryStyleName);
+		
 	}
 	
 	/**
@@ -123,6 +125,9 @@ public class LoadOnDemandPageWidget extends LayoutPanel implements Observer, Eve
 				this.content.add(new HTML(pageToken.getText()));
 			}
 		}
+		
+		
+		
 		// Needed for the panel to show properly!
 		scrollPanel.refresh();
 	}
