@@ -51,7 +51,7 @@ public class InteractiveCarousel extends Carousel {
 			public void onSelection(SelectionEvent<Integer> event) {
 				if (previousSelection == -1) {
 					previousSelection = event.getSelectedItem();
-					setSelectedPage(1);
+					deferedSetSelectedPage(1);
 				} else {
 					if ((event.getSelectedItem() == 0 || event.getSelectedItem() == widgetCount-1)) {
 						previousSelection = -1;
@@ -80,15 +80,38 @@ public class InteractiveCarousel extends Carousel {
 		});
 	}
 	
+	private boolean isDeferedSetSelectedPage = false;
+	private int deferedSelectedPage = 1;
+	
+	/**
+	 * We may need to defer the selection of the page until the carousel is properly loaded.
+	 * @param index the index of the page we want to load.
+	 */
+	private void deferedSetSelectedPage(int index) {
+		if (widgetCount > index) {
+			isDeferedSetSelectedPage = false;
+			setSelectedPage(index);
+		} else {
+			isDeferedSetSelectedPage = true;
+			deferedSelectedPage = index;
+		}
+	}
+	
+	
 	@Override
 	public void add(Widget w) {
 		super.add(w);
 		widgetCount++;
+		if(isDeferedSetSelectedPage) {
+			isDeferedSetSelectedPage = false;
+			setSelectedPage(deferedSelectedPage);
+		}
 	}
 	
 	@Override
 	public void clear() {
 		super.clear();
 		widgetCount = 0;
+		isDeferedSetSelectedPage = false;
 	}
 }
