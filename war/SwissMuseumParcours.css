@@ -72,6 +72,11 @@
 	
 }
 
+.infoPanel-content {
+	margin: 1em 1em 1em 2em;
+	font-family: monospace;
+}
+
 .infoPanel-returnButton {
 	border: 2px solid #606060;
 	color: black;

@@ -18,8 +18,7 @@
 
 package ch.sebastienzurfluh.swissmuseum.parcours.client.view.infos;
 
-import ch.sebastienzurfluh.swissmuseum.core.client.view.FooterWidget;
-
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.animation.AnimationHelper;
 
@@ -29,7 +28,14 @@ public class AppInfoPanel extends InfoPanel {
 			AnimationHelper animationHelper) {
 		super(title, returnToIt, animationHelper);
 		
-		setContent(new FooterWidget());
+		setContent(new HTML(
+				"<img src='resources/images/generic_tiles/logo_parcours.png' align='left'>" +
+				"<br><br>Copyright 2012-2013 Sebastien Zurfluh" +
+				"<br>" +
+				"<br>Créé pour le Mus&eacute;e des Suisses dans le Monde" +
+				"<br>" +
+				"<br>Ce programme est libre: vous pouvez le redistribuer, le modifier" +
+				" selon les termes de la licence \"GNU General Public License\"."));
 	}
 
 	public AppInfoPanel(Widget goBackTo, AnimationHelper animationHelper) {

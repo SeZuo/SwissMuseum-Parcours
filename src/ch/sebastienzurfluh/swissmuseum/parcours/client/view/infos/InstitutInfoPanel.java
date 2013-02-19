@@ -18,6 +18,7 @@
 
 package ch.sebastienzurfluh.swissmuseum.parcours.client.view.infos;
 
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.animation.AnimationHelper;
 
@@ -25,5 +26,19 @@ public class InstitutInfoPanel extends InfoPanel {
 	public InstitutInfoPanel(String title, Widget returnToIt,
 			AnimationHelper animationHelper) {
 		super(title, returnToIt, animationHelper);
+		
+		setContent(new HTML(
+				"<div style='align:center;width:100%;'><img src='resources/images/generic_tiles/logo_penthes.png'" +
+				" width='250px' height='250px' style='margin: 0 1em 0 0;'></div>" +
+				"<br><br>L’<b>Institut des Suisses dans le Monde</b> est le nom donné au pôle de" +
+				" recherche de la <b>Fondation pour l’Histoire des Suisses dans le Monde</b>.  Il" +
+				" entend conduire une politique scientifique qui repose essentiellement sur" +
+				" trois axes : la recherche sur les archives conservées à Penthes," +
+				" l’intensification des échanges avec des universités et des instituts suisses" +
+				" et étrangers et la publication de livres grand public et spécialisés."));
+	}
+
+	public InstitutInfoPanel(Widget goBackTo, AnimationHelper animationHelper) {
+		this("L'Institut des Suisses dans le Monde", goBackTo, animationHelper);
 	}
 }

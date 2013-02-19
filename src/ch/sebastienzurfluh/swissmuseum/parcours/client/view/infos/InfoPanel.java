@@ -63,6 +63,7 @@ public class InfoPanel extends FlowPanel {
 	}
 	
 	public void setContent(Widget content) {
+		content.setStyleName("infoPanel-content");
 		contentPanel.setWidget(content);
 	}
 }

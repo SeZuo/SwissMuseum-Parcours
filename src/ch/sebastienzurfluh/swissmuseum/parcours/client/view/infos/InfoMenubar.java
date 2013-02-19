@@ -31,8 +31,7 @@ public class InfoMenubar extends HorizontalPanel {
 		this.setStyleName("infoMenuBar");
 		
 		final AppInfoPanel appInfo = new AppInfoPanel(goBackTo, animationHelper);
-		final InstitutInfoPanel institutInfo = 
-				new InstitutInfoPanel("InstitutInfoPanel", goBackTo, animationHelper);
+		final InstitutInfoPanel institutInfo = new InstitutInfoPanel(goBackTo, animationHelper);
 		
 		Label benvenon = new Label("Bienvenue au Musée des Suisses dans le Monde");
 		benvenon.setStyleName("infoMenuBar-title");
