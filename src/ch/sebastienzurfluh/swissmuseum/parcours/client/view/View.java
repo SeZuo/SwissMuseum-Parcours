@@ -23,10 +23,13 @@ import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.EventBus;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.PageRequestEventHandler;
 import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.ResourceRequestEventHandler;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
+import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.DataReference;
 import ch.sebastienzurfluh.swissmuseum.core.client.view.menuinterface.PageRequestClickHandler;
+import ch.sebastienzurfluh.swissmuseum.parcours.client.control.TimeMachine;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.bookletnavigator.BookletNavigator;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.groupnavigator.GroupNavigator;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.mgwt.mvp.client.Animation;
@@ -55,7 +58,7 @@ public class View extends SimplePanel {
 	 */
 	public View(
 			EventBus eventBus,
-			Model model,
+			final Model model,
 			PageRequestEventHandler assertPageRequestEventHandlerExists,
 			ResourceRequestEventHandler assertResourceRequestHandlerExists) {
 		assert eventBus != null;
@@ -85,7 +88,6 @@ public class View extends SimplePanel {
 		BookletNavigator bookletNavigator = new BookletNavigator(eventBus, model);
 		GroupNavigator groupNavigator =
 				new GroupNavigator(eventBus, model, pageRequestHandler, animationHelper);
-		
 		
 		animationHelper.goTo(groupNavigator, Animation.FADE);
 		

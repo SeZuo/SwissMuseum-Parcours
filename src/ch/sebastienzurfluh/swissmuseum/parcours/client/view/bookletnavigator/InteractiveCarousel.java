@@ -24,9 +24,11 @@ import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.events.PageC
 import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.DataReference;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.MenuData;
+import ch.sebastienzurfluh.swissmuseum.parcours.client.control.TimeMachine;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.Carousel;
 
@@ -87,7 +89,7 @@ public class InteractiveCarousel extends Carousel {
 	 * We may need to defer the selection of the page until the carousel is properly loaded.
 	 * @param index the index of the page we want to load.
 	 */
-	private void deferedSetSelectedPage(int index) {
+	private void deferedSetSelectedPage(final int index) {
 		if (widgetCount > index) {
 			isDeferedSetSelectedPage = false;
 			setSelectedPage(index);
@@ -103,8 +105,7 @@ public class InteractiveCarousel extends Carousel {
 		super.add(w);
 		widgetCount++;
 		if(isDeferedSetSelectedPage) {
-			isDeferedSetSelectedPage = false;
-			setSelectedPage(deferedSelectedPage);
+			deferedSetSelectedPage(deferedSelectedPage);
 		}
 	}
 	

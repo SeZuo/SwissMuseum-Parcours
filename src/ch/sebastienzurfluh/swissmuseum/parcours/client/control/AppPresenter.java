@@ -26,6 +26,7 @@ import ch.sebastienzurfluh.swissmuseum.core.client.control.eventbus.events.PageC
 import ch.sebastienzurfluh.swissmuseum.core.client.model.Model;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.io.IOConnector;
 import ch.sebastienzurfluh.swissmuseum.core.client.model.structure.DataReference;
+import ch.sebastienzurfluh.swissmuseum.parcours.client.control.eventbus.PageRequestHistory;
 import ch.sebastienzurfluh.swissmuseum.parcours.client.view.View;
 
 import com.google.gwt.user.client.Window;
@@ -88,6 +89,7 @@ public class AppPresenter {
 				
 				PageRequestEventHandler pageRequestHandler = new PageRequestEventHandler(eventBus, model);
 				ResourceRequestEventHandler resourceRequestHandler = new ResourceRequestEventHandler(eventBus, model);
+				PageRequestHistory pageRequestHistory = new PageRequestHistory(eventBus, model);
 
 
 				View view = new View(eventBus, model, pageRequestHandler, resourceRequestHandler);
